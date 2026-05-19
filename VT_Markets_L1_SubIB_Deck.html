@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VT Markets Sub-IB Partnership</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    :root {
+      --navy: #0A1F44;
+      --navy-light: #1A3B7C;
+      --navy-dark: #050F26;
+      --crimson: #C8102E;
+      --crimson-dark: #8B0000;
+      --gold: #D4AF37;
+      --gold-light: #E8C75A;
+      --white: #FFFFFF;
+      --off-white: #F8F6F1;
+      --gray: #6B7280;
+      --gray-light: #E5E7EB;
+      --black: #000000;
+      --theme-intro: #EBF3FB;
+      --theme-intro-accent: #C7DEF5;
+      --theme-intro-border: #5B9BD5;
+      --theme-main: #FBF0F2;
+      --theme-main-accent: #F5C7CE;
+      --theme-main-border: #C8102E;
+      --theme-vision: #FDF9EC;
+      --theme-vision-accent: #F5E8A3;
+      --theme-vision-border: #D4AF37;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'Inter', 'Arial', sans-serif;
+      background: var(--navy-dark);
+      color: var(--navy);
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #root { width: 100vw; height: 100vh; }
+
+    .slide-container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide {
+      flex: 1;
+      padding: 32px 56px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--white);
+      position: relative;
+    }
+
+    .slide-header {
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .slide-title { font-size: 32px; font-weight: 700; color: var(--navy); letter-spacing: -0.5px; }
+    .slide-subtitle { font-size: 14px; color: var(--gray); font-weight: 500; text-transform: uppercase; letter-spacing: 2px; }
+    .slide-number { font-size: 13px; color: var(--gray); font-weight: 500; }
+
+    .nav-bar {
+      background: var(--navy-dark);
+      color: var(--white);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 2px solid var(--gold);
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--gold);
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .nav-btn:hover { background: var(--gold); color: var(--navy-dark); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn.primary { background: var(--crimson); border-color: var(--crimson); }
+    .nav-btn.primary:hover { background: var(--crimson-dark); border-color: var(--gold); color: var(--white); }
+
+    .progress-dots { display: flex; gap: 6px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: all 0.2s; }
+    .dot.active { background: var(--gold); transform: scale(1.3); }
+    .dot:hover { background: var(--gold-light); }
+
+    .brand { font-weight: 700; color: var(--gold); letter-spacing: 1px; font-size: 14px; }
+    .brand-sub { color: rgba(255,255,255,0.6); font-size: 11px; margin-left: 8px; }
+
+    .btn-print {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+    }
+    .btn-print:hover { color: var(--gold); }
+
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th { background: var(--navy); color: var(--white); padding: 10px 8px; text-align: center; font-weight: 600; border: 1px solid var(--navy-light); }
+    td { padding: 8px; text-align: center; border: 1px solid var(--gray-light); }
+    tr:nth-child(even) td { background: var(--off-white); }
+    td.bold { font-weight: 700; color: var(--navy); }
+    td.earner { background: var(--crimson) !important; color: var(--white); font-weight: 700; }
+    td.row-label { background: var(--navy-light); color: var(--white); font-weight: 600; text-align: left; padding-left: 14px; }
+    td.total { background: var(--gold); color: var(--navy-dark); font-weight: 700; }
+
+    .amount { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+
+    .card { background: var(--off-white); border-left: 4px solid var(--crimson); padding: 16px 20px; border-radius: 4px; }
+    .card.gold { border-left-color: var(--gold); background: linear-gradient(90deg, rgba(212,175,55,0.08), transparent); }
+    .card.navy { border-left-color: var(--navy); }
+    .card-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gray); font-weight: 600; margin-bottom: 4px; }
+    .card-value { font-size: 24px; font-weight: 700; color: var(--navy); }
+    .card-note { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+    .bullet { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .bullet-icon { width: 24px; height: 24px; background: var(--gold); color: var(--navy-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+    .bullet-text { font-size: 14px; line-height: 1.6; color: var(--navy); }
+    .bullet-text strong { color: var(--crimson); }
+
+    .chain-node { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 6px; margin-bottom: 6px; }
+    .chain-node.you { background: var(--crimson); color: var(--white); }
+    .chain-node.sub { background: var(--off-white); border: 1px solid var(--gray-light); }
+    .chain-node.client { background: var(--navy); color: var(--white); border: 2px solid var(--gold); }
+    .chain-arrow { text-align: center; color: var(--gold); font-size: 18px; margin: 2px 0; }
+    .chain-label { font-weight: 700; font-size: 14px; min-width: 80px; }
+    .chain-desc { font-size: 12px; opacity: 0.9; }
+
+    input[type="range"] { width: 100%; accent-color: var(--crimson); }
+    select, input[type="number"] { width: 100%; padding: 6px 10px; border: 1px solid var(--gray-light); border-radius: 4px; font-size: 13px; font-family: inherit; }
+    select:focus, input:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+
+    .input-label { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .input-label .value { color: var(--crimson); font-weight: 700; }
+
+    .title-slide {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+      color: var(--white);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0;
+    }
+    .title-main { font-size: 64px; font-weight: 800; letter-spacing: -2px; margin-bottom: 16px; }
+    .title-accent { color: var(--gold); }
+    .title-tag { font-size: 22px; color: rgba(255,255,255,0.85); font-weight: 300; margin-bottom: 8px; }
+    .title-detail { font-size: 14px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-top: 32px; }
+    .title-divider { width: 80px; height: 3px; background: var(--gold); margin: 20px auto; }
+
+    .close-slide { background: linear-gradient(135deg, var(--crimson-dark) 0%, var(--navy-dark) 100%); color: var(--white); }
+    .close-slide .slide-title { color: var(--white); }
+    .close-slide .slide-header { border-bottom-color: var(--gold); }
+
+    /* ── INTRODUCTION THEME (pages 2-4): Cool Blue ── */
+    .slide-intro { background: var(--theme-intro) !important; border-top: 5px solid var(--theme-intro-border); }
+    .slide-intro .slide-header { border-bottom-color: var(--theme-intro-border); }
+    .slide-intro .slide-title { color: #1A3B7C; }
+    .slide-intro .slide-subtitle { color: var(--theme-intro-border); }
+    .slide-intro .bullet-icon { background: var(--theme-intro-border); color: #fff; }
+    .slide-intro::before { content: ''; position: absolute; top: 0; right: 0; width: 280px; height: 280px; background: radial-gradient(circle at top right, rgba(91,155,213,0.12), transparent 70%); pointer-events: none; }
+
+    /* ── MAIN POINT THEME (pages 5-7): Warm Crimson Rose ── */
+    .slide-main { background: var(--theme-main) !important; border-top: 5px solid var(--theme-main-border); }
+    .slide-main .slide-header { border-bottom-color: var(--theme-main-border); }
+    .slide-main .slide-title { color: #6B0018; }
+    .slide-main .slide-subtitle { color: var(--theme-main-border); }
+    .slide-main::before { content: ''; position: absolute; top: 0; right: 0; width: 280px; height: 280px; background: radial-gradient(circle at top right, rgba(200,16,46,0.08), transparent 70%); pointer-events: none; }
+
+    /* ── FUTURE INCOME VISION THEME (pages 8-10): Golden Amber ── */
+    .slide-vision { background: var(--theme-vision) !important; border-top: 5px solid var(--theme-vision-border); }
+    .slide-vision .slide-header { border-bottom-color: var(--theme-vision-border); }
+    .slide-vision .slide-title { color: #6B4A00; }
+    .slide-vision .slide-subtitle { color: #A07818; }
+    .slide-vision::before { content: ''; position: absolute; top: 0; right: 0; width: 280px; height: 280px; background: radial-gradient(circle at top right, rgba(212,175,55,0.15), transparent 70%); pointer-events: none; }
+
+    .l1-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--crimson);
+      color: var(--white);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .print-only { display: none; }
+
+    @media print {
+      @page { size: landscape; margin: 0; }
+      html, body { overflow: visible; background: white; }
+      .nav-bar { display: none; }
+      .slide { page-break-after: always; height: 100vh; }
+      .slide-container { display: block; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // L1 VIEW — direct earning rates per side per lot
+    const L1_DIRECT = { G6: 22, G5: 18, G4: 14, G3: 10, G2: 6, G1: 1 };
+
+    // L1 sub-matrix: L1 is "You" (top). Sub-chain: L2, L3, L4 (max 4 levels deep from L1)
+    // Derived from MIB matrix by shifting one level: L1 plays MIB role
+    // G2, G3 capped at L3 (3 sub-levels: L2 deepest in L1's chain)
+    const L1_MATRIX = {
+      G6: {
+        You:  { You: 22 },
+        L2:   { You: 4,  L2: 18 },
+        L3:   { You: 4,  L2: 3,  L3: 15 },
+        L4:   { You: 4,  L2: 3,  L3: 2,  L4: 13 },
+      },
+      G5: {
+        You:  { You: 18 },
+        L2:   { You: 3,  L2: 15 },
+        L3:   { You: 3,  L2: 2,  L3: 13 },
+        L4:   { You: 3,  L2: 2,  L3: 2,  L4: 11 },
+      },
+      G4: {
+        You:  { You: 14 },
+        L2:   { You: 3,  L2: 11 },
+        L3:   { You: 3,  L2: 2,  L3: 9 },
+        L4:   { You: 3,  L2: 2,  L3: 2,  L4: 7 },
+      },
+      G3: {
+        You:  { You: 10 },
+        L2:   { You: 2,  L2: 8 },
+        L3:   { You: 2,  L2: 2,  L3: 6 },
+      },
+      G2: {
+        You:  { You: 6 },
+        L2:   { You: 1,  L2: 5 },
+        L3:   { You: 1,  L2: 1,  L3: 4 },
+      },
+    };
+
+    // G1 special: L1 earns $1 when they introduce directly; $0 override when sub-IB introduces
+    const G1_L1_RULE = (deepest) => deepest === 'You' ? { You: 1 } : { [deepest]: 1 };
+
+    const LEVELS_STD = ['You', 'L2', 'L3', 'L4'];
+    const LEVELS_LTD = ['You', 'L2', 'L3'];
+    const LEVEL_ORDER = { You: 0, L2: 1, L3: 2, L4: 3 };
+
+    const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+    function SlideHeader({ title, subtitle, slideNum, total }) {
+      return (
+        <div className="slide-header">
+          <div>
+            <div className="slide-subtitle">{subtitle}</div>
+            <div className="slide-title">{title}</div>
+          </div>
+          <div className="slide-number">{slideNum} / {total}</div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 1: TITLE ──────────────────────────────────────────────────────────
+    function TitleSlide() {
+      return (
+        <div className="slide title-slide">
+          <div>
+            <div style={{ fontSize: '14px', color: 'var(--gold)', letterSpacing: '6px', marginBottom: '24px', fontWeight: 600 }}>VT MARKETS</div>
+            <div className="title-main">Sub-IB <span className="title-accent">Partnership</span></div>
+            <div className="title-divider"></div>
+            <div className="title-tag">Your network. Your chain. Your income.</div>
+            <div className="title-tag" style={{ fontSize: '16px', marginTop: '8px', opacity: 0.7 }}>4-level commission · 6 group tiers · transparent payouts</div>
+            <div style={{ marginTop: '20px', display: 'inline-flex', gap: '12px', justifyContent: 'center' }}>
+              <span style={{ background: 'rgba(212,175,55,0.15)', border: '1px solid var(--gold)', color: 'var(--gold)', padding: '6px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, letterSpacing: '2px' }}>L1 SUB-IB VIEW</span>
+            </div>
+            <div className="title-detail">Confidential · Partnership</div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 2: YOUR POSITION ──────────────────────────────────────────────────
+    function PositionSlide({ slideNum, total }) {
+      return (
+        <div className="slide slide-intro">
+          <SlideHeader title="Your position in the network" subtitle="Where you sit" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', flex: 1, alignItems: 'center' }}>
+            <div>
+              <div className="l1-badge">● L1 Sub-IB</div>
+              <h3 style={{ fontSize: '18px', color: '#1A3B7C', marginBottom: '20px', fontWeight: 700 }}>What being an L1 means for you</h3>
+              <div className="bullet">
+                <div className="bullet-icon">1</div>
+                <div className="bullet-text"><strong>4 levels deep</strong> — you sit at the top of your own chain and can recruit sub-IBs up to 4 levels below you</div>
+              </div>
+              <div className="bullet">
+                <div className="bullet-icon">2</div>
+                <div className="bullet-text"><strong>Earn from every trade</strong> — every time a client in your chain trades, you receive a rebate — whether you introduced them or not</div>
+              </div>
+              <div className="bullet">
+                <div className="bullet-icon">3</div>
+                <div className="bullet-text"><strong>Up to $22/lot</strong> — direct clients on G6 pay you the highest rate. The more active your chain, the more you earn passively</div>
+              </div>
+              <div className="bullet">
+                <div className="bullet-icon">4</div>
+                <div className="bullet-text"><strong>Override income</strong> — when your sub-IBs recruit clients, you earn an override on every trade in their network automatically</div>
+              </div>
+              <div className="bullet">
+                <div className="bullet-icon">5</div>
+                <div className="bullet-text"><strong>No minute rules apply</strong> — payouts are straightforward, whole-dollar amounts, easy to explain to your own recruits</div>
+              </div>
+            </div>
+            <div>
+              <div style={{ background: 'var(--white)', borderRadius: '10px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid var(--theme-intro-accent)' }}>
+                <div style={{ fontSize: '13px', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: 600, marginBottom: '16px' }}>Network structure</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ background: 'var(--crimson)', color: 'var(--white)', padding: '12px 16px', borderRadius: '8px', fontWeight: 700, fontSize: '14px' }}>
+                    ★ You (L1) — Top of your chain
+                  </div>
+                  <div style={{ textAlign: 'center', color: 'var(--theme-intro-border)', fontSize: '16px' }}>↓ Override income flows up</div>
+                  <div style={{ background: 'var(--off-white)', border: '1px solid var(--gray-light)', padding: '10px 16px', borderRadius: '8px', fontSize: '13px', color: 'var(--navy)' }}>
+                    <strong>L2</strong> — Your direct sub-IBs
+                  </div>
+                  <div style={{ textAlign: 'center', color: 'var(--gray)', fontSize: '14px' }}>↓</div>
+                  <div style={{ background: 'var(--off-white)', border: '1px solid var(--gray-light)', padding: '10px 16px', borderRadius: '8px', fontSize: '13px', color: 'var(--navy)' }}>
+                    <strong>L3</strong> — Sub-IBs recruited by L2
+                  </div>
+                  <div style={{ textAlign: 'center', color: 'var(--gray)', fontSize: '14px' }}>↓</div>
+                  <div style={{ background: 'var(--off-white)', border: '1px solid var(--gray-light)', padding: '10px 16px', borderRadius: '8px', fontSize: '13px', color: 'var(--navy)' }}>
+                    <strong>L4</strong> — Deepest sub-IB level
+                  </div>
+                  <div style={{ textAlign: 'center', color: 'var(--gray)', fontSize: '14px' }}>↓</div>
+                  <div style={{ background: 'var(--navy)', color: 'var(--white)', padding: '10px 16px', borderRadius: '8px', fontSize: '13px', border: '2px solid var(--gold)', fontWeight: 600 }}>
+                    Clients — Active traders
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 3: CHAIN DIAGRAM ──────────────────────────────────────────────────
+    function ChainSlide({ slideNum, total }) {
+      return (
+        <div className="slide slide-intro">
+          <SlideHeader title="How your chain works" subtitle="4-level IB chain" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '40px', flex: 1 }}>
+            <div>
+              <h3 style={{ fontSize: '16px', color: '#1A3B7C', marginBottom: '12px', fontWeight: 700 }}>Your chain</h3>
+              <div className="chain-node you">
+                <div className="chain-label">You (L1)</div>
+                <div className="chain-desc">Top of your network</div>
+              </div>
+              <div className="chain-arrow">↓</div>
+              <div className="chain-node sub"><div className="chain-label">SUB-IB L2</div><div className="chain-desc">Your direct downline</div></div>
+              <div className="chain-arrow">↓</div>
+              <div className="chain-node sub"><div className="chain-label">SUB-IB L3</div><div className="chain-desc">Recruited by L2</div></div>
+              <div className="chain-arrow">↓</div>
+              <div className="chain-node sub"><div className="chain-label">SUB-IB L4</div><div className="chain-desc">Deepest level</div></div>
+              <div className="chain-arrow">↓</div>
+              <div className="chain-node client"><div className="chain-label">Clients</div><div className="chain-desc">Active traders</div></div>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '16px', color: '#1A3B7C', marginBottom: '12px', fontWeight: 700 }}>Example: L3 introduces a G4 client</h3>
+              <p style={{ fontSize: '13px', color: 'var(--gray)', marginBottom: '16px' }}>When your L3 sub-IB brings in a client trading 1 lot on Group 4, earnings split like this:</p>
+              <table>
+                <thead><tr><th>Position</th><th>Role</th><th>$/lot</th></tr></thead>
+                <tbody>
+                  <tr><td className="bold" style={{ color: 'var(--crimson-dark)' }}>You (L1)</td><td style={{ color: 'var(--gray)' }}>Override — automatic</td><td className="bold amount">$3</td></tr>
+                  <tr><td className="bold">L2</td><td style={{ color: 'var(--gray)' }}>Override</td><td className="bold amount">$2</td></tr>
+                  <tr style={{ background: 'var(--crimson)' }}>
+                    <td style={{ color: 'var(--white)', fontWeight: 700 }}>L3 (introducer)</td>
+                    <td style={{ color: 'var(--white)' }}>Direct earner</td>
+                    <td style={{ color: 'var(--white)', fontWeight: 700, fontSize: '15px' }} className="amount">$9</td>
+                  </tr>
+                  <tr><td className="bold">L4</td><td style={{ color: 'var(--gray)' }}>Not in chain</td><td className="amount" style={{ color: 'var(--gray)' }}>—</td></tr>
+                </tbody>
+              </table>
+              <div className="card gold" style={{ marginTop: '16px' }}>
+                <div className="card-title">Key principle</div>
+                <div style={{ fontSize: '13px', color: 'var(--navy)', marginTop: '4px' }}>Rebate flows from client → introducer → every upline. Every level earns from every trade in their chain — including you, even if you never met that client.</div>
+              </div>
+              <div className="card navy" style={{ marginTop: '12px' }}>
+                <div className="card-title">Your advantage</div>
+                <div style={{ fontSize: '13px', color: 'var(--navy)', marginTop: '4px' }}>You earn override income on <strong style={{ color: 'var(--crimson-dark)' }}>all 4 levels</strong> below you. The more sub-IBs you recruit, the more passive income layers you build.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 4: GROUP TIERS ────────────────────────────────────────────────────
+    function TiersSlide({ slideNum, total }) {
+      const groups = [
+        { code: 'G6', type: 'Standard / Cent', fx: '3.2 pip', xau: '4.2 pip', rate: 22, levels: '4' },
+        { code: 'G5', type: 'Standard / Cent', fx: '2.7 pip', xau: '3.7 pip', rate: 18, levels: '4' },
+        { code: 'G4', type: 'Standard / Cent', fx: '2.2 pip', xau: '3.2 pip', rate: 14, levels: '4' },
+        { code: 'G3', type: 'Standard / Cent', fx: '1.7 pip', xau: '2.7 pip', rate: 10, levels: '3' },
+        { code: 'G2', type: 'Standard / Cent', fx: '1.2 pip', xau: '2.2 pip', rate: 6, levels: '3' },
+        { code: 'G1', type: 'ECN', fx: '0.2 +6', xau: '1.2 +6', rate: 1, levels: '—' },
+      ];
+      return (
+        <div className="slide slide-intro">
+          <SlideHeader title="Group tiers at a glance" subtitle="All 6 groups" slideNum={slideNum} total={total} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <table style={{ fontSize: '14px' }}>
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Account type</th>
+                  <th>Spread FX</th>
+                  <th>Spread XAU</th>
+                  <th>Your direct rate ($/side)</th>
+                  <th>Max sub-levels</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((g) => (
+                  <tr key={g.code} style={g.code === 'G6' ? { background: 'rgba(212,175,55,0.15)' } : {}}>
+                    <td className="bold" style={{ fontSize: '15px', color: 'var(--crimson-dark)' }}>{g.code}</td>
+                    <td>{g.type}</td>
+                    <td>{g.fx}</td>
+                    <td>{g.xau}</td>
+                    <td className="bold amount" style={{ fontSize: '16px', color: g.code === 'G6' ? 'var(--crimson-dark)' : 'var(--navy)' }}>${g.rate}</td>
+                    <td className="bold">{g.levels}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginTop: '32px' }}>
+              <div className="card navy">
+                <div className="card-title">Per side per lot</div>
+                <div className="card-value" style={{ fontSize: '18px' }}>USD currency</div>
+                <div className="card-note">Round-turn trade = 2× per side</div>
+              </div>
+              <div className="card gold">
+                <div className="card-title">Instrument neutral</div>
+                <div className="card-value" style={{ fontSize: '18px' }}>FX · Gold · Silver · Oil</div>
+                <div className="card-note">Same rebate across all four</div>
+              </div>
+              <div className="card">
+                <div className="card-title">G2 &amp; G3 chain depth</div>
+                <div className="card-value" style={{ fontSize: '18px' }}>3 sub-levels max</div>
+                <div className="card-note">G4–G6 support full 4-level chain</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── DISTRIBUTION MATRIX COMPONENT ──────────────────────────────────────────
+    function L1DistributionMatrix({ groupCode, levels }) {
+      const matrix = L1_MATRIX[groupCode];
+      const directRate = L1_DIRECT[groupCode];
+      const scenarios = levels.map(lv => ({
+        label: lv === 'You' ? 'You introduce directly' : `${lv} introduces`,
+        earner: lv,
+        dist: matrix[lv]
+      }));
+
+      return (
+        <div>
+          <h3 style={{ fontSize: '14px', color: 'var(--navy)', marginBottom: '8px', fontWeight: 700, textAlign: 'center' }}>
+            Group {groupCode.replace('G', '')} — ${directRate}/lot (your direct rate)
+          </h3>
+          <table style={{ fontSize: '12px' }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '6px' }}>Deepest</th>
+                {levels.map(lv => <th key={lv} style={{ padding: '6px' }}>{lv === 'You' ? '★ You' : lv}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {scenarios.map((s, i) => (
+                <tr key={i}>
+                  <td className="row-label" style={{ fontSize: '11px', padding: '5px 8px' }}>{s.label}</td>
+                  {levels.map(lv => {
+                    const v = s.dist ? s.dist[lv] : undefined;
+                    const isEarner = lv === s.earner;
+                    if (v === undefined) return <td key={lv} style={{ padding: '5px' }}>—</td>;
+                    return <td key={lv} className={isEarner ? 'earner amount' : 'amount'} style={{ padding: '5px' }}>${v}</td>;
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    // ── SLIDE 5: FULL DISTRIBUTION G4/G5/G6 ────────────────────────────────────
+    function FullDistributionSlide({ slideNum, total }) {
+      return (
+        <div className="slide slide-main">
+          <SlideHeader title="Full 4-level distribution" subtitle="G4 · G5 · G6 standard tiers" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', flex: 1, alignItems: 'center' }}>
+            <L1DistributionMatrix groupCode="G4" levels={LEVELS_STD} />
+            <L1DistributionMatrix groupCode="G5" levels={LEVELS_STD} />
+            <L1DistributionMatrix groupCode="G6" levels={LEVELS_STD} />
+          </div>
+          <div className="card gold" style={{ marginTop: '16px' }}>
+            <div style={{ fontSize: '13px', color: 'var(--navy)' }}>
+              <strong style={{ color: 'var(--crimson-dark)' }}>Red cells</strong> = the direct earner (whoever introduced the client). All other amounts are override income flowing to you and your upchain. Every row shows your cut regardless of who introduced.
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 6: LIMITED DISTRIBUTION G2/G3 ────────────────────────────────────
+    function LimitedDistributionSlide({ slideNum, total }) {
+      return (
+        <div className="slide slide-main">
+          <SlideHeader title="Limited distribution" subtitle="G2 · G3 — capped at L3 sub-level" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', flex: 1, alignItems: 'center' }}>
+            <L1DistributionMatrix groupCode="G2" levels={LEVELS_LTD} />
+            <L1DistributionMatrix groupCode="G3" levels={LEVELS_LTD} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
+            <div className="card">
+              <div className="card-title">Why the cap?</div>
+              <div style={{ fontSize: '13px', color: 'var(--navy)', marginTop: '4px' }}>G2 and G3 have lower rebate pools. Distributing across 4 levels would leave each level with very small amounts — so the chain stops at L3 (your 3rd sub-level).</div>
+            </div>
+            <div className="card gold">
+              <div className="card-title">The upgrade pitch</div>
+              <div style={{ fontSize: '13px', color: 'var(--navy)', marginTop: '4px' }}>Encourage your sub-IBs to move clients to G4 or higher. You unlock a 4th sub-level and earn more per trade across your whole chain.</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 7: G1 ECN RULE ────────────────────────────────────────────────────
+    function G1Slide({ slideNum, total }) {
+      return (
+        <div className="slide slide-main">
+          <SlideHeader title="G1 ECN — how it works for you" subtitle="Personal trading perk" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', flex: 1 }}>
+            <div>
+              <h3 style={{ fontSize: '16px', color: '#6B0018', marginBottom: '12px', fontWeight: 700 }}>The G1 ECN rule</h3>
+              <div className="card navy" style={{ marginBottom: '14px' }}>
+                <div className="card-title">The rule</div>
+                <div style={{ fontSize: '14px', color: 'var(--navy)', marginTop: '4px', lineHeight: 1.6 }}>
+                  On every G1 trade, <strong style={{ color: 'var(--crimson-dark)' }}>$1 goes to the person who introduced that client.</strong> If you introduced them directly, you get the $1. If your sub-IB introduced them, your sub-IB gets the $1 — you earn $0 on that trade.
+                </div>
+              </div>
+              <div className="bullet"><div className="bullet-icon">1</div><div className="bullet-text">G1 is the <strong>low-spread ECN account</strong> — designed for serious traders who want tighter pricing</div></div>
+              <div className="bullet"><div className="bullet-icon">2</div><div className="bullet-text"><strong>Use it for your own trading</strong> — as a sub-IB you can open a G1 account yourself at near-raw spreads</div></div>
+              <div className="bullet"><div className="bullet-icon">3</div><div className="bullet-text"><strong>Not a recruitment tier</strong> — G1 is a trader benefit, not the best group for building a sub-IB network</div></div>
+              <div className="bullet"><div className="bullet-icon">4</div><div className="bullet-text">Route serious recruits to <strong>G2–G6</strong> for meaningful rebate income across your chain</div></div>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '16px', color: '#6B0018', marginBottom: '12px', fontWeight: 700 }}>G1 earnings — two scenarios</h3>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--navy)', marginBottom: '8px' }}>Scenario A: You introduce the client</div>
+                <table>
+                  <thead><tr><th>Level</th><th>Role</th><th>$/lot</th></tr></thead>
+                  <tbody>
+                    <tr style={{ background: 'var(--crimson)' }}>
+                      <td style={{ color: 'var(--white)', fontWeight: 700 }}>You (L1)</td>
+                      <td style={{ color: 'var(--white)' }}>Direct earner</td>
+                      <td style={{ color: 'var(--white)', fontWeight: 700 }} className="amount">$1</td>
+                    </tr>
+                    <tr><td className="bold">L2</td><td style={{ color: 'var(--gray)' }}>Not applicable</td><td className="amount" style={{ color: 'var(--gray)' }}>—</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--navy)', marginBottom: '8px' }}>Scenario B: Your L2 sub-IB introduces the client</div>
+                <table>
+                  <thead><tr><th>Level</th><th>Role</th><th>$/lot</th></tr></thead>
+                  <tbody>
+                    <tr><td className="bold" style={{ color: 'var(--gray)' }}>You (L1)</td><td style={{ color: 'var(--gray)' }}>Override</td><td className="amount" style={{ color: 'var(--gray)' }}>$0</td></tr>
+                    <tr style={{ background: 'var(--crimson)' }}>
+                      <td style={{ color: 'var(--white)', fontWeight: 700 }}>L2 (introducer)</td>
+                      <td style={{ color: 'var(--white)' }}>Direct earner</td>
+                      <td style={{ color: 'var(--white)', fontWeight: 700 }} className="amount">$1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="card gold" style={{ marginTop: '16px' }}>
+                <div className="card-title">Strategic takeaway</div>
+                <div style={{ fontSize: '12px', color: 'var(--navy)', marginTop: '4px' }}>Use G1 for personal trading. Recruit sub-IBs and clients into G2–G6 to build meaningful passive override income across your full chain.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 8: CALCULATOR ─────────────────────────────────────────────────────
+    function CalculatorSlide({ slideNum, total }) {
+      const [group, setGroup] = useState('G4');
+      const [lots, setLots] = useState(2);
+      const [traders, setTraders] = useState(10);
+      const [days, setDays] = useState(20);
+      const [deepest, setDeepest] = useState('L3');
+      const [growth, setGrowth] = useState(15);
+
+      const maxDeepest = useMemo(() => (group === 'G2' || group === 'G3') ? 2 : 3, [group]);
+      const DEEPEST_OPTS = ['You', 'L2', 'L3', 'L4'];
+
+      useEffect(() => {
+        if (LEVEL_ORDER[deepest] > maxDeepest) {
+          setDeepest(DEEPEST_OPTS[maxDeepest]);
+        }
+      }, [maxDeepest, deepest]);
+
+      const calc = useMemo(() => {
+        const lotSides = lots * traders * days * 2;
+        const directRate = L1_DIRECT[group];
+        const gr = growth / 100;
+        let y2mult = 0;
+        for (let m = 1; m <= 12; m++) y2mult += Math.pow(1 + gr, m);
+
+        let dist;
+        if (group === 'G1') {
+          dist = G1_L1_RULE(deepest);
+        } else {
+          dist = L1_MATRIX[group][deepest] || { You: directRate };
+        }
+
+        const levels = DEEPEST_OPTS.map(lv => {
+          const perSide = (dist && dist[lv]) ? dist[lv] : 0;
+          const monthly = perSide * lotSides;
+          const y1 = monthly * 12;
+          const y2 = monthly * y2mult;
+          return { lv, perSide, monthly, y1, y2, total2y: y1 + y2 };
+        });
+        const yourRow = levels.find(l => l.lv === 'You');
+        return { lotSides, directRate, levels, yourRow, y2mult };
+      }, [group, lots, traders, days, deepest, growth]);
+
+      return (
+        <div className="slide slide-vision">
+          <SlideHeader title="Live income calculator" subtitle="Your closing tool" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '24px', flex: 1, minHeight: 0 }}>
+            <div style={{ background: 'var(--off-white)', padding: '16px', borderRadius: '6px', borderLeft: '3px solid var(--gold)' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Group<span className="value">{group}</span></div>
+                <select value={group} onChange={e => setGroup(e.target.value)}>
+                  <option value="G1">G1 — ECN ($1)</option>
+                  <option value="G2">G2 — Standard ($6)</option>
+                  <option value="G3">G3 — Standard ($10)</option>
+                  <option value="G4">G4 — Standard ($14)</option>
+                  <option value="G5">G5 — Standard ($18)</option>
+                  <option value="G6">G6 — Standard ($22)</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Lots per trader per day<span className="value">{lots.toFixed(1)}</span></div>
+                <input type="range" min="0.1" max="20" step="0.1" value={lots} onChange={e => setLots(parseFloat(e.target.value))} />
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Active traders<span className="value">{traders}</span></div>
+                <input type="range" min="1" max="200" step="1" value={traders} onChange={e => setTraders(parseInt(e.target.value))} />
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Trading days per month<span className="value">{days}</span></div>
+                <input type="range" min="1" max="20" step="1" value={days} onChange={e => setDays(parseInt(e.target.value))} />
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Your position<span className="value" style={{ color: 'var(--crimson)' }}>★ You (L1)</span></div>
+                <div style={{ fontSize: '12px', background: 'rgba(200,16,46,0.08)', border: '1px solid rgba(200,16,46,0.2)', borderRadius: '4px', padding: '6px 10px', color: 'var(--crimson-dark)', fontWeight: 600 }}>Fixed: L1 (You)</div>
+              </div>
+              <div style={{ marginBottom: '12px' }}>
+                <div className="input-label">Deepest introducer<span className="value">{deepest}</span></div>
+                <select value={deepest} onChange={e => setDeepest(e.target.value)}>
+                  {DEEPEST_OPTS.map((lv, i) => <option key={lv} value={lv} disabled={i > maxDeepest}>{lv === 'You' ? '★ You (direct)' : lv}{i > maxDeepest ? ' (n/a)' : ''}</option>)}
+                </select>
+              </div>
+              <div>
+                <div className="input-label">Year 2 monthly growth<span className="value">{growth}%</span></div>
+                <input type="range" min="0" max="30" step="1" value={growth} onChange={e => setGrowth(parseInt(e.target.value))} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minHeight: 0 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '12px' }}>
+                <div className="card" style={{ background: 'linear-gradient(135deg,var(--crimson),var(--crimson-dark))', color: 'var(--white)', borderLeft: '4px solid var(--gold)' }}>
+                  <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}>Your monthly earning</div>
+                  <div style={{ fontSize: '34px', fontWeight: 800, color: 'var(--gold)' }} className="amount">{fmt(calc.yourRow?.monthly || 0)}</div>
+                </div>
+                <div className="card navy">
+                  <div className="card-title">Year 1</div>
+                  <div className="card-value amount" style={{ fontSize: '20px' }}>{fmt(calc.yourRow?.y1 || 0)}</div>
+                </div>
+                <div className="card gold">
+                  <div className="card-title">2-Year total</div>
+                  <div className="card-value amount" style={{ fontSize: '20px' }}>{fmt(calc.yourRow?.total2y || 0)}</div>
+                </div>
+              </div>
+              <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
+                <table style={{ fontSize: '12px' }}>
+                  <thead>
+                    <tr><th>Level</th><th>$/side</th><th>Monthly</th><th>Year 1</th><th>2-year</th></tr>
+                  </thead>
+                  <tbody>
+                    {calc.levels.map(l => (
+                      <tr key={l.lv} style={l.lv === 'You' ? { background: 'var(--gold)', color: 'var(--navy-dark)', fontWeight: 700 } : {}}>
+                        <td className="bold">{l.lv === 'You' ? '★ You (L1)' : l.lv}{l.lv === 'You' && <span style={{ marginLeft: '6px', fontSize: '9px', padding: '1px 6px', background: 'var(--navy-dark)', color: 'var(--gold)', borderRadius: '3px' }}>YOU</span>}</td>
+                        <td className="amount">{l.perSide > 0 ? `$${l.perSide}` : '—'}</td>
+                        <td className="amount">{l.monthly > 0 ? fmt(l.monthly) : '—'}</td>
+                        <td className="amount">{l.y1 > 0 ? fmt(l.y1) : '—'}</td>
+                        <td className="amount">{l.total2y > 0 ? fmt(l.total2y) : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                <div className="card" style={{ padding: '8px 12px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px' }}>Lot-sides/mo</div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--navy)' }}>{Math.round(calc.lotSides).toLocaleString()}</div>
+                </div>
+                <div className="card" style={{ padding: '8px 12px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px' }}>Your direct rate</div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--navy)' }} className="amount">${calc.directRate}/side</div>
+                </div>
+                <div className="card" style={{ padding: '8px 12px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px' }}>Year 1 total</div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--navy)' }} className="amount">{fmt((calc.yourRow?.y1 || 0))}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 9: SCENARIOS ──────────────────────────────────────────────────────
+    function ScenariosSlide({ slideNum, total }) {
+      const scenarios = [
+        {
+          title: 'Solo L1 · 10 G5 direct clients · 5 lots/mo each',
+          desc: 'New L1 sub-IB, no sub-IBs yet, all direct clients on Group 5.',
+          monthly: 1800,
+          y1: 21600,
+          profile: 'Entry level'
+        },
+        {
+          title: 'L1 + L2 network · 20 G5 clients across chain · 5 lots/mo',
+          desc: 'L1 with one active L2 sub-IB. Direct clients + L2 chain clients generating override.',
+          monthly: 4200,
+          y1: 50400,
+          profile: 'Growing network'
+        },
+        {
+          title: 'Mature L1 · Full 4-level chain · mixed G4-G6 groups',
+          desc: 'L1 with L2-L4 sub-IB chains active. Network compounding across 4 levels.',
+          monthly: 9100,
+          y1: 109200,
+          profile: 'Established chain'
+        }
+      ];
+      return (
+        <div className="slide slide-vision">
+          <SlideHeader title="Real earning scenarios" subtitle="What L1 partners actually earn" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', flex: 1, alignItems: 'center' }}>
+            {scenarios.map((s, i) => (
+              <div key={i} style={{
+                background: i === 2 ? 'linear-gradient(135deg,var(--gold-light),var(--gold))' : 'var(--off-white)',
+                padding: '24px',
+                borderRadius: '8px',
+                borderTop: '4px solid ' + (i === 2 ? 'var(--crimson)' : 'var(--navy)'),
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1.5px', color: i === 2 ? 'var(--navy-dark)' : 'var(--crimson-dark)', fontWeight: 700, marginBottom: '8px' }}>{s.profile}</div>
+                <h4 style={{ fontSize: '15px', color: 'var(--navy)', marginBottom: '8px', fontWeight: 700, lineHeight: 1.4 }}>{s.title}</h4>
+                <p style={{ fontSize: '12px', color: i === 2 ? 'var(--navy-dark)' : 'var(--gray)', marginBottom: '16px', flex: 1, lineHeight: 1.5 }}>{s.desc}</p>
+                <div style={{ borderTop: '1px solid ' + (i === 2 ? 'rgba(0,0,0,0.15)' : 'var(--gray-light)'), paddingTop: '12px' }}>
+                  <div style={{ fontSize: '11px', color: i === 2 ? 'var(--navy-dark)' : 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Monthly</div>
+                  <div style={{ fontSize: '28px', fontWeight: 800, color: i === 2 ? 'var(--navy-dark)' : 'var(--crimson-dark)', lineHeight: 1 }} className="amount">{fmt(s.monthly)}</div>
+                  <div style={{ fontSize: '12px', color: i === 2 ? 'var(--navy-dark)' : 'var(--gray)', marginTop: '6px' }}>Year 1: <strong className="amount">{fmt(s.y1)}</strong></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: '11px', color: 'var(--gray)', textAlign: 'center', marginTop: '16px', fontStyle: 'italic' }}>Assumes 20 trading days/month, round-turn volume. Projections based on locked rebate matrix; actual results depend on client trading behaviour.</p>
+        </div>
+      );
+    }
+
+    // ── SLIDE 10: GROWTH CHART ──────────────────────────────────────────────────
+    function GrowthChartSlide({ slideNum, total }) {
+      const months = Array.from({ length: 24 }, (_, i) => i + 1);
+      const baseMonthly = 4200;
+      const growthRate = 0.15;
+      const data = months.map(m => {
+        if (m <= 12) return { m, val: baseMonthly };
+        const y2m = m - 12;
+        return { m, val: baseMonthly * Math.pow(1 + growthRate, y2m) };
+      });
+      const maxVal = Math.max(...data.map(d => d.val));
+      const cumulative = data.reduce((acc, d, i) => {
+        acc.push((i === 0 ? 0 : acc[i - 1]) + d.val);
+        return acc;
+      }, []);
+      const totalY1 = cumulative[11];
+      const totalY2 = cumulative[23] - cumulative[11];
+      return (
+        <div className="slide slide-vision">
+          <SlideHeader title="Year 1 vs Year 2 projection" subtitle="Network compounding effect" slideNum={slideNum} total={total} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '30px', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1, position: 'relative', padding: '20px 0' }}>
+                <svg viewBox="0 0 600 280" style={{ width: '100%', height: '100%' }}>
+                  <defs>
+                    <linearGradient id="bar-y1" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1A3B7C" />
+                      <stop offset="100%" stopColor="#0A1F44" />
+                    </linearGradient>
+                    <linearGradient id="bar-y2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#D4AF37" />
+                      <stop offset="100%" stopColor="#A8851F" />
+                    </linearGradient>
+                  </defs>
+                  <line x1="40" y1="240" x2="580" y2="240" stroke="#6B7280" strokeWidth="1" />
+                  <line x1="40" y1="40" x2="40" y2="240" stroke="#6B7280" strokeWidth="1" />
+                  {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
+                    <g key={i}>
+                      <line x1="40" y1={240 - p * 200} x2="580" y2={240 - p * 200} stroke="#E5E7EB" strokeWidth="0.5" strokeDasharray="2 2" />
+                      <text x="36" y={240 - p * 200 + 4} fontSize="9" fill="#6B7280" textAnchor="end">${Math.round(maxVal * p / 1000)}K</text>
+                    </g>
+                  ))}
+                  {data.map((d, i) => {
+                    const x = 50 + i * 22;
+                    const h = (d.val / maxVal) * 200;
+                    const y = 240 - h;
+                    return <rect key={i} x={x} y={y} width="18" height={h} fill={i < 12 ? 'url(#bar-y1)' : 'url(#bar-y2)'} />;
+                  })}
+                  <text x="160" y="265" fontSize="11" fill="#0A1F44" fontWeight="600" textAnchor="middle">Year 1 (flat baseline)</text>
+                  <text x="430" y="265" fontSize="11" fill="#8B0000" fontWeight="600" textAnchor="middle">Year 2 (15% monthly growth)</text>
+                  <line x1="305" y1="40" x2="305" y2="245" stroke="#C8102E" strokeWidth="1" strokeDasharray="4 4" />
+                </svg>
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--gray)', textAlign: 'center', fontStyle: 'italic' }}>Illustrative chart: $4,200/mo baseline (L1 with growing L2 network), 15% monthly compound growth from M13.</p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center' }}>
+              <div className="card navy">
+                <div className="card-title">Year 1 cumulative</div>
+                <div className="card-value amount">{fmt(totalY1)}</div>
+                <div className="card-note">Flat earnings, network ramping</div>
+              </div>
+              <div className="card gold">
+                <div className="card-title">Year 2 cumulative</div>
+                <div className="card-value amount" style={{ color: 'var(--crimson-dark)' }}>{fmt(totalY2)}</div>
+                <div className="card-note">Compounding kicks in</div>
+              </div>
+              <div className="card" style={{ background: 'var(--navy-dark)', color: 'var(--white)', borderLeftColor: 'var(--gold)' }}>
+                <div className="card-title" style={{ color: 'var(--gold)' }}>2-year total</div>
+                <div style={{ fontSize: '28px', fontWeight: 800, color: 'var(--gold)' }} className="amount">{fmt(totalY1 + totalY2)}</div>
+                <div className="card-note" style={{ color: 'rgba(255,255,255,0.6)' }}>{Math.round((totalY2 / totalY1 - 1) * 100)}% jump in Year 2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ── SLIDE 11: CLOSE ─────────────────────────────────────────────────────────
+    function CloseSlide({ slideNum, total }) {
+      return (
+        <div className="slide close-slide">
+          <SlideHeader title="Why start building now" subtitle="Next step" slideNum={slideNum} total={total} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', color: 'var(--white)' }}>
+            <h2 style={{ fontSize: '42px', fontWeight: 800, marginBottom: '24px', color: 'var(--gold)', letterSpacing: '-1px' }}>Build your 4-level chain while spots are open</h2>
+            <p style={{ fontSize: '18px', maxWidth: '700px', marginBottom: '40px', lineHeight: 1.6, color: 'rgba(255,255,255,0.9)' }}>The earlier you start recruiting sub-IBs, the longer your network has to compound. Direct clients pay you for years — sub-IB chains pay you forever.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', maxWidth: '900px', marginBottom: '40px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '20px', borderRadius: '8px', borderTop: '3px solid var(--gold)' }}>
+                <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--gold)', marginBottom: '4px' }}>1</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '6px' }}>Get your sub-IB link from your upline</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>Your unique referral link tracks every client and sub-IB you bring in</div>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '20px', borderRadius: '8px', borderTop: '3px solid var(--gold)' }}>
+                <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--gold)', marginBottom: '4px' }}>2</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '6px' }}>Onboard your first 5 clients</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>Templates, scripts, and training materials provided to help you close</div>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '20px', borderRadius: '8px', borderTop: '3px solid var(--gold)' }}>
+                <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--gold)', marginBottom: '4px' }}>3</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '6px' }}>Scale into L2–L4 recruiting</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)' }}>Activate your 4-level chain for compounding override income</div>
+              </div>
+            </div>
+            <a href="https://beacons.ai/adzharmz" target="_blank" rel="noopener noreferrer"
+              style={{ display: 'inline-block', padding: '16px 40px', background: 'var(--crimson)', color: 'var(--white)', borderRadius: '6px', fontSize: '18px', fontWeight: 700, border: '2px solid var(--gold)', textDecoration: 'none' }}>
+              Let's get your sub-IB account set up
+            </a>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '24px', letterSpacing: '1px' }}>Adzhar · BD Manager · VT Markets Malaysia</p>
+          </div>
+        </div>
+      );
+    }
+
+    // ── APP ──────────────────────────────────────────────────────────────────────
+    function App() {
+      const [slide, setSlide] = useState(0);
+      const totalSlides = 11;
+
+      useEffect(() => {
+        const handler = (e) => {
+          if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            setSlide(s => Math.min(s + 1, totalSlides - 1));
+          } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            setSlide(s => Math.max(s - 1, 0));
+          } else if (e.key === 'Home') {
+            setSlide(0);
+          } else if (e.key === 'End') {
+            setSlide(totalSlides - 1);
+          }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+      }, []);
+
+      const slides = [
+        <TitleSlide />,
+        <PositionSlide slideNum={2} total={totalSlides} />,
+        <ChainSlide slideNum={3} total={totalSlides} />,
+        <TiersSlide slideNum={4} total={totalSlides} />,
+        <FullDistributionSlide slideNum={5} total={totalSlides} />,
+        <LimitedDistributionSlide slideNum={6} total={totalSlides} />,
+        <G1Slide slideNum={7} total={totalSlides} />,
+        <CalculatorSlide slideNum={8} total={totalSlides} />,
+        <ScenariosSlide slideNum={9} total={totalSlides} />,
+        <GrowthChartSlide slideNum={10} total={totalSlides} />,
+        <CloseSlide slideNum={11} total={totalSlides} />,
+      ];
+
+      return (
+        <div className="slide-container">
+          {slides[slide]}
+          <div className="nav-bar">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <span className="brand">VT MARKETS</span>
+              <span className="brand-sub">Sub-IB Partnership Deck · L1 View</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <button className="nav-btn" onClick={() => setSlide(s => Math.max(s - 1, 0))} disabled={slide === 0}>← Prev</button>
+              <div className="progress-dots">
+                {Array.from({ length: totalSlides }, (_, i) => (
+                  <div key={i} className={'dot' + (i === slide ? ' active' : '')} onClick={() => setSlide(i)}></div>
+                ))}
+              </div>
+              <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', minWidth: '45px', textAlign: 'center' }}>{slide + 1} / {totalSlides}</span>
+              <button className="nav-btn primary" onClick={() => setSlide(s => Math.min(s + 1, totalSlides - 1))} disabled={slide === totalSlides - 1}>Next →</button>
+              <button className="btn-print" onClick={() => window.print()}>Print</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
