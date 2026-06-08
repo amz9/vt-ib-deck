@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMZ BDM — Prompt Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1a1a1a;
+  --bg4: #222;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede8;
+  --text-muted: #888;
+  --text-faint: #555;
+  --accent: #c8a96e;
+  --accent2: #e2c48a;
+  --accent-dim: rgba(200,169,110,0.12);
+  --accent-border: rgba(200,169,110,0.3);
+  --green: #4dab6e;
+  --green-bg: rgba(77,171,110,0.1);
+  --blue: #5b9cf6;
+  --blue-bg: rgba(91,156,246,0.1);
+  --purple: #a78bfa;
+  --purple-bg: rgba(167,139,250,0.1);
+  --coral: #f87171;
+  --coral-bg: rgba(248,113,113,0.1);
+  --teal: #2dd4bf;
+  --teal-bg: rgba(45,212,191,0.1);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251,191,36,0.1);
+  --pink: #f472b6;
+  --pink-bg: rgba(244,114,182,0.1);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  padding: 3rem 2rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.4;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.logo-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.header h1 span {
+  color: var(--accent);
+}
+.header-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.meta-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-badge svg { width: 14px; height: 14px; flex-shrink: 0; }
+.meta-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 2px;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* CONTROLS */
+.controls {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding-top: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.search-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px; height: 16px;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+.search-wrap input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px 9px 36px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-wrap input::placeholder { color: var(--text-faint); }
+.search-wrap input:focus { border-color: var(--accent-border); }
+
+.stats-mini {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.tabs-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tab-btn:hover { border-color: var(--border-hover); color: var(--text); }
+.tab-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+.tab-count {
+  font-size: 11px;
+  background: var(--bg4);
+  padding: 1px 5px;
+  border-radius: 10px;
+  color: var(--text-faint);
+}
+.tab-btn.active .tab-count {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* GRID */
+.grid-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 14px;
+}
+.prompt-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.prompt-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.prompt-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg3);
+  transform: translateY(-1px);
+}
+.prompt-card:hover::before { opacity: 1; }
+
+/* Category accent colors */
+.card-learning::before { background: linear-gradient(90deg, var(--blue), transparent); }
+.card-productivity::before { background: linear-gradient(90deg, var(--green), transparent); }
+.card-writing::before { background: linear-gradient(90deg, var(--amber), transparent); }
+.card-aitricks::before { background: linear-gradient(90deg, var(--purple), transparent); }
+.card-research::before { background: linear-gradient(90deg, var(--teal), transparent); }
+.card-business::before { background: linear-gradient(90deg, var(--coral), transparent); }
+.card-money::before { background: linear-gradient(90deg, var(--pink), transparent); }
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.card-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.icon-learning { background: var(--blue-bg); color: var(--blue); }
+.icon-productivity { background: var(--green-bg); color: var(--green); }
+.icon-writing { background: var(--amber-bg); color: var(--amber); }
+.icon-aitricks { background: var(--purple-bg); color: var(--purple); }
+.icon-research { background: var(--teal-bg); color: var(--teal); }
+.icon-business { background: var(--coral-bg); color: var(--coral); }
+.icon-money { background: var(--pink-bg); color: var(--pink); }
+
+.card-title-wrap { flex: 1; min-width: 0; }
+.cat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.label-learning { color: var(--blue); }
+.label-productivity { color: var(--green); }
+.label-writing { color: var(--amber); }
+.label-aitricks { color: var(--purple); }
+.label-research { color: var(--teal); }
+.label-business { color: var(--coral); }
+.label-money { color: var(--pink); }
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tag {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.card-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.btn-copy, .btn-use {
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s;
+}
+.btn-copy {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.btn-copy:hover { border-color: var(--border-hover); color: var(--text); }
+.btn-use {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+.btn-use:hover { background: rgba(200,169,110,0.2); }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--text-faint);
+  display: none;
+}
+.empty-state .big { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state p { font-size: 14px; }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border-hover);
+  border-radius: 14px;
+  padding: 2rem;
+  width: min(680px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalIn 0.2s ease;
+}
+@keyframes modalIn { from { opacity:0; transform: scale(0.97) translateY(8px); } to { opacity:1; transform: scale(1) translateY(0); } }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--bg3); color: var(--text); }
+.modal-cat { margin-bottom: 6px; }
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-right: 2rem;
+  line-height: 1.3;
+}
+.modal-merge-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+.modal-merge-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.modal-merge-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.merge-chip {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.modal-merge-note {
+  font-size: 12px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+.modal-prompt-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.modal-prompt-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #c8c0b0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 16px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.modal-prompt-box::-webkit-scrollbar { width: 4px; }
+.modal-prompt-box::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-modal-primary {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1200;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-modal-primary:hover { opacity: 0.88; }
+.btn-modal-secondary {
+  background: none;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-modal-secondary:hover { color: var(--text); border-color: var(--text-faint); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--bg3);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 13px;
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* FOOTER */
+.footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 2rem 3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+}
+.footer-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.footer-dot { color: var(--accent); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+@media (max-width: 600px) {
+  .header { padding: 2rem 1rem 1.5rem; }
+  .controls { padding: 0.75rem 1rem 1rem; }
+  .grid-wrap { padding: 1.5rem 1rem; }
+  .card-grid { grid-template-columns: 1fr; }
+  .header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo-tag">AMZ BDM · Prompt Library</div>
+      <h1>Prompt <span>Toolkit</span></h1>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="meta-badge"><span class="meta-dot"></span>26 prompts · 7 categories</span>
+    <span class="meta-badge">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Deduplicated & merged
+    </span>
+    <span class="meta-badge">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      Click any card to copy
+    </span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-row">
+    <div class="search-wrap">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search prompts, tags..." oninput="filterCards()">
+    </div>
+    <span class="stats-mini" id="statsLabel">26 / 26</span>
+  </div>
+  <div class="tabs-row" id="tabsRow"></div>
+</div>
+
+<div class="grid-wrap">
+  <div class="card-grid" id="cardGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="big">¯\_(ツ)_/¯</div>
+    <p>No prompts match your search.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <span class="footer-text">AMZ BDM Prompt Library <span class="footer-dot">·</span> built with Claude <span class="footer-dot">·</span> June 2026</span>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-cat" id="mCat"></div>
+    <div class="modal-title" id="mTitle"></div>
+    <div class="modal-merge-box">
+      <div class="modal-merge-label">Merged from</div>
+      <div class="modal-merge-items" id="mMerged"></div>
+      <div class="modal-merge-note" id="mNote"></div>
+    </div>
+    <div class="modal-prompt-label">Prompt template</div>
+    <div class="modal-prompt-box" id="mPrompt"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-primary" onclick="copyModalPrompt()">⧉ Copy prompt</button>
+      <button class="btn-modal-secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard ✓</div>
+
+<script>
+const PROMPTS = [
+  {
+    id:1, cat:"Learning", catKey:"learning",
+    icon:"📖",
+    title:"Explain Like I'm Smart",
+    merged:["#1 Explain Like Smart","#14 Analogy Generator"],
+    note:"Both prompts explain complex topics accessibly using analogies — merged.",
+    tags:["explain","analogy","learning","jargon-free"],
+    prompt:`Explain [COMPLEX TOPIC] to me like I'm intelligent but unfamiliar with the jargon.
+
+Use analogies to concepts from [FIELD I KNOW WELL].
+Don't dumb it down — just make it accessible.
+
+Make the analogy:
+- Accurate (not oversimplified)
+- Memorable
+- Useful for teaching others`
+  },
+  {
+    id:2, cat:"Learning", catKey:"learning",
+    icon:"🗺️",
+    title:"Learning path builder",
+    merged:["#13 Learning Path","Mega #7 Learn New Skills"],
+    note:"Two near-identical prompts merged into one comprehensive path builder.",
+    tags:["learning","roadmap","skill","curriculum"],
+    prompt:`You are an expert educator specializing in [SUBJECT AREA].
+
+I want to learn [SKILL] to achieve [GOAL].
+Current level: [BEGINNER / INTERMEDIATE / ADVANCED]
+Time available: [HOURS PER WEEK] over [TIMEFRAME]
+Learning style: [HANDS-ON / READING / VIDEO / MIXED]
+
+Create a learning path:
+- Week-by-week breakdown
+- Specific resources (books, courses, projects — free and paid)
+- Milestones to track progress
+- Common mistakes to avoid
+- Practice projects that build real skills
+- Ways to validate learning (tests, certifications)
+- 5 specific exercises I can do TODAY
+
+Context: [WHY YOU'RE LEARNING THIS, YOUR BACKGROUND]`
+  },
+  {
+    id:3, cat:"Learning", catKey:"learning",
+    icon:"♟️",
+    title:"Second-order thinking",
+    merged:["#15 Second-Order Thinking"],
+    note:"Great for strategic planning and anticipating unintended consequences.",
+    tags:["strategy","thinking","consequences","planning"],
+    prompt:`If [X HAPPENS], what happens next?
+Then what happens after that?
+Continue this chain 3–4 steps.
+
+What are the non-obvious consequences I should prepare for?`
+  },
+  {
+    id:4, cat:"Productivity", catKey:"productivity",
+    icon:"⚙️",
+    title:"Productivity system architect",
+    merged:["Prod #1 System Architect","Prod #2 Daily Blueprint"],
+    note:"Both about building a sustainable daily workflow — merged into one.",
+    tags:["productivity","routine","workflow","habits"],
+    prompt:`Help me build a complete productivity system.
+
+Ask me about my goals, workload, current schedule, and biggest friction points.
+
+Then create:
+1. A simple system I can follow daily
+2. A realistic daily routine with planning blocks, work blocks, breaks, and a shutdown ritual
+3. Low-energy fallback plan for difficult days (minimum viable tasks)
+
+Keep it sustainable, not perfect.`
+  },
+  {
+    id:5, cat:"Productivity", catKey:"productivity",
+    icon:"🎯",
+    title:"Priority engine",
+    merged:["Prod #3 Priority Engine"],
+    note:"Cuts through task overwhelm by ranking impact vs effort vs urgency.",
+    tags:["tasks","prioritization","focus","GTD"],
+    prompt:`Help me prioritize my tasks.
+
+Here is my task list:
+[PASTE TASKS]
+
+Rank them based on:
+- Impact (how much it moves the needle)
+- Urgency (time-sensitive?)
+- Effort (how long / how hard)
+
+Explain your reasoning for the top 3 priorities.`
+  },
+  {
+    id:6, cat:"Productivity", catKey:"productivity",
+    icon:"🛡️",
+    title:"Focus guard system",
+    merged:["Prod #6 Focus Guard","Prod #4 Friction Finder"],
+    note:"Focus rules + friction audit combined — both protect deep work.",
+    tags:["focus","distraction","environment","deep work"],
+    prompt:`Analyze my productivity problems.
+Ask questions about my habits, tools, and environment.
+Then list my biggest bottlenecks and specific fixes.
+
+After that, help me create rules to protect my focus:
+- Digital rules (notifications, apps, browser)
+- Environment rules (space, desk, background noise)
+- Mindset rules (how to start, how to re-focus)
+
+Explain how each rule improves productivity.`
+  },
+  {
+    id:7, cat:"Productivity", catKey:"productivity",
+    icon:"📅",
+    title:"30-day system builder",
+    merged:["Prod #7 30-Day Plan"],
+    note:"Structured 4-week discipline sprint. Great for BDM quarterly resets.",
+    tags:["30-day","habits","discipline","automation"],
+    prompt:`Create a 30-day productivity system plan broken into weekly themes:
+
+Week 1: Setup — identify tools, routines, priorities
+Week 2: Control — enforce structure, reduce friction
+Week 3: Optimization — track, review, improve
+Week 4: Automation — systemize what's working
+
+Include daily habits under 20 minutes per day.
+Focus on building discipline, not motivation.`
+  },
+  {
+    id:8, cat:"Writing & Content", catKey:"writing",
+    icon:"✉️",
+    title:"Email speedrun",
+    merged:["#9 Email Speedrun"],
+    note:"Fast, structured email drafting template — plug and send.",
+    tags:["email","writing","communication","outreach"],
+    prompt:`Write [TYPE OF EMAIL] to [RECIPIENT].
+
+Context: [1–2 sentences of background]
+Tone: [PROFESSIONAL / CASUAL / FRIENDLY / ASSERTIVE]
+Length: Under [X] words
+Include: [SPECIFIC ELEMENTS TO ADD]
+Avoid: [THINGS NOT TO SAY]`
+  },
+  {
+    id:9, cat:"Writing & Content", catKey:"writing",
+    icon:"♻️",
+    title:"Content repurposer",
+    merged:["#12 Content Repurposer","Mega #4 Social Media Content"],
+    note:"Repurpose + platform-native social posts merged — same goal, different angles.",
+    tags:["content","repurpose","social media","TikTok","LinkedIn"],
+    prompt:`You are a viral social media strategist specializing in [PLATFORM].
+
+Take this [LONG-FORM CONTENT / IDEA] and repurpose it into:
+- 10 tweet-sized insights
+- 3 LinkedIn post ideas (with hooks)
+- 5 email subject lines
+- 1 Reddit-style post title
+- [NUMBER] platform-native posts for [TARGET AUDIENCE]
+
+For each social post also provide:
+1. 3 alternative hooks to A/B test
+2. Visual recommendation (screenshot, chart, meme concept)
+3. Optimal posting time and hashtags
+4. Engagement CTA or question
+
+Keep the core message. Adapt format for each platform.
+Brand context: [YOUR POSITIONING]`
+  },
+  {
+    id:10, cat:"Writing & Content", catKey:"writing",
+    icon:"📝",
+    title:"Long-form writer",
+    merged:["Mega #6 Blogs / Newsletters / Scripts"],
+    note:"Full spec for blogs, newsletters, or YouTube scripts with SEO and structure.",
+    tags:["blog","newsletter","script","SEO","long-form"],
+    prompt:`You are an expert long-form writer specializing in [BLOGS / NEWSLETTERS / SCRIPTS].
+
+Write a [FORMAT] on [TOPIC] for [AUDIENCE].
+
+Specs:
+- Length: [WORD COUNT]
+- Structure: [LISTICLE / NARRATIVE / HOW-TO / ANALYSIS]
+- SEO keywords: [IF APPLICABLE]
+- Voice: [CONVERSATIONAL / AUTHORITATIVE / STORYTELLING]
+
+Requirements:
+1. Compelling hook that makes the problem visceral
+2. Original insights, not generic advice
+3. Specific examples and case studies
+4. Actionable takeaways
+5. Strong conclusion with clear next step
+
+Include:
+- Subheadings every 300 words
+- Pull quotes or standout stats
+- Internal link placeholders
+- Meta description (155 characters)
+
+Research notes: [YOUR NOTES / DATA]
+Unique angle: [YOUR CONTRARIAN TAKE]`
+  },
+  {
+    id:11, cat:"Writing & Content", catKey:"writing",
+    icon:"🎞️",
+    title:"Presentation builder",
+    merged:["Mega #5 Presentations"],
+    note:"Slide-by-slide deck architecture — useful for IB pitch decks.",
+    tags:["presentation","slides","pitch deck","storytelling"],
+    prompt:`You are a presentation designer for [PITCH DECKS / KEYNOTES / SALES].
+
+Create a presentation on [TOPIC] for [AUDIENCE].
+
+Specs:
+- Length: [NUMBER] slides
+- Goal: [INFORM / PERSUADE / SELL]
+- Delivery: [IN-PERSON / ZOOM / RECORDED]
+
+For each slide provide:
+1. Slide title
+2. Key visual concept (chart type, image style, diagram)
+3. Talking points (what to say, not read)
+4. Text on slide (minimal — headline only)
+5. Data / stats to include
+
+Narrative arc: [PROBLEM-SOLUTION / STORY-BASED / DATA-DRIVEN]
+Company / product context: [YOUR INFO]
+Final CTA or conclusion: [WHAT YOU WANT AUDIENCE TO DO]`
+  },
+  {
+    id:12, cat:"AI Tricks", catKey:"aitricks",
+    icon:"🧠",
+    title:"Power prompting tricks",
+    merged:["Gaslight Mode / Mental Down Tricks (all 8 + META)"],
+    note:"Psychological framing tricks consolidated into one reference card.",
+    tags:["meta-prompting","psychology","power-user","tricks"],
+    prompt:`8 psychological framing tricks to improve AI output quality:
+
+1. FAKE MEMORY — "You explained [X] to me yesterday, but I forgot the part about [Y]."
+   Forces consistency and depth.
+
+2. IQ ASSIGNMENT — "You're an IQ 145 specialist in [FIELD]. Now analyze [X]."
+   Higher specificity = more sophisticated output.
+
+3. OBVIOUS TRAP — "Obviously, [WRONG CLAIM], right?"
+   Triggers debate mode, surfaces nuance.
+
+4. LIVE AUDIENCE — "Explain [X] like you're teaching 500 people in an auditorium."
+   Adds structure, examples, anticipates questions.
+
+5. WEIRD CONSTRAINT — "Explain [X] using only [KITCHEN / SPORTS / MOVIE] analogies."
+   Forces creative connections.
+
+6. IMAGINARY STAKES — "Let's bet $100: Is this [code / decision / strategy] correct?"
+   Triggers deeper scrutiny and edge-case thinking.
+
+7. DISAGREEMENT FRAME — "My colleague says this is wrong. Defend it or admit they're right."
+   Forces proper evaluation of both sides.
+
+8. VERSION 2.0 — "Give me a Version 2.0 of this idea."
+   Signals genuine upgrade, not just polish.
+
+META: Treat the AI like it has ego, memory, and stakes.
+These social-psychological frames change output quality significantly.`
+  },
+  {
+    id:13, cat:"AI Tricks", catKey:"aitricks",
+    icon:"⚡",
+    title:"PRISM Kernel — strategy engine",
+    merged:["PRISM KERNEL block"],
+    note:"Reusable modular logic block for business reasoning and strategy.",
+    tags:["strategy","system","template","modular","business"],
+    prompt:`PRISM KERNEL ::
+〔Purpose · Rules · Identity · Structure · Motion〕
+
+P:: Fires on prompts involving goal-setting, strategic planning, or business logic
+R:: Strategic Engine — modular logic form for business reasoning and output pattern design
+I:: Solve business problems, propose system upgrades, write reusable prompt templates
+S:: Output in modular blocks; enforce clarity, reusability, and symbolic tags
+M:: Activated by #business, #strategy, #template, or commands: "generate", "build", "solve"
+
+HOW TO USE:
+Tag your prompt with #business or #strategy, then describe what you want to build or solve.
+Claude will output modular, reusable blocks with clear structure.
+
+EXAMPLE:
+#strategy Build a 90-day IB recruitment framework for [MARKET].
+→ Output: Objective block → Weekly action blocks → KPI tracking block → Risk block`
+  },
+  {
+    id:14, cat:"Research & Analysis", catKey:"research",
+    icon:"🔬",
+    title:"Research synthesizer",
+    merged:["#6 Research Synthesizer","Mega #1 Research Task"],
+    note:"Casual source synthesis + executive research brief merged.",
+    tags:["research","synthesis","analysis","sources"],
+    prompt:`You are an expert research analyst.
+
+I'm researching [TOPIC]. Here are my sources:
+[PASTE SOURCES / NOTES]
+
+Synthesize these into an executive brief with:
+1. Key findings from the last 12 months
+2. Data and statistics with sources
+3. Main consensus points
+4. Points of disagreement between sources
+5. What's missing from this research
+6. Expert opinions and emerging trends
+7. Practical implications for [INDUSTRY / AUDIENCE]
+8. 3 follow-up questions I should explore
+
+Include source links for all factual claims.
+Additional context: [YOUR SPECIFIC NEEDS]`
+  },
+  {
+    id:15, cat:"Research & Analysis", catKey:"research",
+    icon:"⚖️",
+    title:"Decision matrix",
+    merged:["#7 Decision Matrix"],
+    note:"Structured decision-making — useful for IB partner selection, tool evaluation.",
+    tags:["decision","matrix","analysis","tradeoffs"],
+    prompt:`I need to decide between [OPTION A] and [OPTION B].
+
+Help me create a decision matrix:
+1. List key criteria for this decision
+2. Weight each criterion by importance (1–10)
+3. Score each option against each criterion
+4. Identify my hidden assumptions
+5. What's the deciding factor I might be missing?
+
+Then give me a clear recommendation with your reasoning.`
+  },
+  {
+    id:16, cat:"Research & Analysis", catKey:"research",
+    icon:"🔍",
+    title:"Reverse brief / clarifier",
+    merged:["#5 Reverse Brief"],
+    note:"Get Claude to interrogate your goal before solving it — prevents wrong-direction work.",
+    tags:["clarification","requirements","goal","constraints"],
+    prompt:`I want to [ACHIEVE X OUTCOME].
+
+Don't tell me how to do it yet.
+First, ask me 5 clarifying questions to understand:
+- My constraints
+- My resources
+- My timeline
+- My actual goal (which might differ from what I stated)
+
+After my answers, then proceed with recommendations.`
+  },
+  {
+    id:17, cat:"Research & Analysis", catKey:"research",
+    icon:"🗡️",
+    title:"Critic mode",
+    merged:["#2 Critic Mode","#11 Idea Stress-Test"],
+    note:"Harsh review + devil's advocate merged — both attack your work to make it stronger.",
+    tags:["critique","feedback","devil's advocate","review"],
+    prompt:`You are a harsh but fair critic.
+
+Review this [CONTENT TYPE / IDEA]:
+[PASTE CONTENT OR DESCRIBE IDEA]
+
+Evaluate:
+1. What's weak or unclear?
+2. What's missing entirely?
+3. What are the fatal flaws?
+4. What am I assuming that might be wrong?
+5. Who's already tried this and failed — why?
+6. What's the hardest part I'm underestimating?
+
+Be brutal. I want to improve, not feel good.`
+  },
+  {
+    id:18, cat:"Research & Analysis", catKey:"research",
+    icon:"📊",
+    title:"Competitor analysis",
+    merged:["Mega #8 Competitor Analysis"],
+    note:"10-point competitive intelligence framework with SWOT and tactical output.",
+    tags:["competitor","SWOT","market","intelligence"],
+    prompt:`You are a competitive intelligence analyst.
+
+Analyze [COMPETITOR] vs our product [YOUR PRODUCT] in [MARKET].
+
+Research areas:
+1. Product features and positioning
+2. Pricing strategy and monetization
+3. Target customers and use cases
+4. Marketing channels and messaging
+5. Recent launches and roadmap signals
+6. Team size and hiring patterns
+7. Funding and financial health
+8. Customer reviews and pain points
+9. Strengths we can't match vs weaknesses we can exploit
+
+Deliverable:
+- SWOT analysis
+- Feature comparison table
+- Positioning gaps we can own
+- 3 tactical moves we should make this quarter
+
+Be brutally honest about where they're beating us.
+Our context: [YOUR PRODUCT DETAILS]`
+  },
+  {
+    id:19, cat:"Research & Analysis", catKey:"research",
+    icon:"📄",
+    title:"White paper writer",
+    merged:["Mega #2 White Papers"],
+    note:"Full authoritative white paper structure — useful for IB proposals.",
+    tags:["white paper","proposal","writing","B2B"],
+    prompt:`You are a technical writer specializing in authoritative white papers.
+
+Write a white paper on [TOPIC] for [TARGET AUDIENCE].
+
+Structure:
+- Executive Summary (150 words)
+- Problem Statement with market data
+- Current Solutions and their limitations
+- Our Approach / Solution with technical details
+- Case Studies or proof points
+- Implementation framework
+- ROI Analysis
+- Conclusion and Call to Action
+
+Tone: [AUTHORITATIVE / CONVERSATIONAL / TECHNICAL]
+Length: [2,000–5,000 words]
+
+Include:
+- Relevant statistics and citations
+- Visual placeholders for charts/diagrams
+- Quotes from industry experts (mark as [NEEDS VERIFICATION])
+
+Background context: [YOUR COMPANY / PRODUCT INFO]`
+  },
+  {
+    id:20, cat:"Business", catKey:"business",
+    icon:"🎓",
+    title:"Expert interview mode",
+    merged:["#3 Expert Interview"],
+    note:"Locks Claude into an expert persona for deep, opinionated, real-world answers.",
+    tags:["expert","persona","technical","interview"],
+    prompt:`You are [SPECIFIC EXPERT — e.g. "a senior DevOps engineer at Google"].
+
+I'm going to ask you questions about [TOPIC].
+Answer from that expert's perspective with:
+- Specific technical details
+- Real-world tradeoffs
+- What's overhyped vs underrated in this space
+- What beginners get wrong that you've learned not to
+
+[YOUR FIRST QUESTION]`
+  },
+  {
+    id:21, cat:"Business", catKey:"business",
+    icon:"🤝",
+    title:"Meeting prep in 30 min",
+    merged:["#4 Meeting Prep"],
+    note:"Rapid prep template — plug in who and what, get a full briefing.",
+    tags:["meeting","preparation","sales","objections"],
+    prompt:`I have a meeting with [PERSON / ROLE] about [TOPIC] in 30 minutes.
+Help me prepare:
+
+1. Top 3 questions they'll likely ask me
+2. Key points I should make (prioritized)
+3. Potential objections and how to address them
+4. One smart question I should ask them
+5. What outcome should I aim for by the end?`
+  },
+  {
+    id:22, cat:"Business", catKey:"business",
+    icon:"💻",
+    title:"Code explainer",
+    merged:["#10 Code Explainer"],
+    note:"4-part breakdown: what it does → how → problems → improvements.",
+    tags:["code","MQL5","review","debugging"],
+    prompt:`Explain this code to me:
+
+[PASTE CODE]
+
+Format:
+1. What it does (one sentence)
+2. How it works (line-by-line or section breakdown)
+3. Potential issues or edge cases
+4. How you'd improve it`
+  },
+  {
+    id:23, cat:"Business", catKey:"business",
+    icon:"🔤",
+    title:"Jargon translator",
+    merged:["#8 Jargon Translator"],
+    note:"Useful for compliance docs, broker T&Cs, or financial reports.",
+    tags:["jargon","plain English","translation","compliance"],
+    prompt:`Translate this [INDUSTRY JARGON-HEAVY CONTENT] into plain English:
+
+[PASTE CONTENT]
+
+Then:
+1. Give me a one-sentence TL;DR summary
+2. Give me 3 smart questions I should ask to sound informed about this topic`
+  },
+  {
+    id:24, cat:"Money & Business", catKey:"money",
+    icon:"💰",
+    title:"Side hustle finder",
+    merged:["Money #1 Profitable Side Hustle","Money #2 Freelance for Beginners","Money #4 Make Money with ChatGPT"],
+    note:"Three 'how to make money' prompts merged — same intent, different angles.",
+    tags:["side hustle","freelance","income","AI tools"],
+    prompt:`Based on my skills, interests, and available time, suggest 5 high-income online income ideas.
+
+My skills: [LIST YOUR SKILLS]
+Interests: [LIST INTERESTS]
+Time available: [HOURS PER WEEK]
+Budget to start: [RM / USD AMOUNT]
+Experience level: [BEGINNER / SOME EXPERIENCE]
+
+For each idea provide:
+1. Step-by-step action plan
+2. Realistic earnings potential
+3. Tools or platforms needed
+4. Time to first income (realistic)
+5. Biggest challenge to expect
+
+Include AI-powered business ideas where relevant.`
+  },
+  {
+    id:25, cat:"Money & Business", catKey:"money",
+    icon:"📦",
+    title:"Digital products & passive income",
+    merged:["Money #5 Digital Products"],
+    note:"Passive income strategy prompt for selling digital products online.",
+    tags:["passive income","digital products","online business"],
+    prompt:`I want to make passive income online with minimal ongoing effort.
+
+Suggest 5 beginner-friendly digital products I can create and sell.
+For each:
+1. What the product is
+2. How to create it (tools + time needed)
+3. How to market it
+4. Best platform to sell on immediately
+5. Realistic monthly income potential
+
+My background: [YOUR SKILLS / NICHE]`
+  },
+  {
+    id:26, cat:"Money & Business", catKey:"money",
+    icon:"📱",
+    title:"Monetize social media",
+    merged:["Money #3 Monetize Social Media"],
+    note:"Full content + monetization strategy. Useful for BraderPip persona.",
+    tags:["social media","monetization","creator","TikTok","affiliate"],
+    prompt:`Create a social media monetization strategy for [PLATFORM: Instagram / TikTok / YouTube].
+
+Target audience: [DESCRIBE YOUR NICHE AUDIENCE]
+Current following: [FOLLOWER COUNT OR "STARTING FROM ZERO"]
+Content niche: [YOUR TOPIC / PERSONA]
+
+Include:
+1. Content ideas (20 post/video concepts)
+2. Posting schedule and cadence
+3. Engagement growth strategies
+4. Methods to attract brand deals and sponsorships
+5. Affiliate marketing setup
+6. Timeline: When can I realistically start earning?
+
+Brand / persona context: [YOUR POSITIONING]`
+  }
+];
+
+const CATEGORIES = ["All","Learning","Productivity","Writing & Content","AI Tricks","Research & Analysis","Business","Money & Business"];
+let activeCat = "All";
+let currentPrompt = null;
+
+function buildTabs(){
+  const el = document.getElementById("tabsRow");
+  el.innerHTML = "";
+  CATEGORIES.forEach(cat => {
+    const count = cat === "All" ? PROMPTS.length : PROMPTS.filter(p=>p.cat===cat).length;
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (cat===activeCat?" active":"");
+    btn.innerHTML = `${cat}<span class="tab-count">${count}</span>`;
+    btn.onclick = ()=>{ activeCat=cat; buildTabs(); filterCards(); };
+    el.appendChild(btn);
+  });
+}
+
+function getFiltered(){
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  return PROMPTS.filter(p=>{
+    const catOk = activeCat==="All" || p.cat===activeCat;
+    const searchOk = !q || p.title.toLowerCase().includes(q) || p.tags.join(" ").toLowerCase().includes(q) || p.note.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+}
+
+function filterCards(){
+  const filtered = getFiltered();
+  document.getElementById("statsLabel").textContent = `${filtered.length} / ${PROMPTS.length}`;
+  renderCards(filtered);
+}
+
+function renderCards(list){
+  const grid = document.getElementById("cardGrid");
+  const empty = document.getElementById("emptyState");
+  grid.innerHTML="";
+  if(!list.length){ empty.style.display="block"; return; }
+  empty.style.display="none";
+  list.forEach(p=>{
+    const c = document.createElement("div");
+    c.className = `prompt-card card-${p.catKey}`;
+    c.onclick = ()=>openModal(p);
+    c.innerHTML = `
+      <div class="card-head">
+        <div class="card-icon icon-${p.catKey}">${p.icon}</div>
+        <div class="card-title-wrap">
+          <div class="cat-label label-${p.catKey}">${p.cat}</div>
+          <div class="card-title">${p.title}</div>
+        </div>
+      </div>
+      <div class="card-desc">${p.note}</div>
+      <div class="card-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+      <div class="card-footer">
+        <button class="btn-copy" onclick="event.stopPropagation();copyPromptById(${p.id})">⧉ Copy</button>
+        <button class="btn-use" onclick="event.stopPropagation();openModal(PROMPTS.find(x=>x.id===${p.id}))">View →</button>
+      </div>`;
+    grid.appendChild(c);
+  });
+}
+
+function openModal(p){
+  currentPrompt=p;
+  document.getElementById("mCat").innerHTML = `<span class="cat-label label-${p.catKey}" style="font-size:11px">${p.cat}</span>`;
+  document.getElementById("mTitle").textContent = p.title;
+  document.getElementById("mMerged").innerHTML = p.merged.map(m=>`<span class="merge-chip">${m}</span>`).join("");
+  document.getElementById("mNote").textContent = p.note;
+  document.getElementById("mPrompt").textContent = p.prompt;
+  document.getElementById("modalOverlay").classList.add("open");
+}
+
+function closeModal(){
+  document.getElementById("modalOverlay").classList.remove("open");
+  currentPrompt=null;
+}
+
+function copyPromptById(id){
+  const p = PROMPTS.find(x=>x.id===id);
+  if(p){ navigator.clipboard.writeText(p.prompt).then(()=>showToast()).catch(()=>{}); }
+}
+
+function copyModalPrompt(){
+  if(currentPrompt){ navigator.clipboard.writeText(currentPrompt.prompt).then(()=>showToast()).catch(()=>{}); }
+}
+
+function showToast(){
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+buildTabs();
+filterCards();
+</script>
+</body>
+</html>
