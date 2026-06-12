@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AMZ BDM — VT Markets Business Development Manager. IB Partnership Program, Copy Trade platforms, MT5 tools and resources. Est. 2016, Malaysia.">
+<title>AMZ BDM · VT Markets Partner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:       #0B1F3A;
+  --navy-mid:   #1E3A5F;
+  --navy-light: #2A4F7A;
+  --navy-deep:  #07152A;
+  --gold:       #C9A84C;
+  --gold-light: #E8D9A8;
+  --gold-pale:  #FBF6EC;
+  --gold-border:#E2D9C4;
+  --cream:      #F7F5F0;
+  --slate:      #4A5568;
+  --muted:      #7A9BBF;
+  --white:      #FFFFFF;
+  --danger:     #E24B4A;
+  --success:    #1D9E75;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition: 0.2s ease;
+  --section-pad: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 4rem);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--slate);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+ul { list-style: none; }
+
+/* ─── UTILITY ──────────────────────────────────────────────── */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.pill-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--gold-pale);
+  border: 0.5px solid var(--gold-border);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #854F0B;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.pill-label svg { width: 13px; height: 13px; }
+
+/* ─── BUTTONS ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-sm);
+  transition: transform var(--transition), opacity var(--transition), background var(--transition);
+  cursor: pointer;
+  border: none;
+  letter-spacing: 0.02em;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); opacity: 0.9; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: #d4b25a; }
+.btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+.btn-outline:hover { background: rgba(201,168,76,0.08); }
+.btn-navy { background: var(--navy); color: var(--cream); border: 1px solid var(--navy-light); }
+.btn-navy:hover { background: var(--navy-mid); }
+.btn-blue { background: #185FA5; color: var(--cream); }
+.btn-blue:hover { background: #0C447C; }
+.btn-sm { font-size: 0.75rem; padding: 0.5rem 1rem; }
+
+/* ─── NAVIGATION ───────────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--navy);
+  border-bottom: 1px solid var(--navy-mid);
+  padding: 0 clamp(1.25rem, 5vw, 3rem);
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+}
+.logo-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+}
+.logo-sub {
+  font-size: 0.625rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.nav-links a {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+  font-weight: 500;
+}
+.nav-links a:hover { color: var(--gold); background: rgba(201,168,76,0.07); }
+.nav-cta { flex-shrink: 0; }
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 0.5px solid var(--navy-light);
+}
+.nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--cream);
+  transition: var(--transition);
+}
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: var(--navy-deep);
+  padding: 1rem 1.5rem;
+  gap: 0.25rem;
+  border-top: 0.5px solid var(--navy-mid);
+}
+.mobile-menu a {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  padding: 0.625rem 0;
+  border-bottom: 0.5px solid var(--navy-mid);
+  font-weight: 500;
+  transition: color var(--transition);
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { color: var(--gold); }
+.mobile-menu .btn { margin-top: 0.75rem; width: 100%; justify-content: center; }
+.mobile-menu.open { display: flex; }
+
+/* ─── HERO ─────────────────────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 5vw, 4rem);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gold);
+}
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+  padding-left: 2rem;
+}
+.hero-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold);
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  max-width: 560px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-sub {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+.hero-btns {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 2rem 2rem 2.5rem;
+  border-left: 0.5px solid var(--navy-mid);
+  min-width: 140px;
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+}
+.stat-label {
+  font-size: 0.6875rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ─── TRUST BAR ────────────────────────────────────────────── */
+.trust-bar {
+  background: var(--gold-pale);
+  border-top: 2px solid var(--gold);
+  border-bottom: 0.5px solid var(--gold-border);
+  padding: 0.875rem clamp(1.25rem, 5vw, 4rem);
+}
+.trust-bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--slate);
+  white-space: nowrap;
+}
+.trust-item svg { color: var(--gold); flex-shrink: 0; }
+.trust-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--gold-border);
+  flex-shrink: 0;
+}
+
+/* ─── SECTIONS ─────────────────────────────────────────────── */
+.section {
+  padding: var(--section-pad);
+}
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.section-header { margin-bottom: 2.5rem; }
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  font-weight: 400;
+  color: var(--navy);
+  line-height: 1.25;
+  margin-bottom: 0.625rem;
+}
+.section-header p {
+  font-size: 0.9375rem;
+  color: var(--slate);
+  max-width: 520px;
+  line-height: 1.7;
+}
+.section.bg-white { background: var(--white); }
+.section.bg-navy { background: var(--navy); }
+.section.bg-navy .section-header h2 { color: var(--cream); }
+.section.bg-navy .section-header p { color: var(--muted); }
+.section.bg-cream { background: var(--cream); }
+
+/* ─── OFFER CARDS ──────────────────────────────────────────── */
+.offer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.offer-card {
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: transform var(--transition);
+}
+.offer-card:hover { transform: translateY(-2px); }
+.offer-card.dark {
+  background: var(--navy);
+  border: 0.5px solid var(--navy-mid);
+}
+.offer-card.light {
+  background: var(--white);
+  border: 0.5px solid var(--gold-border);
+}
+.offer-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.125rem;
+}
+.offer-icon.gold-bg { background: rgba(201,168,76,0.15); }
+.offer-icon svg { width: 22px; height: 22px; color: var(--gold); }
+.offer-card.dark .offer-icon.gold-bg svg { color: var(--gold); }
+.offer-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.offer-card.dark h3 { color: var(--cream); }
+.offer-card.light h3 { color: var(--navy); }
+.offer-card p {
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.offer-card.dark p { color: var(--muted); }
+.offer-card.light p { color: var(--slate); }
+.offer-tag {
+  display: inline-block;
+  margin-top: 0.875rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.offer-card.dark .offer-tag { background: var(--navy-mid); color: var(--gold); }
+.offer-card.light .offer-tag { background: var(--gold-pale); color: #854F0B; border: 0.5px solid var(--gold-border); }
+.offer-disclaimer {
+  font-size: 0.6875rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* ─── IB COMPARE ───────────────────────────────────────────── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.compare-card {
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+}
+.compare-card.vt {
+  background: var(--navy);
+  border: 1.5px solid var(--gold);
+}
+.compare-card.other {
+  background: var(--white);
+  border: 0.5px solid #E2D9C4;
+}
+.compare-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge-vt { background: var(--gold); color: var(--navy); }
+.badge-other { background: #F1EFE8; color: #5F5E5A; }
+.compare-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.compare-card.vt h3 { color: var(--cream); }
+.compare-card.other h3 { color: var(--navy); }
+.compare-list { display: flex; flex-direction: column; gap: 0; }
+.compare-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 0.625rem 0;
+  border-bottom: 0.5px solid;
+}
+.compare-card.vt .compare-row { border-color: var(--navy-mid); }
+.compare-card.other .compare-row { border-color: #E2D9C4; }
+.compare-row:last-child { border-bottom: none; }
+.compare-icon { flex-shrink: 0; margin-top: 3px; }
+.compare-icon svg { width: 14px; height: 14px; }
+.icon-ok svg { color: var(--success); }
+.icon-bad svg { color: var(--danger); }
+.icon-neutral svg { color: #888; }
+.compare-row span {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.compare-card.vt .compare-row span { color: var(--muted); }
+.compare-card.other .compare-row span { color: var(--slate); }
+.impact-callout {
+  margin-top: 1rem;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.impact-callout.danger { background: rgba(226,75,74,0.08); border: 0.5px solid rgba(226,75,74,0.2); }
+.impact-callout.success { background: rgba(29,158,117,0.08); border: 0.5px solid rgba(29,158,117,0.2); }
+.impact-callout svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+.impact-callout.danger svg { color: var(--danger); }
+.impact-callout.success svg { color: var(--success); }
+.impact-callout p { font-size: 0.8125rem; line-height: 1.5; }
+.impact-callout.danger p { color: var(--danger); }
+.impact-callout.success p { color: var(--success); }
+.impact-hl { font-weight: 600; }
+
+/* ─── VTRADE / COPY TRADE ──────────────────────────────────── */
+.vtrade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+.vtrade-card {
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  border: 0.5px solid;
+}
+.vtrade-card.dark { background: var(--navy); border-color: var(--navy-mid); }
+.vtrade-card.light { background: var(--white); border-color: var(--gold-border); }
+.vtrade-platform {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.375rem;
+  display: block;
+}
+.vtrade-card.dark .vtrade-platform { color: var(--gold); }
+.vtrade-card.light .vtrade-platform { color: #185FA5; }
+.vtrade-audience-tag {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 0.875rem;
+}
+.vtrade-card.dark .vtrade-audience-tag { background: var(--navy-mid); color: var(--gold); }
+.vtrade-card.light .vtrade-audience-tag { background: #E6F1FB; color: #185FA5; }
+.vtrade-card h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.vtrade-card.dark h3 { color: var(--cream); }
+.vtrade-card.light h3 { color: var(--navy); }
+.vtrade-features { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+.vtrade-feature {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.vtrade-feature svg { width: 14px; height: 14px; color: var(--success); flex-shrink: 0; margin-top: 4px; }
+.vtrade-feature span { font-size: 0.8125rem; line-height: 1.5; }
+.vtrade-card.dark .vtrade-feature span { color: var(--muted); }
+.vtrade-card.light .vtrade-feature span { color: var(--slate); }
+
+/* ─── TOOLS ────────────────────────────────────────────────── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.tool-card {
+  background: var(--white);
+  border: 0.5px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.tool-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+.tool-card.coming-soon {
+  opacity: 0.55;
+  border-style: dashed;
+  cursor: default;
+}
+.tool-card.coming-soon:hover { transform: none; border-color: var(--gold-border); }
+.tool-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--gold-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.tool-card-icon svg { width: 20px; height: 20px; color: var(--gold); }
+.tool-card-body { flex: 1; min-width: 0; }
+.tool-card-body h3 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.25rem;
+}
+.tool-card-body p {
+  font-size: 0.8125rem;
+  color: var(--slate);
+  line-height: 1.55;
+  margin-bottom: 0.625rem;
+}
+.tool-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 20px;
+  margin-right: 4px;
+}
+.badge-mt5 { background: #E6F1FB; color: #185FA5; }
+.badge-pdf { background: var(--gold-pale); color: #854F0B; border: 0.5px solid var(--gold-border); }
+.badge-free { background: rgba(29,158,117,0.1); color: #0F6E56; }
+.badge-wip { background: #F1EFE8; color: #5F5E5A; }
+.tool-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gold);
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: color var(--transition);
+}
+.tool-download-btn:hover { color: #d4b25a; }
+.tool-download-btn svg { width: 13px; height: 13px; }
+
+/* ─── CONTACT ──────────────────────────────────────────────── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.contact-left h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  color: var(--cream);
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+.contact-left p { color: var(--muted); font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1.5rem; }
+.channel-list { display: flex; flex-direction: column; gap: 0.625rem; }
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--navy-mid);
+  border: 0.5px solid var(--navy-light);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  transition: border-color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+.channel-item:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+.channel-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(201,168,76,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.channel-icon svg { width: 18px; height: 18px; color: var(--gold); }
+.channel-info { flex: 1; }
+.channel-name { font-size: 0.875rem; font-weight: 600; color: var(--cream); display: block; }
+.channel-handle { font-size: 0.75rem; color: var(--muted); display: block; }
+.channel-arrow { color: var(--gold); opacity: 0.5; }
+.channel-arrow svg { width: 16px; height: 16px; }
+.contact-form {
+  background: var(--navy-mid);
+  border: 0.5px solid var(--navy-light);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--cream);
+  background: var(--navy);
+  border: 0.5px solid var(--navy-light);
+  border-radius: var(--radius-sm);
+  padding: 0.625rem 0.875rem;
+  transition: border-color var(--transition);
+  outline: none;
+  width: 100%;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--muted); }
+.form-group select option { background: var(--navy); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--gold); }
+.form-group textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-note { font-size: 0.6875rem; color: var(--muted); line-height: 1.5; }
+.form-submit { width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.875rem; }
+
+/* ─── FOOTER ───────────────────────────────────────────────── */
+.footer {
+  background: var(--navy-deep);
+  border-top: 0.5px solid var(--navy-mid);
+  padding: 2.5rem clamp(1.25rem, 5vw, 4rem) 1.5rem;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 0.5px solid var(--navy-mid);
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.footer-brand-block .logo-text { font-size: 1rem; color: var(--cream); display: block; margin-bottom: 0.25rem; }
+.footer-brand-block p { font-size: 0.8125rem; color: var(--muted); max-width: 280px; line-height: 1.6; margin-top: 0.5rem; }
+.footer-nav {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.footer-nav a {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  transition: color var(--transition);
+}
+.footer-nav a:hover { color: var(--gold); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.footer-legal { font-size: 0.6875rem; color: #4A5568; line-height: 1.5; }
+.footer-est { font-size: 0.6875rem; color: var(--gold); font-weight: 600; letter-spacing: 0.06em; }
+
+/* ─── SCROLL ANIMATIONS ────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ─── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .compare-grid { grid-template-columns: 1fr; }
+  .vtrade-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-stats {
+    flex-direction: row;
+    border-left: none;
+    border-top: 0.5px solid var(--navy-mid);
+    padding: 1.5rem 0 0 0;
+    gap: 2.5rem;
+  }
+  .stat-num { font-size: 1.25rem; }
+}
+@media (max-width: 680px) {
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+  .offer-grid { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .trust-bar-inner { gap: 0.5rem 1rem; }
+  .trust-sep { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .btn:hover { transform: none; }
+  .offer-card:hover, .tool-card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<header>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="AMZ BDM home">
+        <div class="logo-mark" aria-hidden="true">AMZ</div>
+        <div>
+          <span class="logo-text">AMZ BDM</span>
+          <span class="logo-sub">Est. 2016</span>
+        </div>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#offer">What I offer</a></li>
+        <li><a href="#ib">IB Program</a></li>
+        <li><a href="#copytrade">Copy Trade</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-gold btn-sm">Partner with me</a>
+      </div>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+    <a href="#offer" class="mobile-link">What I offer</a>
+    <a href="#ib" class="mobile-link">IB Program</a>
+    <a href="#copytrade" class="mobile-link">Copy Trade</a>
+    <a href="#tools" class="mobile-link">Tools</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+    <a href="#contact" class="btn btn-gold">Partner with me</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Est. 2016 · VT Markets BDM · Malaysia</div>
+      <h1 id="hero-heading">Your partner in building a <em>smarter</em> trading business.</h1>
+      <p class="hero-sub">BDM. Trader. IB Network Builder. I connect serious partners with the tools, platform, and support they need — backed by a globally regulated broker and years of real market experience.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn-gold">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Become an IB partner
+        </a>
+        <a href="#tools" class="btn btn-outline">
+          Explore the tools
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats" aria-label="Key stats">
+      <div>
+        <span class="stat-num">Multi-Tier</span>
+        <span class="stat-label">IB structure</span>
+      </div>
+      <div>
+        <span class="stat-num">7+</span>
+        <span class="stat-label">Years in markets</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar" role="list" aria-label="Credentials">
+  <div class="trust-bar-inner">
+    <div class="trust-item" role="listitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      ASIC Regulated
+    </div>
+    <div class="trust-sep" aria-hidden="true"></div>
+    <div class="trust-item" role="listitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      FSCA Regulated
+    </div>
+    <div class="trust-sep" aria-hidden="true"></div>
+    <div class="trust-item" role="listitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      MT5 Platform
+    </div>
+    <div class="trust-sep" aria-hidden="true"></div>
+    <div class="trust-item" role="listitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      250 Countries Eligible
+    </div>
+    <div class="trust-sep" aria-hidden="true"></div>
+    <div class="trust-item" role="listitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+      VT Markets Official Partner
+    </div>
+  </div>
+</div>
+
+<!-- WHAT I OFFER -->
+<section class="section bg-white" id="offer" aria-labelledby="offer-heading">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="pill-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        What I offer
+      </div>
+      <h2 id="offer-heading">A full suite — not just a referral link.</h2>
+      <p>Whether you're a new trader, an experienced IB, or a business looking to expand — there's something here built specifically for you.</p>
+    </div>
+    <div class="offer-grid">
+      <div class="offer-card dark reveal reveal-delay-1">
+        <div class="offer-icon gold-bg" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M5 12l7 4 7-4"/></svg>
+        </div>
+        <h3>IB Partnership Program</h3>
+        <p>Multi-tier structure built on VT Markets' ClubÉlite program. Earn rebates from your direct clients and from your entire sub-IB network below you.</p>
+        <span class="offer-tag">Multi-tier network</span>
+      </div>
+      <div class="offer-card dark reveal reveal-delay-2">
+        <div class="offer-icon gold-bg" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </div>
+        <h3>Copy Trade via VTrade &amp; VT Apps</h3>
+        <p>Explore two dedicated copy trading platforms — VTrade for the broader trading community, and VT Apps for fund managers who need full control over their followers.</p>
+        <span class="offer-tag">VTrade · VT Apps</span>
+      </div>
+      <div class="offer-card light reveal reveal-delay-3">
+        <div class="offer-icon gold-bg" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Market Experience &amp; Opinions</h3>
+        <p>Not a signal provider. Just a trader since 2016 who's happy to share what experience has taught — XAUUSD, MT5 setups, and navigating live markets. Always an opinion, never financial advice.</p>
+        <span class="offer-tag">Est. 2016 · XAUUSD</span>
+        <span class="offer-disclaimer">Sharing personal experience only. Not financial advice.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IB PROGRAM -->
+<section class="section bg-cream" id="ib" aria-labelledby="ib-heading">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="pill-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><path d="M5 12l7 4 7-4"/></svg>
+        IB Program
+      </div>
+      <h2 id="ib-heading">Not all rebates are equal. Read the fine print.</h2>
+      <p>Some brokers advertise the same headline rate — but a hidden trade rule quietly disqualifies a portion of your clients' volume. Here's what that really means for your network's income.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card vt reveal reveal-delay-1">
+        <span class="compare-badge badge-vt">VT Markets</span>
+        <h3>Clean rebate. Every qualifying trade counts.</h3>
+        <ul class="compare-list" role="list">
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Rebate paid on all qualifying trades — no time-based filter applied</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Multi-tier structure — earn from your direct clients and your entire sub-IB network</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Dedicated BDM support — not just a portal and a dashboard</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>ASIC + FSCA regulated, globally recognised and trusted</span>
+          </li>
+        </ul>
+        <div class="impact-callout success" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          <p><span class="impact-hl">100% of your eligible volume earns.</span> No silent deductions from your network's activity.</p>
+        </div>
+      </div>
+      <div class="compare-card other reveal reveal-delay-2">
+        <span class="compare-badge badge-other">Other Broker</span>
+        <h3>Same headline rate. Different fine print.</h3>
+        <ul class="compare-list" role="list">
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-bad" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            <span>3-minute rule — any trade closed in under 3 minutes is disqualified from rebate</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-bad" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            <span>Directly impacts scalpers, news traders, and any short-duration strategy</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-bad" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            <span>Your clients may not even know their trades are being silently disqualified</span>
+          </li>
+          <li class="compare-row" role="listitem">
+            <span class="compare-icon icon-neutral" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            <span>Single-tier or limited structure caps how far your earnings can grow</span>
+          </li>
+        </ul>
+        <div class="impact-callout danger" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <p><span class="impact-hl">~15% of traders are affected</span> by the 3-minute rule. That's rebate you never see — silently lost on every affected trade.</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <a href="#contact" class="btn btn-gold">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Join as IB — no hidden rules
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- COPY TRADE -->
+<section class="section bg-white" id="copytrade" aria-labelledby="copytrade-heading">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="pill-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Copy Trade
+      </div>
+      <h2 id="copytrade-heading">Two platforms. Built for different players.</h2>
+      <p>VT Markets offers two dedicated copy trading ecosystems. Know which one fits your role — whether you're following trades or running your own fund.</p>
+    </div>
+    <div class="vtrade-grid">
+      <div class="vtrade-card dark reveal reveal-delay-1">
+        <span class="vtrade-platform">VTrade</span>
+        <span class="vtrade-audience-tag">For traders &amp; followers</span>
+        <h3>Community-driven copy trading</h3>
+        <ul class="vtrade-features" role="list">
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Browse and follow verified signal providers with transparent track records</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Adjust risk settings — control lot sizing relative to the master account</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Real-time performance stats for every provider before you commit</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Fully integrated within the VT Markets MT5 ecosystem</span>
+          </li>
+        </ul>
+        <a href="#contact" class="btn btn-gold btn-sm">
+          Learn about VTrade
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div class="vtrade-card light reveal reveal-delay-2">
+        <span class="vtrade-platform">VT Apps</span>
+        <span class="vtrade-audience-tag">For fund managers &amp; IBs</span>
+        <h3>Manage your own fund, your way.</h3>
+        <ul class="vtrade-features" role="list">
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Manage multiple follower accounts from a single manager dashboard</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Set performance fees — earn a portion from your followers' profitable trades</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Custom lot ratio settings per individual follower account</span>
+          </li>
+          <li class="vtrade-feature" role="listitem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Designed for serious fund managers and structured IB operations</span>
+          </li>
+        </ul>
+        <a href="#contact" class="btn btn-blue btn-sm">
+          Learn about VT Apps
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS & RESOURCES -->
+<section class="section bg-cream" id="tools" aria-labelledby="tools-heading">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="pill-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        Tools &amp; Resources
+      </div>
+      <h2 id="tools-heading">Built from years of live trading.</h2>
+      <p>Every tool here started because I needed it on a real account. Free to download, ready to deploy on MT5.</p>
+    </div>
+    <div class="tools-grid">
+      <article class="tool-card reveal reveal-delay-1">
+        <div class="tool-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        </div>
+        <div class="tool-card-body">
+          <h3>KeyTradeEA</h3>
+          <p>Keyboard-triggered execution for MT5 — Buy, Sell, Close All, SL/TP set, and Breakeven in one keypress. Built for traders who need speed without clicking through menus.</p>
+          <div>
+            <span class="tool-badge badge-mt5">MT5</span>
+            <span class="tool-badge badge-free">Free</span>
+          </div>
+          <button class="tool-download-btn" aria-label="Download KeyTradeEA">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download EA
+          </button>
+        </div>
+      </article>
+      <article class="tool-card reveal reveal-delay-2">
+        <div class="tool-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        </div>
+        <div class="tool-card-body">
+          <h3>PO &amp; SL/TP Script</h3>
+          <p>One-click scripts for placing Pending Orders with SL/TP pre-set, and a separate script to close all pending orders instantly. Clean, simple, no configuration needed.</p>
+          <div>
+            <span class="tool-badge badge-mt5">MT5</span>
+            <span class="tool-badge badge-free">Free</span>
+          </div>
+          <button class="tool-download-btn" aria-label="Download PO SL/TP Script">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Scripts
+          </button>
+        </div>
+      </article>
+      <article class="tool-card reveal reveal-delay-1">
+        <div class="tool-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="tool-card-body">
+          <h3>IB Portal Guide</h3>
+          <p>A comprehensive step-by-step walkthrough of the VT Markets IB portal — from account setup to rebate tracking. Available in English and Bahasa Malaysia.</p>
+          <div>
+            <span class="tool-badge badge-pdf">PDF</span>
+            <span class="tool-badge badge-free">EN / BM</span>
+          </div>
+          <button class="tool-download-btn" aria-label="Download IB Portal Guide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Guide
+          </button>
+        </div>
+      </article>
+      <article class="tool-card coming-soon reveal reveal-delay-2" aria-label="Coming soon tool">
+        <div class="tool-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="tool-card-body">
+          <h3>Coming Soon</h3>
+          <p>A new tool is in the works. Follow <strong>@vt_adz</strong> on Telegram to be the first to know when it drops.</p>
+          <div>
+            <span class="tool-badge badge-wip">In progress</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section bg-navy" id="contact" aria-labelledby="contact-heading">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <div class="pill-label" style="background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.25);color:var(--gold)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Get in touch
+        </div>
+        <h2 id="contact-heading">Ready to partner up?</h2>
+        <p>Whether you want to join as an IB, learn about copy trading platforms, or grab a tool — reach me directly. I respond personally, not through a ticket system.</p>
+        <ul class="channel-list" role="list">
+          <li>
+            <a href="https://t.me/vt_adz" class="channel-item" target="_blank" rel="noopener noreferrer" aria-label="Telegram @vt_adz">
+              <div class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+              <div class="channel-info">
+                <span class="channel-name">Telegram</span>
+                <span class="channel-handle">@vt_adz</span>
+              </div>
+              <span class="channel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://beacons.ai/adzharmz" class="channel-item" target="_blank" rel="noopener noreferrer" aria-label="Link hub at beacons.ai/adzharmz">
+              <div class="channel-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div class="channel-info">
+                <span class="channel-name">Link hub</span>
+                <span class="channel-handle">beacons.ai/adzharmz</span>
+              </div>
+              <span class="channel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" placeholder="e.g. Ahmad Razif" autocomplete="name" required>
+          </div>
+          <div class="form-group">
+            <label for="contact">Email or WhatsApp</label>
+            <input type="text" id="contact" name="contact" placeholder="e.g. +60123456789" autocomplete="tel" required>
+          </div>
+          <div class="form-group">
+            <label for="intent">I want to</label>
+            <select id="intent" name="intent" required>
+              <option value="" disabled selected>Choose your interest</option>
+              <option value="ib">Join as an IB partner</option>
+              <option value="copytrade">Learn about copy trading (VTrade / VT Apps)</option>
+              <option value="tools">Download tools or resources</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message (optional)</label>
+            <textarea id="message" name="message" placeholder="Anything specific you'd like to know?"></textarea>
+          </div>
+          <p class="form-note">I'll respond via Telegram or WhatsApp — usually within the same day.</p>
+          <button type="submit" class="btn btn-gold form-submit">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand-block">
+        <div class="nav-logo" style="margin-bottom:0.625rem">
+          <div class="logo-mark" aria-hidden="true">AMZ</div>
+          <span class="logo-text">AMZ BDM</span>
+        </div>
+        <p>VT Markets Business Development Manager. Helping IBs, traders, and partners build smarter trading businesses — since 2016.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#offer">What I offer</a>
+        <a href="#ib">IB Program</a>
+        <a href="#copytrade">Copy Trade</a>
+        <a href="#tools">Tools</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-legal">VT Markets partner · Vista Global Market Sdn. Bhd. · Malaysia<br>Content on this site reflects personal experience and opinions only. Not financial advice.</p>
+      <span class="footer-est">AMZ BDM · Est. 2016</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileLinks = mobileMenu.querySelectorAll('.mobile-link');
+
+  hamburger.addEventListener('click', function() {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', isOpen);
+  });
+
+  mobileLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      mobileMenu.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function(el) { observer.observe(el); });
+  } else {
+    revealEls.forEach(function(el) { el.classList.add('visible'); });
+  }
+
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const contact = document.getElementById('contact').value.trim();
+      const intent = document.getElementById('intent').value;
+      if (!name || !contact || !intent) {
+        alert('Please fill in your name, contact, and what you need — then I can get back to you.');
+        return;
+      }
+      const intentLabels = {
+        ib: 'join as an IB partner',
+        copytrade: 'learn about copy trading',
+        tools: 'download tools or resources',
+        other: 'discuss something else'
+      };
+      const msg = encodeURIComponent('Hi Adzhar, my name is ' + name + '. I want to ' + (intentLabels[intent] || intent) + '. My contact: ' + contact);
+      window.open('https://t.me/vt_adz?text=' + msg, '_blank', 'noopener,noreferrer');
+    });
+  }
+
+  const toolBtns = document.querySelectorAll('.tool-download-btn');
+  toolBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      window.open('https://t.me/vt_adz', '_blank', 'noopener,noreferrer');
+    });
+  });
+})();
+</script>
+</body>
+</html>
