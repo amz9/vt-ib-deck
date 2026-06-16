@@ -563,7 +563,7 @@ body {
     </div>
   </div>
   <div class="header-meta">
-    <span class="meta-badge"><span class="meta-dot"></span>26 prompts · 7 categories</span>
+    <span class="meta-badge"><span class="meta-dot"></span>32 prompts · 7 categories</span>
     <span class="meta-badge">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       Deduplicated & merged
@@ -581,7 +581,7 @@ body {
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Search prompts, tags..." oninput="filterCards()">
     </div>
-    <span class="stats-mini" id="statsLabel">26 / 26</span>
+    <span class="stats-mini" id="statsLabel">32 / 32</span>
   </div>
   <div class="tabs-row" id="tabsRow"></div>
 </div>
@@ -1184,6 +1184,107 @@ Include:
 6. Timeline: When can I realistically start earning?
 
 Brand / persona context: [YOUR POSITIONING]`
+  },
+  {
+    id:27, cat:"Learning", catKey:"learning",
+    icon:"⏱️",
+    title:"The Learning Curve Destroyer",
+    merged:["Advanced Learning #1"],
+    note:"4-hour emergency learning framework — what to learn first, what to ignore, and the one exercise that puts you ahead of 70%.",
+    tags:["learning","skill","shortcut","priority","practice"],
+    prompt:`You are a teacher who only has 4 hours with me and will never see me again. Your only objective is to make me functional in [SKILL] before the time runs out.
+
+Do not give me theory without practical use. Do not give me a list.
+
+Tell me: what to learn first, what to completely ignore, and what exercise, if I do it once, will already put me ahead of 70% of people who have been studying this for months.`
+  },
+  {
+    id:28, cat:"Learning", catKey:"learning",
+    icon:"🎯",
+    title:"The Real Error Simulator",
+    merged:["Advanced Learning #2"],
+    note:"Forces you into real situations, lets you fail, then asks questions — not answers — until your reasoning is solid.",
+    tags:["learning","mistakes","Socratic","practice","concept"],
+    prompt:`Do not explain [CONCEPT] to me.
+
+Put me directly into a real situation where I would have to use it and would probably make a mistake.
+
+When I make a mistake, do not give me the answer. Ask me a question that forces me to discover where my reasoning is broken.
+
+Only give me the answer after I have tried at least two times. Repeat this cycle until I can get it right without hesitation.`
+  },
+  {
+    id:29, cat:"Learning", catKey:"learning",
+    icon:"🔤",
+    title:"The Impossible Language Translator",
+    merged:["Advanced Learning #3"],
+    note:"Finds the one sentence that unlocks confusing content, explains with everyday analogies, then gates you with 3 comprehension questions.",
+    tags:["learning","analogy","comprehension","jargon","understanding"],
+    prompt:`This content below is confusing to me.
+
+Before explaining it, tell me: what is the one sentence that, if I understand it, will make the rest make sense on its own?
+
+Explain only that sentence first.
+Use an everyday analogy, with no technical terms.
+
+Then ask me 3 questions that only someone who truly understood it would be able to answer.
+
+Do not continue until I pass all three.
+
+[PASTE THE CONTENT HERE]`
+  },
+  {
+    id:30, cat:"Learning", catKey:"learning",
+    icon:"🗓️",
+    title:"The Personal Learning Path Architect",
+    merged:["Advanced Learning #4"],
+    note:"7-day goal-specific learning plan with 45-minute daily tasks, success criteria, and a built-in 'do not do' list per day.",
+    tags:["learning","roadmap","7-day","goal","deadline"],
+    prompt:`My real goal is [GOAL].
+
+It is not to learn [SKILL] in general. It is to achieve [SPECIFIC RESULT] within [DEADLINE].
+
+I already know [WHAT YOU ALREADY MASTER].
+
+Based on that, build me a 7-day learning path.
+
+Each day must include: one single task that fits within 45 minutes, a clear criterion so I know whether I did it correctly, and what not to do that day so I do not waste time.
+
+If the entire path does not lead me to the goal, rebuild it until it does.`
+  },
+  {
+    id:31, cat:"Learning", catKey:"learning",
+    icon:"🔎",
+    title:"The Hidden Gap Detector",
+    merged:["Advanced Learning #5"],
+    note:"Proves you wrong about your own expertise — 5 deceptively simple questions that expose foundation gaps you didn't know existed.",
+    tags:["learning","self-assessment","gaps","mastery","skill"],
+    prompt:`I think I already master [SKILL].
+
+I want you to prove me wrong.
+
+Ask me 5 questions that seem simple but expose the gaps of someone who has never truly gone deep.
+
+For every answer I give, tell me: what my answer reveals about what is still missing in my foundation.
+
+Do not go easy on me.
+
+If I am being shallow, tell me directly.`
+  },
+  {
+    id:32, cat:"Learning", catKey:"learning",
+    icon:"🧒",
+    title:"The Forced Feynman Method",
+    merged:["Advanced Learning #6"],
+    note:"Explain it like a 10-year-old, get interrupted for every flaw, and discover exactly what's still shaky in your understanding.",
+    tags:["learning","Feynman","teaching","understanding","gaps"],
+    prompt:`I just studied [TOPIC].
+
+I am going to explain what I understood as if you were a 10-year-old child.
+
+While I explain, stop me every time I use jargon without knowing what it means, skip a step in the reasoning, or simplify so much that it becomes wrong.
+
+At the end, tell me exactly what those mistakes reveal about what is still not solid in my mind.`
   }
 ];
 
