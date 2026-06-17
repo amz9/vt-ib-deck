@@ -35,6 +35,8 @@
   --amber-bg: rgba(251,191,36,0.1);
   --pink: #f472b6;
   --pink-bg: rgba(244,114,182,0.1);
+  --orange: #fb923c;
+  --orange-bg: rgba(251,146,60,0.12);
   --radius: 10px;
   --radius-sm: 6px;
 }
@@ -253,6 +255,7 @@ body {
 .card-research::before { background: linear-gradient(90deg, var(--teal), transparent); }
 .card-business::before { background: linear-gradient(90deg, var(--coral), transparent); }
 .card-money::before { background: linear-gradient(90deg, var(--pink), transparent); }
+.card-career::before { background: linear-gradient(90deg, var(--orange), transparent); }
 
 .card-head {
   display: flex;
@@ -275,6 +278,7 @@ body {
 .icon-research { background: var(--teal-bg); color: var(--teal); }
 .icon-business { background: var(--coral-bg); color: var(--coral); }
 .icon-money { background: var(--pink-bg); color: var(--pink); }
+.icon-career { background: var(--orange-bg); color: var(--orange); }
 
 .card-title-wrap { flex: 1; min-width: 0; }
 .cat-label {
@@ -291,6 +295,7 @@ body {
 .label-research { color: var(--teal); }
 .label-business { color: var(--coral); }
 .label-money { color: var(--pink); }
+.label-career { color: var(--orange); }
 
 .card-title {
   font-family: 'Syne', sans-serif;
@@ -563,7 +568,7 @@ body {
     </div>
   </div>
   <div class="header-meta">
-    <span class="meta-badge"><span class="meta-dot"></span>32 prompts · 7 categories</span>
+    <span class="meta-badge"><span class="meta-dot"></span>39 prompts · 8 categories</span>
     <span class="meta-badge">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       Deduplicated & merged
@@ -581,7 +586,7 @@ body {
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Search prompts, tags..." oninput="filterCards()">
     </div>
-    <span class="stats-mini" id="statsLabel">32 / 32</span>
+    <span class="stats-mini" id="statsLabel">39 / 39</span>
   </div>
   <div class="tabs-row" id="tabsRow"></div>
 </div>
@@ -1285,10 +1290,97 @@ I am going to explain what I understood as if you were a 10-year-old child.
 While I explain, stop me every time I use jargon without knowing what it means, skip a step in the reasoning, or simplify so much that it becomes wrong.
 
 At the end, tell me exactly what those mistakes reveal about what is still not solid in my mind.`
+  },
+  {
+    id:33, cat:"Career & LinkedIn", catKey:"career",
+    icon:"🏷️",
+    title:"LinkedIn Headline That Sells",
+    merged:["LinkedIn #1"],
+    note:"Punchy, keyword-rich headline rewrite built to win recruiter search and clicks.",
+    tags:["linkedin","headline","recruiter","SEO","personal branding"],
+    prompt:`You are a world-class LinkedIn personal branding expert. Rewrite my LinkedIn headline to make it highly attractive to recruiters in my field.
+
+Use clear keywords, job-specific value, and a positioning that makes me irresistible in search.
+
+Here's my profile for context: [PASTE LINKEDIN PROFILE]`
+  },
+  {
+    id:34, cat:"Career & LinkedIn", catKey:"career",
+    icon:"💬",
+    title:"Optimize Your About Section",
+    merged:["LinkedIn #2"],
+    note:"Warm but keyword-optimized About rewrite, capped under 260 words for skimmability.",
+    tags:["linkedin","about section","copywriting","keyword-optimized"],
+    prompt:`You are a top-tier LinkedIn copywriter. Rewrite my 'About' section so that it clearly explains who I am, what problems I solve, and why I'm valuable while keeping it warm, clear, and keyword-optimized. Keep it under 260 words.
+
+Here's my existing profile: [PASTE PROFILE TEXT]`
+  },
+  {
+    id:35, cat:"Career & LinkedIn", catKey:"career",
+    icon:"📈",
+    title:"Rewrite Experience to Show ROI",
+    merged:["LinkedIn #3"],
+    note:"Turns each job entry into outcomes, numbers, and KPIs recruiters actually scan for.",
+    tags:["linkedin","resume","ROI","KPIs","experience"],
+    prompt:`You are a resume and LinkedIn optimization specialist.
+
+Rewrite my 'Experience' section for each job listed in my LinkedIn so it focuses on outcomes, numbers, KPIs, and skills recruiters look for. Make sure it's easy to skim and speaks in recruiter language.
+
+Here's my current experience section: [PASTE TEXT]`
+  },
+  {
+    id:36, cat:"Career & LinkedIn", catKey:"career",
+    icon:"🛠️",
+    title:"Fix Your LinkedIn Profile Instantly",
+    merged:["LinkedIn #4"],
+    note:"One-shot audit across headline, about, experience, skills, and featured sections.",
+    tags:["linkedin","profile audit","ATS","Fortune 500","full rewrite"],
+    prompt:`You are a professional LinkedIn profile optimizer for Fortune 500 job seekers. Review my entire LinkedIn profile below and suggest exact rewrites for headline, about, experience, skills, and featured sections.
+
+Make sure it's fully keyword-optimized for ATS and recruiter search.
+
+My goal: [INSERT GOAL]. Here's the profile: [PASTE PROFILE TEXT]`
+  },
+  {
+    id:37, cat:"Career & LinkedIn", catKey:"career",
+    icon:"🔑",
+    title:"Inject Keywords To Rank Higher",
+    merged:["LinkedIn #5"],
+    note:"Naturally weaves industry keywords into an existing profile without stuffing.",
+    tags:["linkedin","SEO","keywords","ranking","search"],
+    prompt:`You are a LinkedIn SEO expert. Scan my profile and inject high-ranking keywords for my industry (e.g., data science, UX, etc.) in a natural way to make it rank higher in recruiter search. Do not keyword stuff.
+
+My profile: [PASTE PROFILE TEXT]`
+  },
+  {
+    id:38, cat:"Career & LinkedIn", catKey:"career",
+    icon:"💎",
+    title:"Build a Unique Value Proposition",
+    merged:["LinkedIn #6"],
+    note:"Sharp, differentiated value proposition to anchor the top of your About section.",
+    tags:["linkedin","UVP","positioning","differentiation"],
+    prompt:`You are a personal branding strategist.
+
+Based on my experience and career goals, write a bold, specific Unique Value Proposition that I can put at the top of my 'About' section to instantly hook recruiters and differentiate me.
+
+Here's my experience and industry: [PASTE DETAILS]`
+  },
+  {
+    id:39, cat:"Career & LinkedIn", catKey:"career",
+    icon:"🎤",
+    title:"Turn Your Profile Into a Pitch",
+    merged:["LinkedIn #7"],
+    note:"Condenses your whole profile into a confident 30-second spoken pitch.",
+    tags:["linkedin","elevator pitch","video intro","storytelling"],
+    prompt:`You are a career storyteller and elevator pitch expert.
+
+Based on my LinkedIn profile, write a 30-second pitch that I can use in my summary section or video intro. Make it sharp, confident, and results-driven.
+
+Profile: [PASTE PROFILE TEXT]`
   }
 ];
 
-const CATEGORIES = ["All","Learning","Productivity","Writing & Content","AI Tricks","Research & Analysis","Business","Money & Business"];
+const CATEGORIES = ["All","Learning","Productivity","Writing & Content","AI Tricks","Research & Analysis","Business","Money & Business","Career & LinkedIn"];
 let activeCat = "All";
 let currentPrompt = null;
 
