@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VT Markets - Client Onboarding Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .time-estimate {
+            display: inline-flex;
+            align-items: center;
+            background: #f7fafc;
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin-top: 15px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .time-estimate::before {
+            content: "⏱️";
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .progress-overview {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #718096;
+        }
+
+        .stages-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .stage {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stage:hover {
+            transform: translateY(-5px);
+        }
+
+        .stage.completed {
+            border: 3px solid #48bb78;
+        }
+
+        .stage.in-progress {
+            border: 3px solid #667eea;
+        }
+
+        .stage-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .stage.completed .stage-header {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .stage-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stage-icon {
+            font-size: 2em;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stage-info h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .stage-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .expand-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .stage.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .stage-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .stage.expanded .stage-content {
+            max-height: 3000px;
+        }
+
+        .stage-body {
+            padding: 30px;
+        }
+
+        .substeps {
+            margin-bottom: 25px;
+        }
+
+        .substep {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .substep.completed {
+            border-left-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .substep-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .substep.completed .checkbox {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .checkbox::after {
+            content: "✓";
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .substep.completed .checkbox::after {
+            opacity: 1;
+        }
+
+        .substep-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            flex-grow: 1;
+        }
+
+        .substep-details {
+            margin-left: 39px;
+            color: #718096;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .substep-details ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .substep-details li {
+            margin: 5px 0;
+        }
+
+        .pro-tip {
+            background: linear-gradient(135deg, #fef5e7 0%, #fff9e6 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .pro-tip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #d97706;
+        }
+
+        .pro-tip-header::before {
+            content: "💡";
+            font-size: 1.3em;
+        }
+
+        .pro-tip-content {
+            color: #78350f;
+            line-height: 1.6;
+        }
+
+        .pro-tip-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .recommendations {
+            background: #f0f9ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendations h4 {
+            color: #1e40af;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendations h4::before {
+            content: "⭐";
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendations li::before {
+            content: "✅";
+            flex-shrink: 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-complete {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .quick-links {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .quick-links h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .link-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .link-card:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .link-icon {
+            font-size: 2em;
+        }
+
+        .link-info h4 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .link-info p {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stage-header {
+                padding: 20px;
+            }
+
+            .stage-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>VT Markets Client Onboarding</h1>
+            <p>Complete Step-by-Step Registration, Verification & Trading Setup</p>
+            <div class="time-estimate">
+                Total Time: 15-30 minutes
+            </div>
+        </div>
+
+        <div class="progress-overview">
+            <h3 style="color: #2d3748; margin-bottom: 15px;">Your Progress</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="mainProgress"></div>
+            </div>
+            <div class="progress-stats">
+                <span><strong id="completedCount">0</strong> of <strong>12</strong> tasks completed</span>
+                <span id="estimatedTime">Estimated time remaining: 15-30 min</span>
+            </div>
+        </div>
+
+        <div class="stages-container">
+            <!-- STAGE 1: REGISTER -->
+            <div class="stage" data-stage="1">
+                <div class="stage-header" onclick="toggleStage(1)">
+                    <div class="stage-header-left">
+                        <div class="stage-icon">✅</div>
+                        <div class="stage-info">
+                            <h2>Step 1: Register Your Account</h2>
+                            <div class="stage-meta">
+                                <span>⏱️ 5 minutes</span>
+                                <span class="status-badge status-pending" id="stage1-status">Not Started</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-body">
+                        <div class="substeps">
+                            <div class="substep" data-step="1.1">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">1.1 Fill Basic Information</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>What You Need:</strong>
+                                    <ul>
+                                        <li>Valid email address</li>
+                                        <li>Mobile phone number</li>
+                                        <li>5 minutes of time</li>
+                                    </ul>
+                                    <p><strong>Fields to Complete:</strong> Account Type, First Name, Last Name, Country, Phone, Email</p>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="1.2">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">1.2 Complete Personal Details</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Important:</strong> All names must match your ID documents (Passport/IC)
+                                    <ul>
+                                        <li>Title, First/Middle/Last Name</li>
+                                        <li>Nationality, Date of Birth (18+ required)</li>
+                                        <li>Place of Birth</li>
+                                        <li>ID Type & Number</li>
+                                        <li>Referral Code (optional)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="1.3">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">1.3 Fill Residential Address</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Required Fields:</strong>
+                                    <ul>
+                                        <li>Country of Main Residency</li>
+                                        <li>Full street address with unit number</li>
+                                        <li>Province/State, City/Suburb, Postcode</li>
+                                        <li>US Tax Residency Question (Select "No" unless applicable)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="1.4">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">1.4 Complete Financial Survey</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Why Required:</strong> AML/CTF compliance - regulators require this information
+                                    <ul>
+                                        <li>Employment Status</li>
+                                        <li>Estimated Annual Income</li>
+                                        <li>Estimated Savings & Investments</li>
+                                        <li>Intended Deposit Amount</li>
+                                        <li>Source of Funds</li>
+                                        <li>Trading Knowledge & Experience</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="1.5">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">1.5 Choose Account Configuration</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Important Decisions:</strong>
+                                    <ul>
+                                        <li><strong>Platform:</strong> MetaTrader 4 (MT4) - Most compatible with trading robots</li>
+                                        <li><strong>Account Type:</strong> Standard STP vs BEBAS SWAP (7-day Islamic trial)</li>
+                                        <li><strong>Currency:</strong> USD recommended for stability</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recommendations">
+                            <h4>Recommended Configuration</h4>
+                            <ul>
+                                <li><strong>Platform:</strong> MT4 (best EA support, simpler interface)</li>
+                                <li><strong>Account Type:</strong> BEBAS SWAP (7-day free trial, then converts to Islamic)</li>
+                                <li><strong>Currency:</strong> USD (most stable, globally accepted)</li>
+                            </ul>
+                        </div>
+
+                        <div class="pro-tip">
+                            <div class="pro-tip-header">Pro Tips for Registration</div>
+                            <div class="pro-tip-content">
+                                <ul>
+                                    <li>Have your ID document ready before starting</li>
+                                    <li>Use a valid email you check regularly</li>
+                                    <li>Choose BEBAS SWAP to test swap-free trading (converts after 7 days)</li>
+                                    <li>You can create multiple accounts later for different strategies</li>
+                                    <li>Save your login credentials immediately after receiving them</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="window.open('https://www.vtmarkets.com', '_blank')">
+                                Start Registration →
+                            </button>
+                            <button class="btn btn-secondary" onclick="toggleStage(1)">
+                                Collapse Section
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 2: VERIFY -->
+            <div class="stage" data-stage="2">
+                <div class="stage-header" onclick="toggleStage(2)">
+                    <div class="stage-header-left">
+                        <div class="stage-icon">📄</div>
+                        <div class="stage-info">
+                            <h2>Step 2: Verify Your Identity</h2>
+                            <div class="stage-meta">
+                                <span>⏱️ 5 minutes</span>
+                                <span class="status-badge status-pending" id="stage2-status">Not Started</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-body">
+                        <div class="substeps">
+                            <div class="substep" data-step="2.1">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">2.1 Access Verification Portal</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Two Methods:</strong>
+                                    <ul>
+                                        <li><strong>Method 1:</strong> Click "Verification status" link in your registration email</li>
+                                        <li><strong>Method 2:</strong> Login to Client Portal → Profile icon → "Verification status"</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="2.2">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">2.2 Prepare Required Documents</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Proof of Identity (choose ONE):</strong>
+                                    <ul>
+                                        <li>📸 National ID Card (front + back photos)</li>
+                                        <li>🛂 Passport (photo page + signature page)</li>
+                                    </ul>
+                                    <strong>Proof of Residency (choose ONE):</strong>
+                                    <ul>
+                                        <li>💡 Utility Bill (electricity, water, gas) - within 3 months</li>
+                                        <li>🏦 Bank Statement - within 3 months</li>
+                                        <li>📄 Residence Certificate - within 3 months</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="2.3">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">2.3 Upload Documents</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Photo Requirements:</strong>
+                                    <ul>
+                                        <li>✅ Clear, readable text</li>
+                                        <li>✅ All 4 corners visible</li>
+                                        <li>✅ No glare or shadows</li>
+                                        <li>✅ Color photos (not black & white)</li>
+                                        <li>✅ File formats: JPG, PNG, PDF</li>
+                                        <li>✅ Max file size: 5MB per file</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="2.4">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">2.4 Wait for Approval</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Verification Statuses:</strong>
+                                    <ul>
+                                        <li>🔴 <strong>Incomplete:</strong> You haven't finished uploading documents</li>
+                                        <li>🟡 <strong>Processing:</strong> Documents being reviewed (15 min - 24 hours)</li>
+                                        <li>🟢 <strong>Verified:</strong> ✅ Approved! You can now deposit and trade</li>
+                                    </ul>
+                                    <p><strong>Typical Processing Time:</strong> 15 minutes to 24 hours</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pro-tip">
+                            <div class="pro-tip-header">Pro Tips for Verification</div>
+                            <div class="pro-tip-content">
+                                <ul>
+                                    <li>Take photos in good lighting to avoid glare</li>
+                                    <li>Ensure ALL document corners are visible in the frame</li>
+                                    <li>For proof of address, utility bills are fastest (TNB, water, internet)</li>
+                                    <li>Document must be dated within last 3 months</li>
+                                    <li>Address on document must match your registration address</li>
+                                    <li>Keep originals handy in case re-upload is needed</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="alert('Access Client Portal to upload documents')">
+                                Upload Documents →
+                            </button>
+                            <button class="btn btn-secondary" onclick="toggleStage(2)">
+                                Collapse Section
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 3: DEPOSIT -->
+            <div class="stage" data-stage="3">
+                <div class="stage-header" onclick="toggleStage(3)">
+                    <div class="stage-header-left">
+                        <div class="stage-icon">💵</div>
+                        <div class="stage-info">
+                            <h2>Step 3: Deposit Funds</h2>
+                            <div class="stage-meta">
+                                <span>⏱️ 5 minutes</span>
+                                <span class="status-badge status-pending" id="stage3-status">Not Started</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="stage-content">
+                    <div class="stage-body">
+                        <div class="substeps">
+                            <div class="substep" data-step="3.1">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">3.1 Access Deposit Page</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>How to Access:</strong>
+                                    <ul>
+                                        <li>Login to Client Portal</li>
+                                        <li>Click "Deposit funds" button on center dashboard</li>
+                                        <li>View all available payment options</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="3.2">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">3.2 Choose Payment Method</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Available Methods:</strong>
+                                    <ul>
+                                        <li>⭐ <strong>FPX (Malaysia):</strong> Instant, $0 fees, 16 banks supported</li>
+                                        <li>💳 <strong>Credit/Debit Card:</strong> Instant, $0 fees, global</li>
+                                        <li>📱 <strong>E-Wallets:</strong> Instant, multiple options</li>
+                                        <li>🍎 <strong>Apple/Google Pay:</strong> Instant, secure</li>
+                                        <li>🏦 <strong>Bank Transfer:</strong> 2-5 days, no limits</li>
+                                        <li>₿ <strong>Cryptocurrency:</strong> ~1 hour, 19+ coins</li>
+                                    </ul>
+                                    <p><strong>Minimum Deposit:</strong> $20 USD</p>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="3.3">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">3.3 Complete Payment</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>Payment Process:</strong>
+                                    <ul>
+                                        <li>Enter deposit amount (min $20)</li>
+                                        <li>Fill in payment details</li>
+                                        <li>Complete authentication (OTP/PIN)</li>
+                                        <li>Receive confirmation</li>
+                                    </ul>
+                                    <p><strong>FPX Exchange Rate:</strong> RM4.10193 = $1.00 USD (approx)</p>
+                                </div>
+                            </div>
+
+                            <div class="substep" data-step="3.4">
+                                <div class="substep-header" onclick="toggleSubstep(this)">
+                                    <div class="checkbox"></div>
+                                    <div class="substep-title">3.4 Verify Funds Received</div>
+                                </div>
+                                <div class="substep-details">
+                                    <strong>After Payment:</strong>
+                                    <ul>
+                                        <li>Check your Client Portal dashboard</li>
+                                        <li>FPX/Card: Balance updates instantly</li>
+                                        <li>Bank Transfer: Wait 1-5 business days</li>
+                                        <li>Crypto: Wait ~1 hour for blockchain confirmation</li>
+                                    </ul>
+                                    <p><strong>Keep your transaction receipt for records!</strong></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recommendations">
+                            <h4>Recommended Payment Method</h4>
+                            <ul>
+                                <li><strong>For Malaysian Traders:</strong> FPX (Instant, $0 fees, 24/7)</li>
+                                <li><strong>For International:</strong> Credit/Debit Card (Instant, $0 fees)</li>
+                                <li><strong>For Large Deposits:</strong> Bank Transfer (No limits, secure)</li>
+                            </ul>
+                        </div>
+
+                        <div class="pro-tip">
+                            <div class="pro-tip-header">Pro Tips for Deposits</div>
+                            <div class="pro-tip-content">
+                                <ul>
+                                    <li>Use FPX for fastest deposits if in Malaysia</li>
+                                    <li>Start with minimum $20 to test the process</li>
+                                    <li>Deposit during business hours for faster processing</li>
+                                    <li>Always keep transaction receipts</li>
+                                    <li>All deposit methods have $0 fees from VT Markets</li>
+                                    <li>Contact support via Live Chat if deposit takes >24 hours</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="alert('Access Client Portal to make deposit')">
+                                Make Deposit →
+                            </button>
+                            <button class="btn btn-secondary" onclick="toggleStage(3)">
+                                Collapse Section
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h3>🚀 Ready to Trade? Next Steps</h3>
+            <div class="links-grid">
+                <div class="link-card" onclick="alert('Download MT4/MT5 from Client Portal Downloads section')">
+                    <div class="link-icon">📱</div>
+                    <div class="link-info">
+                        <h4>Download Platform</h4>
+                        <p>MT4/MT5 for all devices</p>
+                    </div>
+                </div>
+                <div class="link-card" onclick="alert('Access Education Center in Client Portal')">
+                    <div class="link-icon">🎓</div>
+                    <div class="link-info">
+                        <h4>Learn to Trade</h4>
+                        <p>Video tutorials & guides</p>
+                    </div>
+                </div>
+                <div class="link-card" onclick="alert('Contact: support@vtmarkets.com or Live Chat')">
+                    <div class="link-icon">💬</div>
+                    <div class="link-info">
+                        <h4>Get Support</h4>
+                        <p>24/7 Live Chat available</p>
+                    </div>
+                </div>
+                <div class="link-card" onclick="alert('Open demo account from Client Portal')">
+                    <div class="link-icon">🎮</div>
+                    <div class="link-info">
+                        <h4>Try Demo Account</h4>
+                        <p>Practice risk-free</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedSteps = 0;
+        const totalSteps = 12;
+
+        function toggleStage(stageNum) {
+            const stage = document.querySelector(`.stage[data-stage="${stageNum}"]`);
+            stage.classList.toggle('expanded');
+            
+            // Update scroll behavior
+            if (stage.classList.contains('expanded')) {
+                setTimeout(() => {
+                    stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
+        }
+
+        function toggleSubstep(element) {
+            const substep = element.closest('.substep');
+            substep.classList.toggle('completed');
+            updateProgress();
+            updateStageStatus();
+        }
+
+        function updateProgress() {
+            completedSteps = document.querySelectorAll('.substep.completed').length;
+            const progress = (completedSteps / totalSteps) * 100;
+            
+            document.getElementById('mainProgress').style.width = progress + '%';
+            document.getElementById('completedCount').textContent = completedSteps;
+            
+            // Update time estimate
+            const remainingSteps = totalSteps - completedSteps;
+            const estimatedMinutes = Math.ceil((remainingSteps / totalSteps) * 25);
+            document.getElementById('estimatedTime').textContent = 
+                `Estimated time remaining: ${estimatedMinutes}-${estimatedMinutes + 5} min`;
+        }
+
+        function updateStageStatus() {
+            // Stage 1: 5 substeps
+            const stage1Steps = document.querySelectorAll('.stage[data-stage="1"] .substep.completed').length;
+            const stage1Badge = document.getElementById('stage1-status');
+            updateStageBadge(stage1Badge, stage1Steps, 5, 1);
+
+            // Stage 2: 4 substeps
+            const stage2Steps = document.querySelectorAll('.stage[data-stage="2"] .substep.completed').length;
+            const stage2Badge = document.getElementById('stage2-status');
+            updateStageBadge(stage2Badge, stage2Steps, 4, 2);
+
+            // Stage 3: 4 substeps
+            const stage3Steps = document.querySelectorAll('.stage[data-stage="3"] .substep.completed').length;
+            const stage3Badge = document.getElementById('stage3-status');
+            updateStageBadge(stage3Badge, stage3Steps, 4, 3);
+        }
+
+        function updateStageBadge(badge, completed, total, stageNum) {
+            const stage = document.querySelector(`.stage[data-stage="${stageNum}"]`);
+            
+            if (completed === 0) {
+                badge.textContent = 'Not Started';
+                badge.className = 'status-badge status-pending';
+                stage.classList.remove('completed', 'in-progress');
+            } else if (completed === total) {
+                badge.textContent = 'Completed ✓';
+                badge.className = 'status-badge status-complete';
+                stage.classList.remove('in-progress');
+                stage.classList.add('completed');
+            } else {
+                badge.textContent = `In Progress (${completed}/${total})`;
+                badge.className = 'status-badge status-progress';
+                stage.classList.remove('completed');
+                stage.classList.add('in-progress');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            updateStageStatus();
+        });
+
+        // Auto-save progress to localStorage
+        function saveProgress() {
+            const completed = [];
+            document.querySelectorAll('.substep.completed').forEach(substep => {
+                completed.push(substep.getAttribute('data-step'));
+            });
+            localStorage.setItem('vtm_onboarding_progress', JSON.stringify(completed));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('vtm_onboarding_progress');
+            if (saved) {
+                const completed = JSON.parse(saved);
+                completed.forEach(stepId => {
+                    const substep = document.querySelector(`.substep[data-step="${stepId}"]`);
+                    if (substep) {
+                        substep.classList.add('completed');
+                    }
+                });
+                updateProgress();
+                updateStageStatus();
+            }
+        }
+
+        // Load saved progress on page load
+        document.addEventListener('DOMContentLoaded', loadProgress);
+
+        // Save progress when checkbox is clicked
+        document.querySelectorAll('.substep-header').forEach(header => {
+            header.addEventListener('click', () => {
+                setTimeout(saveProgress, 100);
+            });
+        });
+    </script>
+</body>
+</html>

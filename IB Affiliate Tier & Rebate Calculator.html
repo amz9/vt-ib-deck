@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Affiliate Tier & Rebate — VT Markets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1228;
+    --panel:#101A37;
+    --panel-2:#15203F;
+    --panel-3:#0D1730;
+    --hairline:#28345A;
+    --hairline-soft:#1C2748;
+    --text:#F3F1E8;
+    --text-dim:#9AA2C2;
+    --text-faint:#5C6488;
+
+    --silver-1:#E7EAF1; --silver-2:#9AA3B8; --silver-glow:rgba(184,194,212,.35);
+    --gold-1:#F3D38C;   --gold-2:#A9772E;   --gold-glow:rgba(210,168,87,.4);
+    --plat-1:#9DBBFF;   --plat-2:#2E4C9C;   --plat-glow:rgba(92,134,224,.4);
+    --super-1:#BFF3FB;  --super-2:#1C6E84;  --super-glow:rgba(111,211,232,.45);
+
+    --radius:14px;
+    --maxw:1080px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 500px at 12% -10%, rgba(92,134,224,.12), transparent 60%),
+      radial-gradient(700px 500px at 110% 10%, rgba(210,168,87,.08), transparent 60%),
+      var(--ink);
+    color:var(--text);
+    font-family:'Hanken Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; margin:0; letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:-0.02em;}
+
+  a{color:inherit;}
+
+  /* ---------- header ---------- */
+  .topbar{padding:36px 0 0;}
+  .eyebrow-row{display:flex; align-items:center; gap:14px; justify-content:center;}
+  .eyebrow-row .dot{width:6px; height:6px; border-radius:50%; background:var(--gold-1); flex:none;}
+  .eyebrow-row .rule{height:1px; background:linear-gradient(90deg, transparent, var(--hairline) 30%, var(--hairline) 70%, transparent); flex:1; max-width:220px;}
+  .eyebrow{
+    text-align:center; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--text-dim); font-weight:600; white-space:nowrap;
+  }
+
+  .titleblock{text-align:center; margin:18px 0 6px;}
+  .titleblock h1{font-size:clamp(28px,4.4vw,46px); line-height:1.05;}
+  .titleblock h1 em{font-style:italic; color:var(--gold-1); font-weight:500;}
+  .titleblock p{color:var(--text-dim); margin:12px auto 0; max-width:520px; font-size:15px;}
+
+  .prepared{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin:26px 0 0; font-size:14px; color:var(--text-faint); flex-wrap:wrap;
+  }
+  .prepared input{
+    background:transparent; border:none; border-bottom:1px dashed var(--hairline);
+    color:var(--text); font-family:'IBM Plex Mono', monospace; font-size:14px;
+    padding:2px 4px; min-width:140px; text-align:center;
+  }
+  .prepared input:focus{outline:none; border-bottom-color:var(--gold-1);}
+  .prepared input::placeholder{color:var(--text-faint);}
+
+  /* ---------- hero / calculator ---------- */
+  .hero{padding:46px 0 10px;}
+
+  .calc-card{
+    background:linear-gradient(180deg, var(--panel), var(--panel-3));
+    border:1px solid var(--hairline-soft);
+    border-radius:var(--radius);
+    padding:28px;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+  }
+
+  .calc-grid{
+    display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:18px; align-items:end;
+  }
+  .field label{
+    display:block; font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--text-faint); margin-bottom:8px; font-weight:600;
+  }
+  .field select, .field input[type=number]{
+    width:100%; background:var(--panel-2); border:1px solid var(--hairline);
+    color:var(--text); border-radius:8px; padding:11px 12px; font-size:15px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .field select:focus, .field input:focus{outline:none; border-color:var(--gold-2);}
+
+  .weight-bars{display:flex; gap:4px; margin-top:8px;}
+  .weight-bars span{height:4px; flex:1; border-radius:2px; background:var(--hairline-soft);}
+  .weight-bars span.on{background:var(--gold-2);}
+
+  .tier-pills{display:flex; gap:6px; flex-wrap:wrap;}
+  .tier-pill{
+    flex:1; min-width:80px; text-align:center; padding:10px 6px; border-radius:8px;
+    border:1px solid var(--hairline); background:var(--panel-2); cursor:pointer;
+    font-size:12px; font-weight:600; color:var(--text-dim); transition:.15s ease;
+  }
+  .tier-pill:hover{border-color:var(--text-faint);}
+  .tier-pill.active{color:var(--ink); border-color:transparent;}
+  .tier-pill[data-tier="silver"].active{background:linear-gradient(180deg,var(--silver-1),var(--silver-2));}
+  .tier-pill[data-tier="gold"].active{background:linear-gradient(180deg,var(--gold-1),var(--gold-2));}
+  .tier-pill[data-tier="platinum"].active{background:linear-gradient(180deg,var(--plat-1),var(--plat-2)); color:#fff;}
+  .tier-pill[data-tier="super"].active{background:linear-gradient(180deg,var(--super-1),var(--super-2)); color:#06222B;}
+
+  /* ---------- badges (shared) ---------- */
+  .badge{
+    width:52px; height:52px; border-radius:50%; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px -8px rgba(0,0,0,.55);
+  }
+  .badge.lg{width:60px; height:60px;}
+  .badge svg{width:26px; height:26px; fill:#FBF8F0;}
+  .badge.lg svg{width:30px; height:30px;}
+  .badge.silver{background:radial-gradient(circle at 35% 28%, var(--silver-1), var(--silver-2));}
+  .badge.gold{background:radial-gradient(circle at 35% 28%, var(--gold-1), var(--gold-2));}
+  .badge.platinum{background:radial-gradient(circle at 35% 28%, var(--plat-1), var(--plat-2));}
+  .badge.super{background:radial-gradient(circle at 35% 28%, var(--super-1), var(--super-2));}
+
+  /* ---------- ladder ---------- */
+  .ladder-caption{
+    text-align:center; font-size:13px; color:var(--text-faint); margin:0 0 18px;
+  }
+  .ladder-caption b{color:var(--text-dim); font-weight:600;}
+  .ladder-wrap{padding:6px 0 14px; overflow-x:auto;}
+  .ladder{
+    display:flex; align-items:flex-end; gap:14px; justify-content:center;
+    min-width:600px; max-width:760px; margin:0 auto;
+  }
+  .step{display:flex; flex-direction:column; align-items:center; flex:1; position:relative;}
+  .step-card{
+    background:var(--panel); border:1px solid var(--hairline-soft); border-radius:12px;
+    padding:16px 8px 14px; text-align:center; width:100%; position:relative;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease;
+  }
+  .step .delta{
+    position:absolute; top:-11px; right:8px; font-size:10px; font-weight:600;
+    background:var(--panel-2); border:1px solid var(--hairline); color:var(--text-dim);
+    padding:2px 7px; border-radius:20px; font-family:'IBM Plex Mono',monospace;
+    opacity:0; transform:translateY(2px); transition:.2s ease;
+  }
+  .step .delta.show{opacity:1; transform:translateY(0);}
+  .step-name{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--text-dim); margin-top:10px; font-weight:600;}
+  .step-value{font-size:19px; margin-top:3px;}
+  .step-rate{font-size:11px; color:var(--text-faint); margin-top:2px;}
+  .pedestal{width:60%; border-top:2px solid var(--ring, var(--hairline)); margin-top:10px; opacity:.55; background:linear-gradient(180deg, var(--hairline-soft), transparent);}
+  .step.current .step-card{
+    transform:translateY(-5px);
+    border-color:var(--ring);
+    box-shadow:0 0 0 1px var(--ring) inset, 0 20px 36px -18px var(--ring-glow);
+  }
+  .here-tag{
+    display:none; font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ring); font-weight:700; margin-bottom:8px;
+  }
+  .step.current .here-tag{display:block;}
+  .step[data-tier="silver"]{--ring:var(--silver-1); --ring-glow:var(--silver-glow);}
+  .step[data-tier="gold"]{--ring:var(--gold-1); --ring-glow:var(--gold-glow);}
+  .step[data-tier="platinum"]{--ring:var(--plat-1); --ring-glow:var(--plat-glow);}
+  .step[data-tier="super"]{--ring:var(--super-1); --ring-glow:var(--super-glow);}
+
+  /* ---------- section headers ---------- */
+  .section{padding:54px 0 0;}
+  .section-head{margin-bottom:22px;}
+  .section-head .kicker{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-faint); font-weight:600;}
+  .section-head h2{font-size:clamp(20px,2.6vw,26px); margin-top:6px;}
+
+  /* ---------- tier overview cards ---------- */
+  .tier-cards{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .tier-card{
+    background:var(--panel); border:1px solid var(--hairline-soft); border-radius:var(--radius);
+    padding:20px 16px; text-align:center; transition:.2s ease;
+  }
+  .tier-card:hover{border-color:var(--text-faint); transform:translateY(-2px);}
+  .tier-card h3{font-size:16px; margin-top:14px;}
+  .tier-card .req{font-size:12px; color:var(--text-faint); margin:8px 0 14px; min-height:32px; line-height:1.4;}
+  .rate-range{font-size:17px;}
+  .rate-range span{display:block; font-family:'Hanken Grotesk',sans-serif; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-faint); margin-top:3px; font-weight:600;}
+
+  /* ---------- table ---------- */
+  .table-card{
+    background:var(--panel); border:1px solid var(--hairline-soft); border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .table-scroll{overflow-x:auto;}
+  table{width:100%; min-width:560px; border-collapse:collapse; font-size:13.5px;}
+  thead th{
+    text-align:center; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-faint); font-weight:600; padding:14px 8px; border-bottom:1px solid var(--hairline-soft);
+    background:var(--panel-3);
+  }
+  thead th:first-child{text-align:left; padding-left:18px;}
+  tbody td{padding:13px 8px; text-align:center; border-bottom:1px solid var(--hairline-soft); font-family:'IBM Plex Mono',monospace;}
+  tbody td:first-child{text-align:left; padding-left:18px; font-family:'Hanken Grotesk',sans-serif; font-weight:600; color:var(--text-dim);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(255,255,255,.02);}
+  tbody tr.row-active{background:rgba(210,168,87,.06);}
+  th.col-active, td.col-active{background:rgba(210,168,87,.07); color:var(--text);}
+  thead th.col-active{color:var(--gold-1);}
+
+  .note{
+    display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--text-faint);
+    padding:16px 18px; border-top:1px solid var(--hairline-soft);
+  }
+  .note .i{
+    flex:none; width:16px; height:16px; border-radius:50%; border:1px solid var(--text-faint);
+    display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; margin-top:1px;
+  }
+
+  /* ---------- footer ---------- */
+  footer{padding:40px 0 60px;}
+  .footer-rule{height:1px; background:var(--hairline-soft); margin-bottom:22px;}
+  .footer-grid{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:12.5px; color:var(--text-faint);}
+  .footer-grid .field-inline{display:flex; align-items:center; gap:6px;}
+  .footer-grid input{
+    background:transparent; border:none; border-bottom:1px dashed var(--hairline);
+    color:var(--text-dim); font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:2px 4px; min-width:120px;
+  }
+  .footer-grid input:focus{outline:none; border-bottom-color:var(--gold-1);}
+  .footer-grid input::placeholder{color:var(--text-faint);}
+
+  @media (max-width: 760px){
+    .calc-grid{grid-template-columns:1fr;}
+    .tier-cards{grid-template-columns:1fr 1fr;}
+    .ladder-wrap{overflow-x:visible;}
+    .ladder{
+      flex-direction:column; align-items:stretch; min-width:0; max-width:380px; gap:20px;
+    }
+    .step .pedestal{display:none;}
+    .step.current .step-card{transform:none;}
+  }
+  @media (max-width: 480px){
+    .tier-cards{grid-template-columns:1fr;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-bullion" viewBox="0 0 32 32">
+      <path d="M8 23 L10.5 12 L21.5 12 L24 23 Z"></path>
+      <line x1="12.3" y1="15.5" x2="19.7" y2="15.5" stroke="#0A1228" stroke-width="1" opacity="0.3"></line>
+    </symbol>
+    <symbol id="ic-crown" viewBox="0 0 32 32">
+      <path d="M6 23 L8 11.5 L13 17.5 L16 9 L19 17.5 L24 11.5 L26 23 Z"></path>
+      <circle cx="8" cy="10.5" r="1.7"></circle>
+      <circle cx="16" cy="8" r="1.7"></circle>
+      <circle cx="24" cy="10.5" r="1.7"></circle>
+      <rect x="6" y="23" width="20" height="3" rx="1"></rect>
+    </symbol>
+    <symbol id="ic-diamond" viewBox="0 0 32 32">
+      <path d="M9 11 L23 11 L27 15.5 L16 27 L5 15.5 Z"></path>
+      <path d="M9 11 L16 27 M23 11 L16 27 M5 15.5 L27 15.5" stroke="#0A1228" stroke-width="0.7" fill="none" opacity="0.35"></path>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="topbar wrap">
+  <div class="eyebrow-row">
+    <span class="rule"></span>
+    <span class="eyebrow">VT Markets · IB Affiliate Programme</span>
+    <span class="rule"></span>
+  </div>
+  <div class="titleblock">
+    <h1>Forex, Gold, Oil &amp; <em>Silver</em><br>rebate, mapped to your tier.</h1>
+    <p>Move the inputs below and watch your estimated payout climb the ladder — from Silver entry through to Super Tier.</p>
+  </div>
+  <div class="prepared">
+    <span>Prepared for</span>
+    <input id="ibName" type="text" placeholder="IB / partner name" />
+  </div>
+</div>
+
+<div class="hero wrap">
+  <div class="calc-card">
+    <div class="calc-grid">
+      <div class="field">
+        <label for="groupSelect">Volume group</label>
+        <select id="groupSelect">
+          <option value="0">G1 — entry spread</option>
+          <option value="1">G2</option>
+          <option value="2" selected>G3</option>
+          <option value="3">G4</option>
+          <option value="4">G5 — widest spread</option>
+        </select>
+        <div class="weight-bars" id="weightBars">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="lotsInput">Monthly lots traded</label>
+        <input id="lotsInput" type="number" min="0" step="10" value="100" />
+      </div>
+      <div class="field">
+        <label>Your current tier</label>
+        <div class="tier-pills" id="tierPills">
+          <div class="tier-pill" data-tier="silver">Silver</div>
+          <div class="tier-pill" data-tier="gold">Gold</div>
+          <div class="tier-pill" data-tier="platinum">Platinum</div>
+          <div class="tier-pill" data-tier="super">Super</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="ladder-caption" id="ladderCaption">Estimate at <b>100 lots</b> in <b>G3</b> this month</p>
+</div>
+
+<div class="ladder-wrap">
+  <div class="ladder" id="ladder">
+    <div class="step" data-tier="silver">
+      <div class="step-card">
+        <div class="here-tag">You are here</div>
+        <span class="delta mono" id="delta-silver"></span>
+        <div class="badge silver"><svg><use href="#ic-bullion"></use></svg></div>
+        <div class="step-name">Silver</div>
+        <div class="step-value mono" id="val-silver">$0</div>
+        <div class="step-rate mono" id="rate-silver">$0 / lot</div>
+      </div>
+      <div class="pedestal" style="height:14px"></div>
+    </div>
+    <div class="step" data-tier="gold">
+      <div class="step-card">
+        <div class="here-tag">You are here</div>
+        <span class="delta mono" id="delta-gold"></span>
+        <div class="badge gold"><svg><use href="#ic-bullion"></use></svg></div>
+        <div class="step-name">Gold</div>
+        <div class="step-value mono" id="val-gold">$0</div>
+        <div class="step-rate mono" id="rate-gold">$0 / lot</div>
+      </div>
+      <div class="pedestal" style="height:44px"></div>
+    </div>
+    <div class="step" data-tier="platinum">
+      <div class="step-card">
+        <div class="here-tag">You are here</div>
+        <span class="delta mono" id="delta-platinum"></span>
+        <div class="badge platinum"><svg><use href="#ic-crown"></use></svg></div>
+        <div class="step-name">Platinum</div>
+        <div class="step-value mono" id="val-platinum">$0</div>
+        <div class="step-rate mono" id="rate-platinum">$0 / lot</div>
+      </div>
+      <div class="pedestal" style="height:74px"></div>
+    </div>
+    <div class="step" data-tier="super">
+      <div class="step-card">
+        <div class="here-tag">You are here</div>
+        <span class="delta mono" id="delta-super"></span>
+        <div class="badge super"><svg><use href="#ic-diamond"></use></svg></div>
+        <div class="step-name">Super</div>
+        <div class="step-value mono" id="val-super">$0</div>
+        <div class="step-rate mono" id="rate-super">$0 / lot</div>
+      </div>
+      <div class="pedestal" style="height:104px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section wrap">
+  <div class="section-head">
+    <div class="kicker">Tier requirements</div>
+    <h2>What it takes to move up</h2>
+  </div>
+  <div class="tier-cards">
+    <div class="tier-card">
+      <div class="badge lg silver" style="margin:0 auto;"><svg><use href="#ic-bullion"></use></svg></div>
+      <h3>Silver Tier</h3>
+      <p class="req">Welcome to IB Affiliate</p>
+      <div class="rate-range mono" id="range-silver">— <span>per lot</span></div>
+    </div>
+    <div class="tier-card">
+      <div class="badge lg gold" style="margin:0 auto;"><svg><use href="#ic-bullion"></use></svg></div>
+      <h3>Gold Tier</h3>
+      <p class="req">5K Gross @ 5NDC @ 50 Lot</p>
+      <div class="rate-range mono" id="range-gold">— <span>per lot</span></div>
+    </div>
+    <div class="tier-card">
+      <div class="badge lg platinum" style="margin:0 auto;"><svg><use href="#ic-crown"></use></svg></div>
+      <h3>Platinum Tier</h3>
+      <p class="req">10K Gross @ 20NDC @ 200 Lot</p>
+      <div class="rate-range mono" id="range-platinum">— <span>per lot</span></div>
+    </div>
+    <div class="tier-card">
+      <div class="badge lg super" style="margin:0 auto;"><svg><use href="#ic-diamond"></use></svg></div>
+      <h3>Super Tier</h3>
+      <p class="req">100K Gross @ 150 UNDC @ 1,200 Lot — needs performance review</p>
+      <div class="rate-range mono" id="range-super">— <span>per lot</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section wrap">
+  <div class="section-head">
+    <div class="kicker">Full breakdown</div>
+    <h2>Spread &amp; rebate by volume group</h2>
+  </div>
+  <div class="table-card">
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Spread FX</th>
+          <th>Spread XAU</th>
+          <th data-tier="silver">Silver</th>
+          <th data-tier="gold">Gold</th>
+          <th data-tier="platinum">Platinum</th>
+          <th data-tier="super">Super</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    </div>
+    <div class="note">
+      <span class="i">i</span>
+      <span>Note: tier qualification is based on monthly performance and volume requirements as stated above. Rebate figures are paid per standard lot traded.</span>
+    </div>
+  </div>
+</div>
+
+<footer class="wrap">
+  <div class="footer-rule"></div>
+  <div class="footer-grid">
+    <div class="field-inline">
+      <span>Prepared by</span>
+      <input id="bdmName" type="text" placeholder="Your BDM name" />
+    </div>
+    <div class="field-inline">
+      <span>Contact</span>
+      <input id="bdmContact" type="text" placeholder="Telegram / email" />
+    </div>
+  </div>
+</footer>
+
+<script>
+  const DATA = [
+    { id:'G1', fx:'0.2 pip + 6', xau:'1.2 pip + 6', rebate:{ silver:1,  gold:1,  platinum:1,  super:2  } },
+    { id:'G2', fx:'1.2 pip',     xau:'2.2 pip',     rebate:{ silver:3,  gold:5,  platinum:7,  super:8  } },
+    { id:'G3', fx:'1.7 pip',     xau:'2.8 pip',     rebate:{ silver:4,  gold:7,  platinum:11, super:13 } },
+    { id:'G4', fx:'2.2 pip',     xau:'3.2 pip',     rebate:{ silver:6,  gold:10, platinum:16, super:18 } },
+    { id:'G5', fx:'3.2 pip',     xau:'4.2 pip',     rebate:{ silver:11, gold:17, platinum:24, super:28 } },
+  ];
+  const TIERS = ['silver','gold','platinum','super'];
+  const TIER_LABEL = { silver:'Silver', gold:'Gold', platinum:'Platinum', super:'Super' };
+
+  const $ = (sel) => document.querySelector(sel);
+  const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits:0, maximumFractionDigits:2 });
+
+  const state = {
+    groupIdx: 2,
+    lots: 100,
+    currentTier: 'silver',
+  };
+
+  function buildTable(){
+    const tbody = $('#tableBody');
+    tbody.innerHTML = DATA.map((g, i) => `
+      <tr data-idx="${i}">
+        <td>${g.id}</td>
+        <td>${g.fx}</td>
+        <td>${g.xau}</td>
+        ${TIERS.map(t => `<td data-tier="${t}">$${g.rebate[t].toFixed(2)}</td>`).join('')}
+      </tr>
+    `).join('');
+  }
+
+  function buildRanges(){
+    TIERS.forEach(t => {
+      const vals = DATA.map(g => g.rebate[t]);
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const el = $('#range-' + t);
+      el.innerHTML = (min === max ? fmt(min) : `${fmt(min)} – ${fmt(max)}`) + '<span>per lot</span>';
+    });
+  }
+
+  function weightBars(){
+    const bars = document.querySelectorAll('#weightBars span');
+    bars.forEach((b, i) => b.classList.toggle('on', i <= state.groupIdx));
+  }
+
+  function render(){
+    const group = DATA[state.groupIdx];
+    const lots = Math.max(0, Number(state.lots) || 0);
+
+    $('#ladderCaption').innerHTML = `Estimate at <b>${lots.toLocaleString()} lots</b> in <b>${group.id}</b> this month`;
+
+    const totals = {};
+    TIERS.forEach(t => totals[t] = group.rebate[t] * lots);
+
+    const currentRank = state.currentTier ? TIERS.indexOf(state.currentTier) : -1;
+
+    TIERS.forEach((t, rank) => {
+      $('#val-' + t).textContent = fmt(totals[t]);
+      $('#rate-' + t).textContent = '$' + group.rebate[t].toFixed(2) + ' / lot';
+
+      const step = document.querySelector('.step[data-tier="' + t + '"]');
+      step.classList.toggle('current', t === state.currentTier);
+
+      const deltaEl = $('#delta-' + t);
+      if (state.currentTier && rank > currentRank){
+        const diff = totals[t] - totals[state.currentTier];
+        deltaEl.textContent = '+' + fmt(diff);
+        deltaEl.classList.add('show');
+      } else {
+        deltaEl.classList.remove('show');
+      }
+    });
+
+    document.querySelectorAll('.tier-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.tier === state.currentTier);
+    });
+
+    document.querySelectorAll('#tableBody tr').forEach(tr => {
+      tr.classList.toggle('row-active', Number(tr.dataset.idx) === state.groupIdx);
+    });
+    document.querySelectorAll('th[data-tier], td[data-tier]').forEach(cell => {
+      cell.classList.toggle('col-active', cell.dataset.tier === state.currentTier);
+    });
+
+    weightBars();
+  }
+
+  function init(){
+    buildTable();
+    buildRanges();
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('name')) $('#ibName').value = params.get('name');
+    if (params.get('bdm')) $('#bdmName').value = params.get('bdm');
+    if (params.get('contact')) $('#bdmContact').value = params.get('contact');
+    const pGroup = parseInt(params.get('group'), 10);
+    if (!isNaN(pGroup) && pGroup >= 1 && pGroup <= 5) state.groupIdx = pGroup - 1;
+    const pLots = parseFloat(params.get('lots'));
+    if (!isNaN(pLots)) state.lots = pLots;
+    const pTier = params.get('tier');
+    if (pTier && TIERS.includes(pTier)) state.currentTier = pTier;
+
+    $('#groupSelect').value = String(state.groupIdx);
+    $('#lotsInput').value = state.lots;
+
+    $('#groupSelect').addEventListener('input', e => { state.groupIdx = Number(e.target.value); render(); });
+    $('#lotsInput').addEventListener('input', e => { state.lots = e.target.value; render(); });
+    document.querySelectorAll('.tier-pill').forEach(p => {
+      p.addEventListener('click', () => {
+        state.currentTier = state.currentTier === p.dataset.tier ? null : p.dataset.tier;
+        render();
+      });
+    });
+
+    render();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
