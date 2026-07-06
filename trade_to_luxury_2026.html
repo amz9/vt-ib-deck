@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trade to Luxury 2026 — VT Markets Malaysia&Indonesia</title>
+<title>Trade to Luxury 2026 - VT Markets Malaysia&Indonesia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -361,7 +361,7 @@
 <body>
 
 <div class="hero">
-  <div class="hero-eyebrow">VT Markets — Malaysia&Indonesia Exclusive</div>
+  <div class="hero-eyebrow">VT Markets - Malaysia&Indonesia Exclusive</div>
   <div class="hero-title">Trade to Luxury 2026</div>
   <div class="hero-sub">20 Mei – 31 Disember 2026 &nbsp;|&nbsp; Untuk Traders Malaysia&Indonesia Sahaja</div>
   <div class="hero-badge">Trade macam biasa. Menang hadiah luar biasa.</div>
@@ -410,7 +410,7 @@
   <!-- TAB 1: CALCULATOR -->
   <div class="section" id="s1">
     <div class="section-title">Kira Hadiah Korang</div>
-    <div class="section-sub">Masukkan deposit & volume — tengok tier mana yang layak.</div>
+    <div class="section-sub">Masukkan deposit & volume - tengok tier mana yang layak.</div>
     <div class="prize-calculator">
       <div class="calc-row">
         <div>
@@ -444,7 +444,7 @@
       </div>
       <div class="result-box" id="resultBox">
         <div class="result-tier-label">MASUKKAN NILAI UNTUK LIHAT TIER</div>
-        <div class="result-prize" style="color:var(--text-muted); font-size:1rem;">—</div>
+        <div class="result-prize" style="color:var(--text-muted); font-size:1rem;">-</div>
       </div>
     </div>
     <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; margin-top:-0.5rem;">
@@ -462,7 +462,7 @@
   <!-- TAB 3: MARKETS -->
   <div class="section" id="s3">
     <div class="section-title">Market Yang Layak</div>
-    <div class="section-sub">Trade apa yang korang dah biasa — semua ini dikira.</div>
+    <div class="section-sub">Trade apa yang korang dah biasa - semua ini dikira.</div>
     <div class="market-grid">
       <div class="market-card"><span class="market-icon">💱</span><div><div class="market-name">Forex</div><div class="market-pairs">Semua major & minor pairs</div></div></div>
       <div class="market-card"><span class="market-icon">🥇</span><div><div class="market-name">Gold</div><div class="market-pairs">XAUUSD, XAUAUD</div></div></div>
@@ -472,11 +472,11 @@
       <div class="market-card"><span class="market-icon">₿</span><div><div class="market-name">Bitcoin</div><div class="market-pairs">BTCUSD</div></div></div>
     </div>
     <div class="card" style="border-color: rgba(129,199,132,0.4);">
-      <div style="font-size:0.78rem; color:#81C784; font-weight:600; margin-bottom:0.3rem;">Copy Trade Account — Layak ✓</div>
+      <div style="font-size:0.78rem; color:#81C784; font-weight:600; margin-bottom:0.3rem;">Copy Trade Account - Layak ✓</div>
       <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.55;">Volume dari copy trading dikira sekali dalam promo ni. MAM dan PAMM sahaja yang excluded.</div>
     </div>
     <div class="card" style="border-color: rgba(229,115,115,0.4);">
-      <div style="font-size:0.78rem; color:#E57373; font-weight:600; margin-bottom:0.3rem;">Hold kurang 3 minit — TIDAK dikira</div>
+      <div style="font-size:0.78rem; color:#E57373; font-weight:600; margin-bottom:0.3rem;">Hold kurang 3 minit - TIDAK dikira</div>
       <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.55;">Hanya trades yang ditahan lebih dari 3 minit yang valid. Scalp trade pendek akan void secara automatik.</div>
     </div>
   </div>
@@ -570,7 +570,7 @@
   <div class="footer">
     Trade to Luxury 2026 adalah promosi eksklusif VT Markets untuk klien Malaysia&Indonesia.<br>
     Tertakluk kepada Terma & Syarat. Tempoh: 20 Mei – 31 Dis 2026.<br>
-    Untuk maklumat lanjut, hubungi <strong>Adzhar Md Zandar</strong> — BDM VT Markets.<br>
+    Untuk maklumat lanjut, hubungi <strong>Adzhar Md Zandar</strong> - BDM VT Markets.<br>
     adzhar.mz@vtmarkets.com &nbsp;|&nbsp; +601137043701 &nbsp;|&nbsp; beacons.ai/adzharmz
   </div>
 </div>
@@ -647,7 +647,7 @@
     let nextUp = null;
 
     // prizes array is tier1(highest) to tier16(lowest)
-    // Loop from lowest (end) to highest (start) — first match = best eligible tier
+    // Loop from lowest (end) to highest (start) - first match = best eligible tier
     for (let i = prizes.length - 1; i >= 0; i--) {
       if (d >= prizes[i].dep && v >= prizes[i].vol) {
         best = prizes[i];
@@ -677,7 +677,7 @@
           upgradeHint = `<div style="font-size:0.7rem; color:var(--gold-dim); margin-top:0.4rem;">Naik ke Tier ${nextUp.tier}: tambah ${parts.join(' & ')}</div>`;
         }
       }
-      rb.innerHTML = `<div class="result-tier-label">TIER ${best.tier} — LAYAK</div><div class="result-prize">${best.name}</div><div class="result-cash">Cash value: <span>${fmtUSD(best.cash)}</span></div><div class="result-met">✓ Korang layak claim hadiah ni sekarang!</div>${upgradeHint}`;
+      rb.innerHTML = `<div class="result-tier-label">TIER ${best.tier} - LAYAK</div><div class="result-prize">${best.name}</div><div class="result-cash">Cash value: <span>${fmtUSD(best.cash)}</span></div><div class="result-met">✓ Korang layak claim hadiah ni sekarang!</div>${upgradeHint}`;
       const el = document.getElementById('pc' + best.tier);
       if (el) el.classList.add('highlighted');
     } else if (d > 0 || v > 0) {
@@ -691,7 +691,7 @@
       rb.innerHTML = `<div class="result-tier-label">BELUM LAYAK MANA-MANA TIER</div><div class="result-prize" style="font-size:1rem; color:var(--text-muted);">Hampir sampai...</div><div class="result-miss">Untuk Tier 16 (TnG eWallet): ${parts.join(' & ')}</div>`;
     } else {
       rb.classList.remove('active');
-      rb.innerHTML = `<div class="result-tier-label">MASUKKAN NILAI UNTUK LIHAT TIER</div><div class="result-prize" style="color:var(--text-muted); font-size:1rem;">—</div>`;
+      rb.innerHTML = `<div class="result-tier-label">MASUKKAN NILAI UNTUK LIHAT TIER</div><div class="result-prize" style="color:var(--text-muted); font-size:1rem;">-</div>`;
     }
   }
 
