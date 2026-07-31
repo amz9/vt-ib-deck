@@ -1,17 +1,3 @@
-Saya belum boleh commit perubahan dengan selamat melalui connector GitHub kerana fungsi yang tersedia hanya menerima **penggantian keseluruhan fail**, bukan patch beberapa baris. Memaksa update sekarang berisiko memotong atau merosakkan fail HTML.
-
-Perubahan yang perlu dibuat ialah:
-
-1. Tukar array hadiah kepada **Tier 1 TnG → Tier 16 BYD**.
-2. Paparkan `prizes` terus, bukan `prizes.slice().reverse()`.
-3. Kalkulator perlu semak dari Tier 16 turun ke Tier 1.
-4. `nextUp` perlu menggunakan indeks `i + 1`.
-5. Sasaran minimum perlu menggunakan `prizes[0]`.
-6. Teks “Untuk Tier 16 (TnG)” perlu menjadi “Untuk Tier 1 (TnG)”.
-
-Kod pengganti penuh untuk bahagian JavaScript:
-
-```javascript
 const prizes = [
   { tier:1,  dep:1000,   vol:100,   name:'TnG eWallet ~$125',              cash:100   },
   { tier:2,  dep:2000,   vol:150,   name:'Traveloka Voucher ~$250',        cash:200   },
@@ -160,4 +146,3 @@ function updateResult(d, v) {
     `;
   }
 }
-```
