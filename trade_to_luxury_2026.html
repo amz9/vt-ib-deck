@@ -1,148 +1,853 @@
-const prizes = [
-  { tier:1,  dep:1000,   vol:100,   name:'TnG eWallet ~$125',              cash:100   },
-  { tier:2,  dep:2000,   vol:150,   name:'Traveloka Voucher ~$250',        cash:200   },
-  { tier:3,  dep:3000,   vol:250,   name:'Nespresso CitiZ Platinum',       cash:290   },
-  { tier:4,  dep:5000,   vol:400,   name:'Dyson Supersonic Hair Dryer',    cash:480   },
-  { tier:5,  dep:10000,  vol:650,   name:'Samsung Galaxy Tab S11',         cash:780   },
-  { tier:6,  dep:15000,  vol:1000,  name:'Vivo X300 Pro 5G',               cash:950   },
-  { tier:7,  dep:20000,  vol:1250,  name:'MacBook Air 15"',                cash:1100  },
-  { tier:8,  dep:30000,  vol:1600,  name:'iPhone 17 Pro Max 1TB',          cash:1600  },
-  { tier:9,  dep:50000,  vol:2500,  name:'5D4N Osaka Trip (2 pax)',        cash:2800  },
-  { tier:10, dep:70000,  vol:3500,  name:'Kawasaki Ninja 250SL',           cash:3500  },
-  { tier:11, dep:100000, vol:5500,  name:'Honda CB250R',                   cash:4800  },
-  { tier:12, dep:150000, vol:10000, name:'11D Europe Luxury Trip (2 pax)', cash:7000  },
-  { tier:13, dep:200000, vol:24000, name:'Omega Speedmaster Apollo 8',     cash:14000 },
-  { tier:14, dep:250000, vol:40000, name:'Hublot Big Bang Titanium',       cash:20000 },
-  { tier:15, dep:300000, vol:50000, name:'Chery 05',                       cash:23800 },
-  { tier:16, dep:350000, vol:60000, name:'BYD Premium + 3-Year Service',   cash:35100 }
-];
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Trade to Luxury 2026 reward tiers, eligibility calculator, markets, rules and redemption guide for VT Markets Malaysia & Indonesia." />
+<meta name="theme-color" content="#0A0A0A" />
+<title>Trade to Luxury 2026 — VT Markets Malaysia & Indonesia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #8B6914;
+    --black: #0A0A0A;
+    --surface: #141414;
+    --surface2: #1E1E1E;
+    --surface3: #252525;
+    --border: rgba(201,168,76,0.25);
+    --text: #F0EAD6;
+    --text-muted: #9A9080;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--black); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+  button, input { font: inherit; }
+  button:focus-visible, input:focus-visible, a:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 3px;
+  }
+  [hidden] { display: none !important; }
 
-function buildPrizeGrid() {
-  const grid = document.getElementById('prizeGrid');
-  grid.innerHTML = '';
-
-  prizes.forEach(p => {
-    const c = document.createElement('div');
-    c.className = 'prize-card';
-    c.id = 'pc' + p.tier;
-
-    c.innerHTML = `
-      <div class="prize-tier-badge">TIER ${p.tier}</div>
-      <div class="prize-name">${p.name}</div>
-      <div class="prize-dep">
-        Deposit: <span>${fmtUSD(p.dep)}</span>
-        &nbsp;|&nbsp;
-        Vol: <span>${fmtVol(p.vol)}</span>
-      </div>
-    `;
-
-    grid.appendChild(c);
-  });
-}
-
-function updateResult(d, v) {
-  const rb = document.getElementById('resultBox');
-  let best = null;
-  let nextUp = null;
-
-  // Semak dari hadiah tertinggi ke hadiah terendah.
-  for (let i = prizes.length - 1; i >= 0; i--) {
-    if (d >= prizes[i].dep && v >= prizes[i].vol) {
-      best = prizes[i];
-
-      if (i < prizes.length - 1) {
-        nextUp = prizes[i + 1];
-      }
-
-      break;
-    }
+  .hero {
+    background: var(--black);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 1.5rem 2.25rem;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .hero-sub {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.78rem;
+    color: var(--gold-light);
+    letter-spacing: 1px;
   }
 
-  document
-    .querySelectorAll('.prize-card')
-    .forEach(c => c.classList.remove('highlighted'));
+  .wrapper { max-width: 680px; margin: 0 auto; }
 
-  if (best) {
-    rb.classList.add('active');
+  .nav-tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-tab {
+    flex: 1;
+    min-width: 80px;
+    padding: 0.9rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+  .nav-tab.active,
+  .nav-tab[aria-selected="true"] { color: var(--gold); border-bottom-color: var(--gold); }
+  .nav-tab:hover { color: var(--gold-light); }
 
-    let upgradeHint = '';
+  .section { display: none; padding: 1.5rem; }
+  .section.active { display: block; }
 
-    if (nextUp) {
-      const needDep = Math.max(0, nextUp.dep - d);
-      const needVol = Math.max(0, nextUp.vol - v);
-      const parts = [];
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 0.35rem;
+  }
+  .section-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
 
-      if (needDep > 0) {
-        parts.push(fmtUSD(needDep) + ' deposit');
-      }
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.75rem;
+  }
 
-      if (needVol > 0) {
-        parts.push(fmtVol(needVol) + ' volume');
-      }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    font-size: 0.78rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: var(--text-muted); }
+  .info-val { color: var(--text); font-weight: 500; text-align: right; max-width: 60%; }
+  .tag {
+    display: inline-block;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.65rem;
+    color: var(--gold);
+    margin: 2px;
+  }
 
-      if (parts.length > 0) {
-        upgradeHint = `
-          <div style="font-size:0.7rem; color:var(--gold-dim); margin-top:0.4rem;">
-            Naik ke Tier ${nextUp.tier}: tambah ${parts.join(' & ')}
+  /* CALCULATOR */
+  .prize-calculator {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .calc-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .calc-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .calc-input-wrap { position: relative; }
+  .calc-prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: var(--gold-dim);
+    pointer-events: none;
+  }
+  .calc-input {
+    width: 100%;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.9rem;
+    padding: 0.6rem 0.75rem 0.6rem 1.6rem;
+    font-family: 'Inter', sans-serif;
+    -webkit-appearance: none;
+  }
+  .calc-input:focus { outline: none; border-color: var(--gold); }
+  .slider-wrap { margin-bottom: 1rem; }
+  .slider-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+  .slider-val { font-size: 0.85rem; font-weight: 600; color: var(--gold); }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--gold);
+    cursor: pointer;
+    height: 4px;
+  }
+  .result-box {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .result-box.active { border-color: var(--gold); }
+  .result-tier-label { font-size: 0.68rem; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 0.25rem; }
+  .result-prize { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--gold); margin-bottom: 0.25rem; }
+  .result-cash { font-size: 0.75rem; color: var(--text-muted); }
+  .result-cash span { color: var(--gold-light); font-weight: 600; }
+  .result-met { font-size: 0.72rem; color: #81C784; margin-top: 0.3rem; }
+  .result-miss { font-size: 0.72rem; color: #E57373; margin-top: 0.3rem; }
+  .calc-actions { display: flex; justify-content: flex-end; margin-top: 0.75rem; }
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.72rem;
+    padding: 0.45rem 0.75rem;
+  }
+  .reset-btn:hover { color: var(--gold-light); border-color: var(--gold-dim); }
+
+  /* PRIZE GRID */
+  .prize-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .prize-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .prize-card.highlighted { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+  .prize-tier-badge { font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .prize-name { font-size: 0.8rem; font-weight: 500; color: var(--text); line-height: 1.3; margin-bottom: 0.4rem; }
+  .prize-dep { font-size: 0.68rem; color: var(--text-muted); }
+  .prize-dep span { color: var(--gold-light); }
+
+  /* MARKET */
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .market-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .market-icon { font-size: 1.4rem; }
+  .market-name { font-size: 0.8rem; font-weight: 500; color: var(--text); }
+  .market-pairs { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* RULES */
+  .rule-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .rule-item:last-child { border-bottom: none; }
+  .rule-num {
+    min-width: 30px;
+    height: 30px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .rule-title { font-size: 0.83rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+  .rule-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.55; }
+  .rule-warn { font-size: 0.72rem; color: #E57373; margin-top: 0.25rem; }
+  .rule-ok { font-size: 0.72rem; color: #81C784; margin-top: 0.25rem; }
+
+  /* STEPS */
+  .steps-wrap { position: relative; }
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+  .step-connector {
+    position: absolute;
+    left: 14px;
+    top: 32px;
+    bottom: -14px;
+    width: 1px;
+    background: var(--border);
+  }
+  .step-num {
+    min-width: 30px;
+    height: 30px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--black);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .step-title { font-size: 0.87rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; margin-top: 4px; }
+  .step-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.55; }
+
+  /* CTA */
+  .cta-block {
+    background: var(--surface2);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  .cta-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); margin-bottom: 0.4rem; }
+  .cta-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.5; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .cta-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .cta-btn:active { transform: translateY(0); }
+
+  .footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 1.8rem; }
+    .calc-row { grid-template-columns: 1fr; }
+    .prize-grid { grid-template-columns: 1fr; }
+    .market-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">VT Markets — Malaysia & Indonesia Exclusive</div>
+  <div class="hero-title">Trade to Luxury 2026</div>
+  <div class="hero-sub">20 Mei – 31 Disember 2026 &nbsp;|&nbsp; Untuk Traders Malaysia & Indonesia Sahaja</div>
+  <div class="hero-badge">Trade macam biasa. Menang hadiah luar biasa.</div>
+</div>
+
+<div class="wrapper">
+  <div class="nav-tabs" id="navTabs" role="tablist" aria-label="Navigasi Trade to Luxury">
+    <button type="button" class="nav-tab active" id="tab0" role="tab" aria-selected="true" aria-controls="s0" onclick="switchTab(0)">Promo</button>
+    <button type="button" class="nav-tab" id="tab1" role="tab" aria-selected="false" aria-controls="s1" tabindex="-1" onclick="switchTab(1)">Kira Hadiah</button>
+    <button type="button" class="nav-tab" id="tab2" role="tab" aria-selected="false" aria-controls="s2" tabindex="-1" onclick="switchTab(2)">Semua Hadiah</button>
+    <button type="button" class="nav-tab" id="tab3" role="tab" aria-selected="false" aria-controls="s3" tabindex="-1" onclick="switchTab(3)">Market</button>
+    <button type="button" class="nav-tab" id="tab4" role="tab" aria-selected="false" aria-controls="s4" tabindex="-1" onclick="switchTab(4)">Rules</button>
+    <button type="button" class="nav-tab" id="tab5" role="tab" aria-selected="false" aria-controls="s5" tabindex="-1" onclick="switchTab(5)">Cara Join</button>
+  </div>
+
+  <!-- TAB 0: PROMO OVERVIEW -->
+  <div class="section active" id="s0" role="tabpanel" aria-labelledby="tab0">
+    <div class="section-title">Apa itu Trade to Luxury?</div>
+    <div class="section-sub">Promo trading eksklusif VT Markets untuk rakyat Malaysia & Indonesia.</div>
+    <div class="card">
+      <div class="info-row"><span class="info-key">Tempoh</span><span class="info-val">20 Mei – 31 Dis 2026</span></div>
+      <div class="info-row"><span class="info-key">Kelayakan</span><span class="info-val">Traders Malaysia & Indonesia (New & Existing)</span></div>
+      <div class="info-row"><span class="info-key">Account Types</span><span class="info-val"><span class="tag">STP</span><span class="tag">VIP</span><span class="tag">ECN</span><span class="tag">Cent</span><span class="tag">Copy Trade</span></span></div>
+      <div class="info-row"><span class="info-key">MAM / PAMM</span><span class="info-val" style="color:#E57373;">Excluded</span></div>
+      <div class="info-row"><span class="info-key">Jumlah Tier Hadiah</span><span class="info-val">16 Tier</span></div>
+      <div class="info-row"><span class="info-key">Entry Terendah</span><span class="info-val">$1,000 deposit / 100 lots</span></div>
+      <div class="info-row"><span class="info-key">Hadiah Tertinggi</span><span class="info-val">BYD Premium + 3-Year Service Pack</span></div>
+      <div class="info-row"><span class="info-key">Redemption Cutoff</span><span class="info-val">15hb setiap bulan</span></div>
+      <div class="info-row"><span class="info-key">Final Deadline</span><span class="info-val">15 Januari 2027</span></div>
+    </div>
+    <div class="card" style="border-color: rgba(201,168,76,0.5);">
+      <div style="font-size:0.8rem; color: var(--gold); font-weight:600; margin-bottom:0.4rem;">Macam mana ia berfungsi?</div>
+      <div style="font-size:0.78rem; color: var(--text-muted); line-height:1.65;">
+        1. Opt-in melalui Client Portal<br>
+        2. Deposit & trade instrumen yang layak<br>
+        3. Deposit + volume cukup → hubungi AM untuk claim<br>
+        4. Submit sebelum 15hb setiap bulan
+      </div>
+    </div>
+    <div class="card" style="border-color: rgba(129,199,132,0.35);">
+      <div style="font-size:0.78rem; color: #81C784; font-weight:600; margin-bottom:0.3rem;">Hadiah boleh ditukar kepada Cash</div>
+      <div style="font-size:0.75rem; color: var(--text-muted); line-height:1.55;">Semua hadiah ada opsyen cash equivalent pada 80% nilai retail. Cash dikreditkan terus ke trading account korang.</div>
+    </div>
+  </div>
+
+  <!-- TAB 1: CALCULATOR -->
+  <div class="section" id="s1" role="tabpanel" aria-labelledby="tab1" hidden>
+    <div class="section-title">Kira Hadiah Korang</div>
+    <div class="section-sub">Masukkan deposit & volume — tengok tier mana yang layak.</div>
+    <div class="prize-calculator">
+      <div class="calc-row">
+        <div>
+          <span class="calc-label">Deposit Terkumpul (USD)</span>
+          <div class="calc-input-wrap">
+            <span class="calc-prefix">$</span>
+            <input class="calc-input" type="number" id="depositInput" placeholder="cth: 5000" min="0" oninput="calcPrize()" />
           </div>
-        `;
+        </div>
+        <div>
+          <span class="calc-label">Volume Terkumpul (Lots)</span>
+          <div class="calc-input-wrap">
+            <span class="calc-prefix" style="left:8px; font-size:0.68rem; color:var(--text-muted);">lots</span>
+            <input class="calc-input" style="padding-left:2.6rem;" type="number" id="volumeInput" placeholder="cth: 300" min="0" oninput="calcPrize()" />
+          </div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row">
+          <span class="calc-label" style="margin:0;">Deposit</span>
+          <span class="slider-val" id="depSliderVal">$0</span>
+        </div>
+        <input type="range" min="0" max="350000" step="1000" value="0" id="depSlider" oninput="syncSlider('dep')" />
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-row">
+          <span class="calc-label" style="margin:0;">Volume</span>
+          <span class="slider-val" id="volSliderVal">0 lots</span>
+        </div>
+        <input type="range" min="0" max="60000" step="100" value="0" id="volSlider" oninput="syncSlider('vol')" />
+      </div>
+      <div class="result-box" id="resultBox" role="status" aria-live="polite" aria-atomic="true">
+        <div class="result-tier-label">MASUKKAN NILAI UNTUK LIHAT TIER</div>
+        <div class="result-prize" style="color:var(--text-muted); font-size:1rem;">—</div>
+      </div>
+      <div class="calc-actions">
+        <button type="button" class="reset-btn" onclick="resetCalculator()">Reset kalkulator</button>
+      </div>
+    </div>
+    <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; margin-top:-0.5rem;">
+      Deposit & volume dikira secara kumulatif merentas semua accounts bawah 1 User ID.
+    </div>
+  </div>
+
+  <!-- TAB 2: ALL PRIZES -->
+  <div class="section" id="s2" role="tabpanel" aria-labelledby="tab2" hidden>
+    <div class="section-title">Semua 16 Hadiah</div>
+    <div class="section-sub">Dari TnG eWallet sampai kereta BYD. Pilih tier korang.</div>
+    <div class="prize-grid" id="prizeGrid"></div>
+  </div>
+
+  <!-- TAB 3: MARKETS -->
+  <div class="section" id="s3" role="tabpanel" aria-labelledby="tab3" hidden>
+    <div class="section-title">Market Yang Layak</div>
+    <div class="section-sub">Trade apa yang korang dah biasa — semua ini dikira.</div>
+    <div class="market-grid">
+      <div class="market-card"><span class="market-icon">💱</span><div><div class="market-name">Forex</div><div class="market-pairs">Semua major & minor pairs</div></div></div>
+      <div class="market-card"><span class="market-icon">🥇</span><div><div class="market-name">Gold</div><div class="market-pairs">XAUUSD, XAUAUD</div></div></div>
+      <div class="market-card"><span class="market-icon">🥈</span><div><div class="market-name">Silver</div><div class="market-pairs">XAGUSD, XAGAUD</div></div></div>
+      <div class="market-card"><span class="market-icon">🛢️</span><div><div class="market-name">Crude Oil</div><div class="market-pairs">CLOIL, USOUSD, UKOUSD</div></div></div>
+      <div class="market-card"><span class="market-icon">⚙️</span><div><div class="market-name">Metals</div><div class="market-pairs">XPDAUD</div></div></div>
+      <div class="market-card"><span class="market-icon">₿</span><div><div class="market-name">Bitcoin</div><div class="market-pairs">BTCUSD</div></div></div>
+    </div>
+    <div class="card" style="border-color: rgba(129,199,132,0.4);">
+      <div style="font-size:0.78rem; color:#81C784; font-weight:600; margin-bottom:0.3rem;">Copy Trade Account — Layak ✓</div>
+      <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.55;">Volume dari copy trading dikira sekali dalam promo ni. MAM dan PAMM sahaja yang excluded.</div>
+    </div>
+    <div class="card" style="border-color: rgba(229,115,115,0.4);">
+      <div style="font-size:0.78rem; color:#E57373; font-weight:600; margin-bottom:0.3rem;">Hold kurang 3 minit — TIDAK dikira</div>
+      <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.55;">Hanya trades yang ditahan lebih dari 3 minit yang valid. Scalp trade pendek akan void secara automatik.</div>
+    </div>
+  </div>
+
+  <!-- TAB 4: RULES -->
+  <div class="section" id="s4" role="tabpanel" aria-labelledby="tab4" hidden>
+    <div class="section-title">Rules Utama</div>
+    <div class="section-sub">4 rules je. Faham ini, korang selamat.</div>
+    <div class="card">
+      <div class="rule-item">
+        <div class="rule-num">1</div>
+        <div>
+          <div class="rule-title">Opt-in DULU, baru deposit</div>
+          <div class="rule-desc">Deposit sebelum opt-in tidak akan dikira langsung dalam pengiraan promo.</div>
+          <div class="rule-warn">⚠ Deposit dulu = volume & deposit hangus</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">2</div>
+        <div>
+          <div class="rule-title">Hold trade lebih 3 minit</div>
+          <div class="rule-desc">Trades yang ditahan kurang dari 3 minit tidak dikira. Berlaku untuk semua instrumen tanpa pengecualian.</div>
+          <div class="rule-warn">⚠ Scalp di bawah 3 minit = void</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">3</div>
+        <div>
+          <div class="rule-title">Volume dikira merentas semua accounts</div>
+          <div class="rule-desc">Semua accounts bawah 1 User ID dikira secara agregat. Tak perlu trade dalam 1 account sahaja.</div>
+          <div class="rule-ok">✓ Multi-account = semua volume dikira</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">4</div>
+        <div>
+          <div class="rule-title">Rebate & transfer bukan deposit</div>
+          <div class="rule-desc">IB rebates, internal transfers, dan balance adjustments tidak dikira sebagai deposit baharu untuk kelayakan promo.</div>
+          <div class="rule-warn">⚠ Fresh deposit dari luar sahaja yang valid</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-color: rgba(201,168,76,0.45);">
+      <div style="font-size:0.8rem; color:var(--gold); font-weight:600; margin-bottom:0.4rem;">Redemption Deadline</div>
+      <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.6;">
+        Submit redemption sebelum <strong style="color:var(--text);">15hb setiap bulan</strong> untuk dikira dalam bulan tersebut.<br>
+        Lepas 15hb → carry forward ke bulan berikut.<br>
+        <strong style="color:var(--gold-light);">Final deadline: 15 Januari 2027.</strong> Lepas tu, semua hak gugur.
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: HOW TO JOIN -->
+  <div class="section" id="s5" role="tabpanel" aria-labelledby="tab5" hidden>
+    <div class="section-title">Cara Join</div>
+    <div class="section-sub">3 langkah. Senang je.</div>
+    <div class="card">
+      <div class="steps-wrap">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-connector"></div>
+          <div>
+            <div class="step-title">Opt-in kat Client Portal</div>
+            <div class="step-desc">Log masuk ke VT Markets Client Portal → cari "Trade to Luxury 2026" → klik Opt-In. Wajib buat ni sebelum sebarang deposit baharu.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-connector"></div>
+          <div>
+            <div class="step-title">Deposit & trade macam biasa</div>
+            <div class="step-desc">Deposit ke account yang layak. Trade Forex, Gold, Silver, Oil, atau Bitcoin. Hold setiap trade lebih 3 minit. Volume dikira merentas semua accounts korang.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Claim hadiah melalui AM</div>
+            <div class="step-desc">Bila deposit + volume dah hit threshold, hubungi Account Manager untuk submit redemption. Mesti sebelum 15hb bulan tersebut.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-block">
+      <div class="cta-title">Nak Join Atau Ada Soalan?</div>
+      <div class="cta-sub">DM Adzhar untuk link opt-in, panduan lengkap, dan semua detail promo. Free consultation.</div>
+      <a class="cta-btn" href="https://beacons.ai/adzharmz" target="_blank" rel="noopener noreferrer">PM Adzhar Sekarang →</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Trade to Luxury 2026 adalah promosi eksklusif VT Markets untuk klien Malaysia & Indonesia.<br>
+    Tertakluk kepada Terma & Syarat. Tempoh: 20 Mei – 31 Dis 2026.<br>
+    Untuk maklumat lanjut, hubungi <strong>Adzhar Md Zandar</strong> — BDM VT Markets.<br>
+    adzhar.mz@vtmarkets.com &nbsp;|&nbsp; +601137043701 &nbsp;|&nbsp; beacons.ai/adzharmz
+  </div>
+</div>
+
+<script>
+  'use strict';
+
+  const prizes = Object.freeze([
+    { tier: 1,  dep: 1000,   vol: 100,   name: 'TnG eWallet ~$125',               cash: 100 },
+    { tier: 2,  dep: 2000,   vol: 150,   name: 'Traveloka Voucher ~$250',         cash: 200 },
+    { tier: 3,  dep: 3000,   vol: 250,   name: 'Nespresso CitiZ Platinum',        cash: 290 },
+    { tier: 4,  dep: 5000,   vol: 400,   name: 'Dyson Supersonic Hair Dryer',     cash: 480 },
+    { tier: 5,  dep: 10000,  vol: 650,   name: 'Samsung Galaxy Tab S11',          cash: 780 },
+    { tier: 6,  dep: 15000,  vol: 1000,  name: 'Vivo X300 Pro 5G',                cash: 950 },
+    { tier: 7,  dep: 20000,  vol: 1250,  name: 'MacBook Air 15"',                 cash: 1100 },
+    { tier: 8,  dep: 30000,  vol: 1600,  name: 'iPhone 17 Pro Max 1TB',           cash: 1600 },
+    { tier: 9,  dep: 50000,  vol: 2500,  name: '5D4N Osaka Trip (2 pax)',         cash: 2800 },
+    { tier: 10, dep: 70000,  vol: 3500,  name: 'Kawasaki Ninja 250SL',            cash: 3500 },
+    { tier: 11, dep: 100000, vol: 5500,  name: 'Honda CB250R',                    cash: 4800 },
+    { tier: 12, dep: 150000, vol: 10000, name: '11D Europe Luxury Trip (2 pax)',  cash: 7000 },
+    { tier: 13, dep: 200000, vol: 24000, name: 'Omega Speedmaster Apollo 8',      cash: 14000 },
+    { tier: 14, dep: 250000, vol: 40000, name: 'Hublot Big Bang Titanium',        cash: 20000 },
+    { tier: 15, dep: 300000, vol: 50000, name: 'Chery 05',                        cash: 23800 },
+    { tier: 16, dep: 350000, vol: 60000, name: 'BYD Premium + 3-Year Service',    cash: 35100 }
+  ]);
+
+  const $ = (id) => document.getElementById(id);
+
+  function readPositiveNumber(id) {
+    const value = Number.parseFloat($(id).value);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function fmtUSD(value) {
+    const amount = Math.max(0, Number(value) || 0);
+
+    if (amount >= 1_000_000) {
+      return '$' + (amount / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+
+    if (amount >= 1_000) {
+      const decimals = amount % 1_000 === 0 ? 0 : 1;
+      return '$' + (amount / 1_000).toFixed(decimals).replace(/\.0$/, '') + 'k';
+    }
+
+    return '$' + Math.round(amount).toLocaleString('en-US');
+  }
+
+  function fmtVol(value) {
+    const lots = Math.max(0, Number(value) || 0);
+
+    if (lots >= 1_000) {
+      const decimals = lots % 1_000 === 0 ? 0 : 1;
+      return (lots / 1_000).toFixed(decimals).replace(/\.0$/, '') + 'k lots';
+    }
+
+    return Math.round(lots).toLocaleString('en-US') + ' lots';
+  }
+
+  function buildPrizeGrid() {
+    const grid = $('prizeGrid');
+    const fragment = document.createDocumentFragment();
+
+    prizes.forEach((prize) => {
+      const card = document.createElement('article');
+      card.className = 'prize-card';
+      card.id = 'pc' + prize.tier;
+      card.setAttribute('aria-label', `Tier ${prize.tier}: ${prize.name}`);
+
+      card.innerHTML = `
+        <div class="prize-tier-badge">TIER ${prize.tier}</div>
+        <div class="prize-name">${prize.name}</div>
+        <div class="prize-dep">
+          Deposit: <span>${fmtUSD(prize.dep)}</span>
+          &nbsp;|&nbsp;
+          Vol: <span>${fmtVol(prize.vol)}</span>
+        </div>
+      `;
+
+      fragment.appendChild(card);
+    });
+
+    grid.replaceChildren(fragment);
+  }
+
+  function calcPrize() {
+    const deposit = readPositiveNumber('depositInput');
+    const volume = readPositiveNumber('volumeInput');
+
+    $('depSlider').value = Math.min(deposit, Number($('depSlider').max));
+    $('volSlider').value = Math.min(volume, Number($('volSlider').max));
+    $('depSliderVal').textContent = fmtUSD(deposit);
+    $('volSliderVal').textContent = fmtVol(volume);
+
+    updateResult(deposit, volume);
+  }
+
+  function syncSlider(type) {
+    if (type === 'dep') {
+      const value = Number($('depSlider').value);
+      $('depositInput').value = value || '';
+      $('depSliderVal').textContent = fmtUSD(value);
+    } else {
+      const value = Number($('volSlider').value);
+      $('volumeInput').value = value || '';
+      $('volSliderVal').textContent = fmtVol(value);
+    }
+
+    updateResult(
+      readPositiveNumber('depositInput'),
+      readPositiveNumber('volumeInput')
+    );
+  }
+
+  function getBestEligibleTier(deposit, volume) {
+    for (let index = prizes.length - 1; index >= 0; index -= 1) {
+      const prize = prizes[index];
+
+      if (deposit >= prize.dep && volume >= prize.vol) {
+        return {
+          best: prize,
+          nextUp: index < prizes.length - 1 ? prizes[index + 1] : null
+        };
       }
     }
 
-    rb.innerHTML = `
-      <div class="result-tier-label">TIER ${best.tier} - LAYAK</div>
-      <div class="result-prize">${best.name}</div>
-      <div class="result-cash">
-        Cash value: <span>${fmtUSD(best.cash)}</span>
-      </div>
-      <div class="result-met">
-        ✓ Korang layak claim hadiah ni sekarang!
-      </div>
-      ${upgradeHint}
-    `;
+    return { best: null, nextUp: prizes[0] };
+  }
 
-    const el = document.getElementById('pc' + best.tier);
+  function updateResult(deposit, volume) {
+    const resultBox = $('resultBox');
+    const { best, nextUp } = getBestEligibleTier(deposit, volume);
 
-    if (el) {
-      el.classList.add('highlighted');
+    document.querySelectorAll('.prize-card').forEach((card) => {
+      card.classList.remove('highlighted');
+    });
+
+    if (best) {
+      resultBox.classList.add('active');
+
+      let upgradeHint = '';
+
+      if (nextUp) {
+        const needDep = Math.max(0, nextUp.dep - deposit);
+        const needVol = Math.max(0, nextUp.vol - volume);
+        const requirements = [];
+
+        if (needDep > 0) requirements.push(`${fmtUSD(needDep)} deposit`);
+        if (needVol > 0) requirements.push(`${fmtVol(needVol)} volume`);
+
+        if (requirements.length > 0) {
+          upgradeHint = `
+            <div style="font-size:0.7rem; color:var(--gold-dim); margin-top:0.4rem;">
+              Naik ke Tier ${nextUp.tier}: tambah ${requirements.join(' & ')}
+            </div>
+          `;
+        }
+      }
+
+      resultBox.innerHTML = `
+        <div class="result-tier-label">TIER ${best.tier} — LAYAK</div>
+        <div class="result-prize">${best.name}</div>
+        <div class="result-cash">Cash value: <span>${fmtUSD(best.cash)}</span></div>
+        <div class="result-met">✓ Korang layak claim hadiah ini sekarang!</div>
+        ${upgradeHint}
+      `;
+
+      $('pc' + best.tier)?.classList.add('highlighted');
+      return;
     }
-  } else if (d > 0 || v > 0) {
-    rb.classList.remove('active');
 
-    const target = prizes[0];
-    const needDep = Math.max(0, target.dep - d);
-    const needVol = Math.max(0, target.vol - v);
-    const parts = [];
+    resultBox.classList.remove('active');
 
-    if (needDep > 0) {
-      parts.push('deposit +' + fmtUSD(needDep));
+    if (deposit > 0 || volume > 0) {
+      const target = prizes[0];
+      const needDep = Math.max(0, target.dep - deposit);
+      const needVol = Math.max(0, target.vol - volume);
+      const requirements = [];
+
+      if (needDep > 0) requirements.push(`deposit +${fmtUSD(needDep)}`);
+      if (needVol > 0) requirements.push(`volume +${fmtVol(needVol)}`);
+
+      resultBox.innerHTML = `
+        <div class="result-tier-label">BELUM LAYAK MANA-MANA TIER</div>
+        <div class="result-prize" style="font-size:1rem; color:var(--text-muted);">
+          Hampir sampai...
+        </div>
+        <div class="result-miss">
+          Untuk Tier 1 (TnG eWallet): ${requirements.join(' & ')}
+        </div>
+      `;
+      return;
     }
 
-    if (needVol > 0) {
-      parts.push('volume +' + fmtVol(needVol));
-    }
-
-    rb.innerHTML = `
-      <div class="result-tier-label">BELUM LAYAK MANA-MANA TIER</div>
-      <div class="result-prize"
-           style="font-size:1rem; color:var(--text-muted);">
-        Hampir sampai...
-      </div>
-      <div class="result-miss">
-        Untuk Tier 1 (TnG eWallet): ${parts.join(' & ')}
-      </div>
-    `;
-  } else {
-    rb.classList.remove('active');
-
-    rb.innerHTML = `
-      <div class="result-tier-label">
-        MASUKKAN NILAI UNTUK LIHAT TIER
-      </div>
-      <div class="result-prize"
-           style="color:var(--text-muted); font-size:1rem;">
-        -
-      </div>
+    resultBox.innerHTML = `
+      <div class="result-tier-label">MASUKKAN NILAI UNTUK LIHAT TIER</div>
+      <div class="result-prize" style="color:var(--text-muted); font-size:1rem;">—</div>
     `;
   }
-}
+
+  function resetCalculator() {
+    $('depositInput').value = '';
+    $('volumeInput').value = '';
+    $('depSlider').value = 0;
+    $('volSlider').value = 0;
+    $('depSliderVal').textContent = '$0';
+    $('volSliderVal').textContent = '0 lots';
+    updateResult(0, 0);
+    $('depositInput').focus();
+  }
+
+  function switchTab(index, shouldFocus = false) {
+    const sections = [...document.querySelectorAll('.section')];
+    const tabs = [...document.querySelectorAll('.nav-tab')];
+
+    sections.forEach((section, currentIndex) => {
+      const isActive = currentIndex === index;
+      section.classList.toggle('active', isActive);
+      section.hidden = !isActive;
+    });
+
+    tabs.forEach((tab, currentIndex) => {
+      const isActive = currentIndex === index;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+    });
+
+    if (shouldFocus) tabs[index]?.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('navTabs').addEventListener('keydown', (event) => {
+    const tabs = [...document.querySelectorAll('.nav-tab')];
+    const currentIndex = tabs.indexOf(document.activeElement);
+
+    if (currentIndex < 0) return;
+
+    let nextIndex = currentIndex;
+
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+    if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = tabs.length - 1;
+
+    if (nextIndex !== currentIndex) {
+      event.preventDefault();
+      switchTab(nextIndex, true);
+    }
+  });
+
+  buildPrizeGrid();
+  switchTab(0);
+</script>
+</body>
+</html>
