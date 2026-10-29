@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMZ BDM Content Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A; --navy-mid:#1E3A5F; --gold:#C9A84C; --gold-pale:#FBF6EC;
+  --bg:#F7F5F0; --surface:#FFFFFF; --surface-2:#FBFAF7; --border:#E5E0D4; --border-strong:#CFC7B4;
+  --text:#14213A; --text-2:#4A5568; --muted:#7B8597; --accent:#B08A2E; --accent-bg:#FBF3DE;
+  --danger:#C2413F; --danger-bg:#FCEBEA; --success:#1D8A66; --success-bg:#E5F5EE;
+  --c-edu:#2F6FD0; --c-edu-bg:#E8F0FC; --c-mit:#B7791F; --c-mit-bg:#FCF2DF;
+  --c-kre:#1D8A66; --c-kre-bg:#E3F4EC; --c-cer:#7C4FC4; --c-cer-bg:#F1EAFB;
+  --c-ib:#C2410C; --c-ib-bg:#FDEDE3;
+  --shadow:0 1px 2px rgba(11,31,58,.06),0 4px 16px rgba(11,31,58,.06);
+  --radius:10px; --font-d:'DM Serif Display',Georgia,serif; --font-b:'Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1424; --surface:#0F1D33; --surface-2:#13233D; --border:#22344F; --border-strong:#33496B;
+    --text:#EEF1F6; --text-2:#B8C2D3; --muted:#8392A9; --accent:#E2C06A; --accent-bg:#2A2410;
+    --danger:#F07C7A; --danger-bg:#3A1A1C; --success:#4CC79A; --success-bg:#10302A;
+    --c-edu:#7FB0FF; --c-edu-bg:#16284A; --c-mit:#F2C064; --c-mit-bg:#33280F;
+    --c-kre:#5BD3A6; --c-kre-bg:#103229; --c-cer:#B79BF2; --c-cer-bg:#271D42;
+    --c-ib:#FF9E6B; --c-ib-bg:#3A2013; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1424; --surface:#0F1D33; --surface-2:#13233D; --border:#22344F; --border-strong:#33496B;
+  --text:#EEF1F6; --text-2:#B8C2D3; --muted:#8392A9; --accent:#E2C06A; --accent-bg:#2A2410;
+  --danger:#F07C7A; --danger-bg:#3A1A1C; --success:#4CC79A; --success-bg:#10302A;
+  --c-edu:#7FB0FF; --c-edu-bg:#16284A; --c-mit:#F2C064; --c-mit-bg:#33280F;
+  --c-kre:#5BD3A6; --c-kre-bg:#103229; --c-cer:#B79BF2; --c-cer-bg:#271D42;
+  --c-ib:#FF9E6B; --c-ib-bg:#3A2013; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:14px/1.5 var(--font-b);min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+a{color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;border-bottom:2px solid var(--gold)}
+.top-in{display:flex;align-items:center;gap:16px;padding:10px 20px;max-width:1500px;margin:0 auto;flex-wrap:wrap}
+.brand{font-family:var(--font-d);font-size:20px;letter-spacing:.2px;white-space:nowrap}
+.brand b{color:var(--gold);font-weight:400}
+.nav{display:flex;gap:2px;flex-wrap:wrap;flex:1}
+.nav a{white-space:nowrap;color:#C9D3E3;text-decoration:none;padding:7px 12px;border-radius:7px;font-weight:500;font-size:13px}
+.nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav a.on{background:var(--gold);color:var(--navy)}
+.sync{display:flex;align-items:center;gap:8px;font-size:12px;color:#C9D3E3;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#4CC79A;display:inline-block}
+.dot.dirty{background:#F2C064}
+.top .btn-ghost{color:#fff;border-color:rgba(255,255,255,.25)}
+
+main{max-width:1500px;margin:0 auto;padding:22px 20px 80px}
+h1{font-family:var(--font-d);font-weight:400;font-size:28px;line-height:1.2}
+h2{font-family:var(--font-d);font-weight:400;font-size:21px;margin:26px 0 12px}
+h3{font-size:14px;font-weight:600;margin-bottom:8px}
+.sub{color:var(--text-2);margin-top:4px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+
+/* ---------- controls ---------- */
+.btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-weight:600;font-size:13px;background:var(--navy);color:#fff;border:1px solid var(--navy);white-space:nowrap}
+.btn:hover{filter:brightness(1.15)}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
+.btn-ghost:hover{background:var(--surface-2);filter:none}
+.btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.in,select.in,textarea.in{width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--text);outline:none}
+.in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+textarea.in{resize:vertical;min-height:70px;line-height:1.55}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:4px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.bar .in{width:auto;min-width:140px}
+.bar .grow{flex:1;min-width:200px}
+
+/* ---------- cards / stats ---------- */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat .k{font-size:12px;color:var(--text-2);font-weight:500}
+.stat .v{font-family:var(--font-d);font-size:32px;line-height:1.1;margin-top:6px}
+.stat .v small{font-family:var(--font-b);font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.meter{height:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--gold)}
+.rowbar{display:grid;grid-template-columns:130px 1fr 56px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.rowbar span:last-child{text-align:right;color:var(--text-2);font-variant-numeric:tabular-nums}
+
+/* ---------- chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+.t-edu{background:var(--c-edu-bg);color:var(--c-edu);border-color:transparent}
+.t-mit{background:var(--c-mit-bg);color:var(--c-mit);border-color:transparent}
+.t-kre{background:var(--c-kre-bg);color:var(--c-kre);border-color:transparent}
+.t-cer{background:var(--c-cer-bg);color:var(--c-cer);border-color:transparent}
+.t-ib{background:var(--c-ib-bg);color:var(--c-ib);border-color:transparent}
+.flag{background:var(--accent-bg);color:var(--accent);border-color:transparent}
+.flag.warn{background:var(--danger-bg);color:var(--danger)}
+.src{font-family:ui-monospace,Menlo,monospace;font-size:10.5px}
+
+/* ---------- calendar ---------- */
+.week{margin-bottom:18px}
+.week-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.week-h b{font-family:var(--font-d);font-weight:400;font-size:19px}
+.week-h .theme{color:var(--text-2)}
+.week-h .cnt{margin-left:auto;font-size:12px;color:var(--muted)}
+.week.now .week-h b{color:var(--accent)}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.day{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-height:120px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.day.today{border-color:var(--gold);box-shadow:0 0 0 2px var(--accent-bg)}
+.day.over{background:var(--accent-bg);border-style:dashed;border-color:var(--accent)}
+.day-h{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.day-h button{color:var(--muted);font-size:16px;line-height:1;padding:0 4px;border-radius:4px}
+.day-h button:hover{background:var(--surface-2);color:var(--text)}
+.tc{border:1px solid var(--border);border-left:3px solid var(--muted);border-radius:7px;padding:6px 7px;background:var(--surface-2);cursor:pointer;font-size:12px;line-height:1.35;position:relative}
+.tc:hover{border-color:var(--border-strong)}
+.tc.edu{border-left-color:var(--c-edu)}.tc.mit{border-left-color:var(--c-mit)}.tc.kre{border-left-color:var(--c-kre)}.tc.cer{border-left-color:var(--c-cer)}.tc.ib{border-left-color:var(--c-ib)}
+.tc .t{font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding-right:18px}
+.tc .m{color:var(--muted);font-size:11px;margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tc .ck{position:absolute;top:5px;right:5px}
+.tc.done{opacity:.6}.tc.done .t{text-decoration:line-through}
+.tc .star{color:var(--accent);font-weight:700}
+.pips{display:inline-flex;gap:2px}.pips i{width:6px;height:6px;border-radius:50%;background:var(--border-strong)}.pips i.on{background:var(--success)}
+
+/* ---------- table ---------- */
+.list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.li{display:grid;grid-template-columns:28px 58px minmax(0,1fr) 150px 130px 92px 74px;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border)}
+.li:last-child{border-bottom:none}
+.li:hover{background:var(--surface-2)}
+.li.hd{background:var(--surface-2);font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.li .ti{font-weight:500;cursor:pointer}
+.li .ti:hover{color:var(--accent)}
+.li .ti small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
+.li .id{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-2)}
+.li .act{display:flex;gap:4px;justify-content:flex-end}
+.icon-btn{width:28px;height:28px;border-radius:6px;display:inline-grid;place-items:center;color:var(--text-2);border:1px solid transparent}
+.icon-btn:hover{background:var(--surface-2);border-color:var(--border)}
+.icon-btn.del:hover{color:var(--danger);border-color:var(--danger)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--success);cursor:pointer}
+
+/* ---------- modal / drawer ---------- */
+.ov{position:fixed;inset:0;background:rgba(7,21,42,.55);z-index:50;display:flex;justify-content:flex-end}
+.drawer{background:var(--bg);width:min(920px,100%);height:100%;overflow-y:auto;box-shadow:-10px 0 40px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.dr-h{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;gap:12px;align-items:flex-start}
+.dr-h .ttl{flex:1;min-width:0}
+.dr-h .ttl input{font-family:var(--font-d);font-size:20px;border:none;background:transparent;width:100%;padding:2px 0;outline:none;color:var(--text)}
+.dr-b{padding:18px 20px 60px;display:flex;flex-direction:column;gap:16px}
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.sec>h3{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.fg .w2{grid-column:span 2}
+.stack{display:flex;flex-direction:column;gap:10px}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid var(--border-strong);border-radius:8px;cursor:pointer;font-weight:500;font-size:13px;background:var(--surface)}
+.step.on{background:var(--success-bg);border-color:var(--success);color:var(--success)}
+.scene{border:1px solid var(--border);border-radius:8px;padding:10px;background:var(--surface-2)}
+.scene-h{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.scene-h .n{font-weight:700;color:var(--accent);font-size:12px;min-width:22px}
+.scene .fg{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.var{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-top:6px}
+.modal{background:var(--surface);margin:auto;border-radius:12px;width:min(640px,calc(100% - 32px));max-height:86vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.ov.center{justify-content:center;align-items:center}
+.modal-h{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-b{padding:14px 18px;overflow-y:auto}
+.pick{padding:9px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer}
+.pick:hover{border-color:var(--accent);background:var(--accent-bg)}
+
+/* ---------- swot ---------- */
+.quad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.q h3{font-family:var(--font-d);font-weight:400;font-size:18px}
+.q.S{border-top:3px solid var(--c-kre)}.q.W{border-top:3px solid var(--c-mit)}.q.O{border-top:3px solid var(--c-edu)}.q.T{border-top:3px solid var(--danger)}
+.sw{display:grid;grid-template-columns:36px 1fr 24px;gap:8px;padding:8px 0;border-top:1px solid var(--border);align-items:start}
+.sw:first-of-type{border-top:none}
+.sw .c{font-weight:700;font-size:12px;color:var(--accent)}
+.ed{outline:none;border-radius:4px;padding:1px 3px;margin:-1px -3px}
+.ed:hover{background:var(--surface-2)}
+.ed:focus{background:var(--accent-bg);box-shadow:0 0 0 2px var(--accent-bg)}
+.ed-t{font-weight:600}
+.ed-s{font-size:12px;color:var(--muted)}
+.tows{display:grid;grid-template-columns:52px 120px 1fr 24px;gap:10px;padding:10px 0;border-top:1px solid var(--border);align-items:start}
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:8px;overflow:hidden}
+.seg button{padding:6px 12px;font-size:12px;font-weight:600}
+.seg button.on{background:var(--navy);color:#fff}
+.prose p{margin:6px 0;color:var(--text-2)}
+.prose ol,.prose ul{margin:6px 0 6px 20px;color:var(--text-2)}
+.prose li{margin:4px 0}
+.note{padding:10px 12px;border-radius:8px;background:var(--accent-bg);color:var(--text);border:1px solid var(--border);font-size:13px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;z-index:90;box-shadow:var(--shadow);font-size:13px;max-width:calc(100% - 32px)}
+.banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+
+@media (max-width:1100px){
+  .days{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .top-in{padding:8px 16px;gap:8px}
+  .brand{font-size:17px}
+  .nav{order:3;flex-basis:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
+  main{padding:16px 16px 80px}
+  h1{font-size:23px}
+  .days{grid-template-columns:1fr}
+  .day{min-height:0}
+  .li{grid-template-columns:24px minmax(0,1fr) 64px}
+  .li .id,.li .c-type,.li .c-plat,.li .c-date{display:none}
+  .li.hd{display:none}
+  .quad{grid-template-columns:1fr}
+  .tows{grid-template-columns:44px 1fr 24px}.tows .combo{display:none}
+  .fg .w2{grid-column:auto}
+  .rowbar{grid-template-columns:100px 1fr 46px}
+  .dr-h,.dr-b{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">AMZ BDM <b>Content Hub</b></div>
+    <nav class="nav" id="nav">
+      <a href="#/ringkasan" data-r="ringkasan">Ringkasan</a>
+      <a href="#/kalendar" data-r="kalendar">Kalendar</a>
+      <a href="#/bank" data-r="bank">Bank Topik</a>
+      <a href="#/siri" data-r="siri">Broker 101</a>
+      <a href="#/swot" data-r="swot">SWOT &amp; TOWS</a>
+      <a href="#/panduan" data-r="panduan">Panduan</a>
+      <a href="#/tetapan" data-r="tetapan">Tetapan</a>
+    </nav>
+    <div class="sync" id="syncState"></div>
+  </div>
+</header>
+<main id="app"><div class="empty">Memuatkan data…</div></main>
+<input type="file" id="importFile" accept="application/json,.json" class="sr">
+
+<script>
+"use strict";
+/* ================= storage & state ================= */
+const LS_DATA="amzhub:data", LS_META="amzhub:meta", DATA_URL="data/amz-content.json";
+const TYPES=["Edukasi Asas","Mitos vs Fakta","Kredibiliti","Cerita Peribadi","IB Recruitment"];
+const TYPE_CLS={"Edukasi Asas":"edu","Mitos vs Fakta":"mit","Kredibiliti":"kre","Cerita Peribadi":"cer","IB Recruitment":"ib"};
+const PLATFORMS=["TikTok","Instagram","Facebook Page","YouTube","Threads","X","Telegram","WhatsApp Channel"];
+const FORMATS=["Reel","Video","Carousel","Thread","Blog","Poll","Live","Story"];
+const OBJECTIVES=["Awareness","Trust","Engagement","Lead IB"];
+const STEPS=[["skrip","Skrip siap"],["semak","Disemak compliance"],["rakam","Dirakam / direka"],["sunting","Disunting"],["siar","Disiarkan"]];
+const DAYS=["Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu","Ahad"];
+const SRC_NAME={C:"Set C (Claude)",D:"Set D",B:"Set A/B (Gemini)",N:"Baharu"};
+let DB=null, META={dirty:false,lastSync:"",gh:{owner:"amz9",repo:"vt-ib-deck",branch:"main",path:DATA_URL,token:""}};
+let UI={route:"ringkasan",q:"",fStatus:"utama",fType:"",fPlat:"",fSrc:"",fFlag:"",fStep:"",sort:"id",towsSet:"B",calWeek:"all"};
+
+const $=(s,el=document)=>el.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}};
+function toast(msg,ms=2600){document.querySelectorAll(".toast").forEach(x=>x.remove());const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),ms)}
+
+let saveTimer=null;
+function save(immediate){
+  DB.updatedAt=new Date().toISOString(); META.dirty=true;
+  clearTimeout(saveTimer);
+  const go=()=>{ if(!lsSet(LS_DATA,JSON.stringify(DB))) toast("Gagal simpan dalam browser (storan penuh?). Export JSON sebagai backup."); saveMeta(); renderSync(); };
+  immediate?go():saveTimer=setTimeout(go,350);
+  renderSync();
+}
+function saveMeta(){lsSet(LS_META,JSON.stringify(META))}
+function renderSync(){
+  const el=$("#syncState"); if(!el||!DB) return;
+  el.innerHTML=META.dirty
+    ?`<span class="dot dirty"></span><span>Disimpan dalam browser · belum sync</span>`
+    :`<span class="dot"></span><span>Selari dengan server</span>`;
+  el.title=META.lastSync?("Sync terakhir: "+new Date(META.lastSync).toLocaleString("ms-MY")):"";
+}
+
+async function fetchServer(){
+  const r=await fetch(DATA_URL+"?t="+Date.now(),{cache:"no-store"});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  return r.json();
+}
+async function boot(){
+  try{const m=JSON.parse(lsGet(LS_META)||"null"); if(m) META={...META,...m,gh:{...META.gh,...(m.gh||{})}}}catch(e){}
+  let local=null; try{local=JSON.parse(lsGet(LS_DATA)||"null")}catch(e){}
+  let server=null; try{server=await fetchServer()}catch(e){}
+  if(local&&server&&server.updatedAt>local.updatedAt){
+    if(!META.dirty){DB=server;lsSet(LS_DATA,JSON.stringify(DB))}
+    else{DB=local;UI.serverNewer=server}
+  } else DB=local||server;
+  if(!DB){
+    $("#app").innerHTML=`<div class="card" style="max-width:560px;margin:40px auto"><h1>Data tak dijumpai</h1>
+      <p class="sub">Fail <code>${DATA_URL}</code> tak dapat dimuat. Ini biasa berlaku bila fail HTML dibuka terus dari komputer (file://). Buka melalui GitHub Pages, atau import fail JSON.</p>
+      <p style="margin-top:14px"><button class="btn" onclick="$('#importFile').click()">Import JSON</button></p></div>`;
+    return;
+  }
+  migrate(); renderSync(); route();
+}
+function migrate(){
+  DB.topics.forEach(t=>{t.steps=t.steps||{};STEPS.forEach(([k])=>t.steps[k]=!!t.steps[k]);t.scenes=t.scenes||[];t.flags=t.flags||[];
+    if("status" in t){delete t.status}});
+  DB.meta=DB.meta||{}; DB.meta.startDate=DB.meta.startDate||"2026-11-02"; DB.meta.weeks=DB.meta.weeks||12;
+}
+
+/* ================= helpers ================= */
+const tById=id=>DB.topics.find(t=>t.id===id);
+const isCal=t=>!!t.date;
+const isVar=t=>!t.date&&!!t.dupOf;
+const statusOf=t=>isCal(t)?"kalendar":isVar(t)?"versi":"bank";
+const variantsOf=id=>DB.topics.filter(t=>t.dupOf===id);
+const typeCls=t=>TYPE_CLS[t.type]||"";
+const typeChip=t=>`<span class="chip t-${typeCls(t)}">${esc(t.type||"—")}</span>`;
+function stepIdx(t){let n=0;STEPS.forEach(([k],i)=>{if(t.steps[k])n=i+1});return n}
+function stepLabel(t){const n=stepIdx(t);return n?STEPS[n-1][1]:"Belum mula"}
+const pips=t=>`<span class="pips" title="${esc(stepLabel(t))}">${STEPS.map(([k])=>`<i class="${t.steps[k]?"on":""}"></i>`).join("")}</span>`;
+function parseD(s){const [y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d))}
+function fmtD(s){if(!s)return "";const d=parseD(s);return d.getUTCDate()+" "+["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"][d.getUTCMonth()]+" "+d.getUTCFullYear()}
+function addDays(s,n){const d=parseD(s);d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
+function todayStr(){const d=new Date();return new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())).toISOString().slice(0,10)}
+function weekOf(s){return Math.floor((parseD(s)-parseD(DB.meta.startDate))/864e5/7)+1}
+function nextId(){let m=0;DB.topics.forEach(t=>{const n=parseInt(String(t.id).replace(/\D/g,""))||0;if(n>m)m=n});return "T"+String(m+1).padStart(3,"0")}
+function srcBadge(t){return `<span class="chip src" title="${esc(SRC_NAME[t.source]||"")}">${esc(t.source||"N")}${t.sourceId?"#"+t.sourceId:""}</span>`}
+
+/* ================= router ================= */
+window.addEventListener("hashchange",route);
+function route(){
+  if(!DB) return;
+  const h=location.hash.replace(/^#\/?/,"").split("/");
+  const r=h[0]||"ringkasan";
+  if(r==="topik"&&h[1]){ if(!$("#drawer")) {UI.route=UI.route||"bank"; render();} openEditor(h[1],true); return; }
+  UI.route=r; closeOverlays(); render();
+}
+function render(){
+  document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.dataset.r===UI.route));
+  const v={ringkasan:vSummary,kalendar:vCalendar,bank:vBank,siri:vSeries,swot:vSwot,panduan:vGuide,tetapan:vSettings}[UI.route]||vSummary;
+  const y=window.scrollY; $("#app").innerHTML=serverBanner()+v(); bindView(); window.scrollTo(0,y);
+}
+function serverBanner(){
+  if(!UI.serverNewer) return "";
+  return `<div class="note banner"><b>Ada versi lebih baru di server.</b><span>Data dalam browser ini ada perubahan yang belum sync.</span>
+  <button class="btn btn-sm" data-act="useServer">Guna versi server</button><button class="btn btn-ghost btn-sm" data-act="dismissServer">Kekalkan versi saya</button></div>`;
+}
+
+/* ================= views ================= */
+function vSummary(){
+  const all=DB.topics, main=all.filter(t=>!isVar(t)), cal=all.filter(isCal);
+  const done=cal.filter(t=>t.steps.siar).length;
+  const prog=cal.length?Math.round(cal.reduce((a,t)=>a+stepIdx(t),0)/(cal.length*STEPS.length)*100):0;
+  const today=todayStr(), wk=weekOf(today), start=DB.meta.startDate;
+  const before=today<start;
+  const showWk=before?1:wk;
+  const wkStart=addDays(start,(showWk-1)*7), wkEnd=addDays(wkStart,6);
+  const thisWeek=cal.filter(t=>t.date>=wkStart&&t.date<=wkEnd).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const daysTo=Math.round((parseD(start)-parseD(today))/864e5);
+  const byType=TYPES.map(ty=>{const xs=cal.filter(t=>t.type===ty);return [ty,xs.filter(t=>t.steps.siar).length,xs.length]});
+  const stepCounts=STEPS.map(([k,l])=>[l,cal.filter(t=>t.steps[k]).length]);
+  const needs=[["Semak compliance","warn"],["Ada ruang [isi] cerita sebenar",""],["Skrip template, perlu tulis semula",""]].map(([f,c])=>[f,c,cal.filter(t=>t.flags.includes(f)).length]);
+  return `<div class="head"><div><h1>Ringkasan</h1><p class="sub">${esc(DB.meta.name||"AMZ BDM Content Hub")} · Kalendar ${DB.meta.weeks} minggu bermula ${fmtD(start)}</p></div>
+    <div class="bar" style="margin:0"><a class="btn btn-gold" href="#/kalendar">Buka kalendar</a><button class="btn btn-ghost" data-act="new">+ Topik baru</button></div></div>
+  <div class="stats">
+    <div class="card stat"><div class="k">Topik unik (bank + kalendar)</div><div class="v">${main.length}</div></div>
+    <div class="card stat"><div class="k">Dalam kalendar</div><div class="v">${cal.length}</div></div>
+    <div class="card stat"><div class="k">Sudah disiarkan</div><div class="v">${done}<small> / ${cal.length}</small></div></div>
+    <div class="card stat"><div class="k">Progres produksi kalendar</div><div class="v">${prog}<small>%</small></div><div class="meter" style="margin-top:8px"><i style="width:${prog}%"></i></div></div>
+    <div class="card stat"><div class="k">Versi alternatif disimpan</div><div class="v">${all.filter(isVar).length}</div></div>
+  </div>
+  <h2>${before?`Minggu 1 · bermula dalam ${daysTo} hari`:showWk>=1&&showWk<=DB.meta.weeks?`Minggu ini · Minggu ${showWk}`:"Minggu ini"} <span class="sub" style="font-family:var(--font-b);font-size:13px">${fmtD(wkStart)} – ${fmtD(wkEnd)}${DB.weekThemes&&DB.weekThemes[showWk]?" · "+esc(DB.weekThemes[showWk]):""}</span></h2>
+  <div class="list">${thisWeek.length?thisWeek.map(rowHtml).join(""):`<div class="empty">Tiada topik dijadualkan untuk minggu ini.</div>`}</div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="card"><h3>Disiarkan ikut jenis</h3>${byType.map(([ty,a,b])=>`<div class="rowbar"><span>${esc(ty)}</span><div class="meter"><i style="width:${b?a/b*100:0}%"></i></div><span>${a}/${b}</span></div>`).join("")}</div>
+    <div class="card"><h3>Tahap produksi (kalendar)</h3>${stepCounts.map(([l,n])=>`<div class="rowbar"><span>${esc(l)}</span><div class="meter"><i style="width:${cal.length?n/cal.length*100:0}%"></i></div><span>${n}</span></div>`).join("")}</div>
+    <div class="card"><h3>Perlu perhatian (kalendar)</h3>${needs.map(([f,c,n])=>`<div class="var"><span class="chip flag ${c}">${esc(f)}</span><a href="#/bank" data-act="flagFilter" data-flag="${esc(f)}">${n} topik</a></div>`).join("")}</div>
+  </div>`;
+}
+function rowHtml(t){
+  const v=isVar(t), p=v&&tById(t.dupOf);
+  return `<div class="li" data-id="${esc(t.id)}">
+    <input type="checkbox" data-act="tickSiar" ${t.steps.siar?"checked":""} title="Tanda disiarkan">
+    <span class="id">${esc(t.id)}</span>
+    <div class="ti" data-act="open">${esc(t.short||t.title)}<small>${t.short?esc(t.title)+" · ":""}${v&&p?"Versi alternatif bagi "+esc(p.id)+" · ":""}${srcBadge(t)} ${t.series?`<span class="chip flag">★ ${esc(t.series)} ${t.seriesEp||""}</span> `:""}${t.flags.map(f=>`<span class="chip flag ${f.startsWith("Semak")?"warn":""}">${esc(f)}</span>`).join(" ")}</small></div>
+    <div class="c-type">${typeChip(t)}</div>
+    <div class="c-plat" style="font-size:12px;color:var(--text-2)">${esc(t.platform)}<br>${esc(t.format)}</div>
+    <div class="c-date" style="font-size:12px;color:var(--text-2)">${t.date?fmtD(t.date)+(t.time?"<br>"+esc(t.time):""):"—"}</div>
+    <div class="act">${pips(t)}<button class="icon-btn del" data-act="del" title="Padam" aria-label="Padam">✕</button></div>
+  </div>`;
+}
+
+function vCalendar(){
+  const cal=DB.topics.filter(isCal);
+  const maxW=Math.max(DB.meta.weeks,...cal.map(t=>weekOf(t.date)));
+  const today=todayStr(), curW=weekOf(today);
+  const out=cal.filter(t=>weekOf(t.date)<1);
+  let html=`<div class="head"><div><h1>Kalendar ${DB.meta.weeks} minggu</h1><p class="sub">Seret kad ke hari lain untuk ubah tarikh. Klik kad untuk buka skrip dan papan cerita. Tanda ✓ bila dah disiarkan.</p></div>
+  <div class="bar" style="margin:0"><select class="in" id="calWeek"><option value="all">Semua minggu</option>${Array.from({length:maxW},(_,i)=>`<option value="${i+1}" ${UI.calWeek==i+1?"selected":""}>Minggu ${i+1}</option>`).join("")}</select>
+  ${curW>=1&&curW<=maxW?`<button class="btn btn-ghost" data-act="gotoWeek" data-w="${curW}">Minggu ini</button>`:""}</div></div>
+  <div class="bar">${TYPES.map(ty=>`<span class="chip t-${TYPE_CLS[ty]}">${esc(ty)}</span>`).join("")}<span class="chip flag">★ Broker 101</span></div>`;
+  for(let w=1;w<=maxW;w++){
+    if(UI.calWeek!=="all"&&+UI.calWeek!==w) continue;
+    const ws=addDays(DB.meta.startDate,(w-1)*7);
+    const items=cal.filter(t=>weekOf(t.date)===w);
+    html+=`<section class="week ${w===curW?"now":""}" id="w${w}"><div class="week-h"><b>Minggu ${w}</b><span class="theme ed" contenteditable="true" data-edit="theme" data-w="${w}" title="Klik untuk ubah tema">${esc((DB.weekThemes||{})[w]||"Tema minggu")}</span><span class="cnt">${fmtD(ws)} – ${fmtD(addDays(ws,6))} · ${items.filter(t=>t.steps.siar).length}/${items.length} disiarkan</span></div><div class="days">`;
+    for(let d=0;d<7;d++){
+      const ds=addDays(ws,d);
+      const its=items.filter(t=>t.date===ds).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+      html+=`<div class="day ${ds===today?"today":""}" data-date="${ds}"><div class="day-h"><span>${DAYS[d]} · ${parseD(ds).getUTCDate()}/${parseD(ds).getUTCMonth()+1}</span><button data-act="addDay" data-date="${ds}" title="Tambah topik pada hari ini" aria-label="Tambah topik">+</button></div>
+      ${its.map(t=>`<div class="tc ${typeCls(t)} ${t.steps.siar?"done":""}" draggable="true" data-id="${esc(t.id)}" data-act="open">
+        <input type="checkbox" class="ck" data-act="tickSiar" ${t.steps.siar?"checked":""} title="Tanda disiarkan">
+        <div class="t">${t.series?`<span class="star">★${t.seriesEp||""}</span> `:""}${esc(t.short||t.title)}</div>
+        <div class="m"><span>${esc(t.platform)} · ${esc(t.format)}</span>${pips(t)}</div></div>`).join("")}</div>`;
+    }
+    html+=`</div></section>`;
+  }
+  if(out.length) html+=`<h2>Di luar julat kalendar</h2><div class="list">${out.map(rowHtml).join("")}</div>`;
+  return html;
+}
+
+function filtered(){
+  const q=UI.q.trim().toLowerCase();
+  let xs=DB.topics.filter(t=>{
+    const st=statusOf(t);
+    if(UI.fStatus==="utama"&&st==="versi") return false;
+    if(UI.fStatus&&UI.fStatus!=="utama"&&st!==UI.fStatus) return false;
+    if(UI.fType&&t.type!==UI.fType) return false;
+    if(UI.fPlat&&t.platform!==UI.fPlat) return false;
+    if(UI.fSrc&&t.source!==UI.fSrc) return false;
+    if(UI.fFlag&&!t.flags.includes(UI.fFlag)) return false;
+    if(UI.fStep==="siar"&&!t.steps.siar) return false;
+    if(UI.fStep==="belum"&&t.steps.siar) return false;
+    if(q&&!(t.id+" "+t.title+" "+t.short+" "+t.hook+" "+t.tows+" "+t.script).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const s=UI.sort;
+  xs.sort((a,b)=>s==="date"?((a.date||"9999")+(a.time||"")).localeCompare((b.date||"9999")+(b.time||"")):s==="type"?(a.type+a.id).localeCompare(b.type+b.id):a.id.localeCompare(b.id,undefined,{numeric:true}));
+  return xs;
+}
+function vBank(){
+  const xs=filtered();
+  const flags=[...new Set(DB.topics.flatMap(t=>t.flags))];
+  const opt=(arr,cur,all)=>`<option value="">${all}</option>`+arr.map(v=>`<option ${v===cur?"selected":""}>${esc(v)}</option>`).join("");
+  return `<div class="head"><div><h1>Bank Topik</h1><p class="sub">Semua topik dari 4 fail asal, dah digabung. Topik yang bertindih disimpan sebagai <b>versi alternatif</b> di bawah topik utama.</p></div>
+  <div class="bar" style="margin:0"><button class="btn btn-gold" data-act="new">+ Topik baru</button><button class="btn btn-ghost" data-act="csv">Export CSV</button></div></div>
+  <div class="bar">
+    <input class="in grow" id="q" placeholder="Cari tajuk, hook, skrip, ID…" value="${esc(UI.q)}">
+    <select class="in" data-f="fStatus">
+      ${[["utama","Topik utama (kalendar + bank)"],["","Semua termasuk versi alternatif"],["kalendar","Dalam kalendar"],["bank","Bank (belum dijadual)"],["versi","Versi alternatif sahaja"]].map(([v,l])=>`<option value="${v}" ${UI.fStatus===v?"selected":""}>${l}</option>`).join("")}
+    </select>
+    <select class="in" data-f="fType">${opt(TYPES,UI.fType,"Semua jenis")}</select>
+    <select class="in" data-f="fPlat">${opt(PLATFORMS,UI.fPlat,"Semua platform")}</select>
+    <select class="in" data-f="fSrc"><option value="">Semua sumber</option>${["C","D","B","N"].map(s=>`<option value="${s}" ${UI.fSrc===s?"selected":""}>${esc(SRC_NAME[s])}</option>`).join("")}</select>
+    <select class="in" data-f="fFlag">${opt(flags,UI.fFlag,"Semua tanda")}</select>
+    <select class="in" data-f="fStep"><option value="">Semua progres</option><option value="siar" ${UI.fStep==="siar"?"selected":""}>Sudah disiarkan</option><option value="belum" ${UI.fStep==="belum"?"selected":""}>Belum disiarkan</option></select>
+    <select class="in" data-f="sort"><option value="id" ${UI.sort==="id"?"selected":""}>Susun: ID</option><option value="date" ${UI.sort==="date"?"selected":""}>Susun: Tarikh</option><option value="type" ${UI.sort==="type"?"selected":""}>Susun: Jenis</option></select>
+  </div>
+  <p class="sub" style="margin-bottom:8px">${xs.length} topik</p>
+  <div class="list"><div class="li hd"><span>✓</span><span>ID</span><span>Topik</span><span class="c-type">Jenis</span><span class="c-plat">Platform</span><span class="c-date">Tarikh</span><span style="text-align:right">Progres</span></div>
+  ${xs.length?xs.map(rowHtml).join(""):`<div class="empty">Tiada topik sepadan dengan carian.</div>`}</div>`;
+}
+
+function vSeries(){
+  const xs=DB.topics.filter(t=>t.series).sort((a,b)=>(a.series+String(a.seriesEp||0).padStart(3,"0")).localeCompare(b.series+String(b.seriesEp||0).padStart(3,"0")));
+  const groups=[...new Set(xs.map(t=>t.series))];
+  return `<div class="head"><div><h1>Siri</h1><p class="sub">Siri mingguan, contohnya "Broker 101". Tetapkan nama siri dan nombor episod dalam editor topik.</p></div></div>
+  ${groups.map(g=>`<h2>${esc(g)}</h2><div class="list">${xs.filter(t=>t.series===g).map(t=>rowHtml(t).replace('<span class="id">',`<span class="id">Ep ${esc(t.seriesEp||"?")}<br>`)).join("")}</div>`).join("")||`<div class="empty">Belum ada siri.</div>`}
+  <p class="sub" style="margin-top:14px">Nota: Siri Broker 101 versi asal set A/B (10 episod, papan cerita babak demi babak) disimpan sebagai versi alternatif dalam topik yang sepadan.</p>`;
+}
+
+function vSwot(){
+  const Q=[["S","Kekuatan (Strengths)"],["W","Kelemahan (Weaknesses)"],["O","Peluang (Opportunities)"],["T","Ancaman (Threats)"]];
+  const set=UI.towsSet, tows=(DB.tows&&DB.tows[set])||[];
+  return `<div class="head"><div><h1>SWOT &amp; TOWS</h1><p class="sub">Klik mana-mana teks untuk sunting. Perubahan disimpan secara automatik.</p></div></div>
+  ${DB.meta.profile?`<div class="note" style="margin-bottom:14px">${esc(DB.meta.profile)}</div>`:""}
+  <div class="quad">${Q.map(([q,l])=>`<div class="card q ${q}"><h3>${l}</h3>
+    ${DB.swot.map((s,i)=>s.q!==q?"":`<div class="sw"><span class="c">${esc(s.code)}</span><div><div class="ed ed-t" contenteditable="true" data-edit="swot" data-i="${i}" data-k="title">${esc(s.title)}</div><div class="ed" contenteditable="true" data-edit="swot" data-i="${i}" data-k="text">${esc(s.text)}</div><div class="ed ed-s" contenteditable="true" data-edit="swot" data-i="${i}" data-k="status">${esc(s.status)}</div></div><button class="icon-btn del" data-act="delSwot" data-i="${i}" title="Padam" aria-label="Padam">✕</button></div>`).join("")}
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" data-act="addSwot" data-q="${q}">+ Tambah</button></div>`).join("")}</div>
+  <h2>Matriks TOWS</h2>
+  <div class="bar"><div class="seg">${Object.keys(DB.tows||{}).map(k=>`<button class="${k===set?"on":""}" data-act="towsSet" data-s="${k}">Versi set ${k==="B"?"A/B":k}</button>`).join("")}</div>
+  <span class="sub" style="margin:0">Kod TOWS pada setiap topik merujuk matriks set asalnya (lihat sumber topik). Fail C tidak sertakan matriks TOWS sendiri, jadi guna versi A/B sebagai rujukan.</span></div>
+  <div class="card">${tows.map((r,i)=>`<div class="tows"><b style="color:var(--accent)">${esc(r.code)}</b><span class="combo ed ed-s" contenteditable="true" data-edit="tows" data-i="${i}" data-k="combo">${esc(r.combo)}</span><div><div class="ed" contenteditable="true" data-edit="tows" data-i="${i}" data-k="text">${esc(r.text)}</div>${r.alloc?`<div class="ed ed-s" contenteditable="true" data-edit="tows" data-i="${i}" data-k="alloc">${esc(r.alloc)}</div>`:""}</div><button class="icon-btn del" data-act="delTows" data-i="${i}" aria-label="Padam">✕</button></div>`).join("")}
+  <button class="btn btn-ghost btn-sm" style="margin-top:8px" data-act="addTows">+ Tambah strategi</button></div>`;
+}
+
+function vGuide(){
+  return `<div class="head"><div><h1>Panduan</h1><p class="sub">Cara guna hub ini, peraturan kandungan dan rujukan rasmi.</p></div></div>
+  <div class="grid2">
+  <div class="card prose"><h3>Cara guna</h3><ol>
+    <li><b>Ringkasan</b>: progres keseluruhan dan senarai posting minggu ini.</li>
+    <li><b>Kalendar</b>: 12 minggu, Isnin hingga Ahad. Seret kad untuk tukar hari. Butang <b>+</b> pada setiap hari untuk tambah topik dari bank atau topik baru.</li>
+    <li><b>Bank Topik</b>: semua topik unik. Tapis ikut jenis, platform, sumber atau tanda. Pilih "Semua termasuk versi alternatif" untuk lihat versi lain.</li>
+    <li><b>Editor topik</b> (klik mana-mana topik): sunting skrip, kapsyen, papan cerita babak demi babak, tarikh, siri, dan tanda 5 langkah produksi.</li>
+    <li><b>Versi alternatif</b>: topik yang sama dari fail lain. Boleh salin skrip atau tukar jadi topik utama.</li>
+    <li><b>Simpan</b>: setiap perubahan auto-simpan dalam browser. Guna <a href="#/tetapan">Tetapan</a> untuk sync ke GitHub atau export backup.</li>
+  </ol>
+  <h3 style="margin-top:14px">Asal data</h3><ul>
+    <li><b>C</b>: fail "Skrip_PapanCerita_100_Topik_claude" (tulang belakang kalendar, bertarikh).</li>
+    <li><b>D</b>: fail "Skrip_Papan_Cerita_100_Topik" (skrip SO/ST/WO/WT, rujukan sumber).</li>
+    <li><b>B</b>: fail "gemini_1" dan "Strategi_Kandungan…12_Minggu" (topik sama, skrip template).</li>
+    <li>Kalendar: 90 topik C + 10 topik D. Topik B disimpan dalam bank kerana skripnya perlu ditulis semula.</li>
+  </ul></div>
+  <div class="card"><h3>Peraturan kandungan</h3>
+    ${(DB.rules||[]).map((r,i)=>`<div class="sw" style="grid-template-columns:1fr 24px"><div><div class="ed ed-t" contenteditable="true" data-edit="rule" data-i="${i}" data-k="title">${esc(r.title)}</div><div class="ed" contenteditable="true" data-edit="rule" data-i="${i}" data-k="text">${esc(r.text)}</div></div><button class="icon-btn del" data-act="delRule" data-i="${i}" aria-label="Padam">✕</button></div>`).join("")}
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" data-act="addRule">+ Tambah peraturan</button>
+    <h3 style="margin-top:16px">Amaran risiko standard</h3>
+    <div class="note ed" contenteditable="true" data-edit="risk">${esc(DB.meta.riskStandard||"")}</div>
+  </div></div>
+  <h2>Rujukan rasmi</h2>
+  <div class="list">${(DB.refs||[]).map(r=>`<div class="li" style="grid-template-columns:130px minmax(0,1fr)"><b style="font-size:12px">${esc(r.pub)}</b><div>${/^https?:\/\//.test(r.url)?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title)}<small style="display:block;color:var(--muted)">${esc(r.scope)}</small></div></div>`).join("")}</div>`;
+}
+
+function vSettings(){
+  const g=META.gh;
+  return `<div class="head"><div><h1>Tetapan</h1><p class="sub">Sync, backup dan tarikh mula kalendar.</p></div></div>
+  <div class="grid2">
+  <div class="card"><h3>Sync ke GitHub</h3>
+    <p class="sub" style="margin-bottom:10px">Simpan data terus ke repo, supaya semua device nampak versi yang sama. Token disimpan dalam browser ini sahaja.</p>
+    <div class="fg">
+      <div><label class="f">Owner</label><input class="in" data-gh="owner" value="${esc(g.owner)}" placeholder="amz9"></div>
+      <div><label class="f">Repo</label><input class="in" data-gh="repo" value="${esc(g.repo)}" placeholder="vt-ib-deck"></div>
+      <div><label class="f">Branch</label><input class="in" data-gh="branch" value="${esc(g.branch)}"></div>
+      <div><label class="f">Laluan fail</label><input class="in" data-gh="path" value="${esc(g.path)}"></div>
+      <div class="w2" style="grid-column:1/-1"><label class="f">Token (fine-grained, Contents: Read and write, repo ini sahaja)</label><input class="in" type="password" data-gh="token" value="${esc(g.token)}" placeholder="github_pat_…" autocomplete="off"></div>
+    </div>
+    <div class="bar" style="margin-top:12px"><button class="btn" data-act="ghPush">Simpan ke GitHub</button><button class="btn btn-ghost" data-act="ghPull">Tarik dari GitHub</button></div>
+    <p class="sub" style="font-size:12px">${META.lastSync?"Sync terakhir: "+esc(new Date(META.lastSync).toLocaleString("ms-MY")):"Belum pernah sync."} Selepas simpan, GitHub Pages ambil ±1 minit untuk kemas kini.</p>
+  </div>
+  <div class="card"><h3>Backup &amp; pindah data</h3>
+    <div class="bar"><button class="btn btn-ghost" data-act="export">Export JSON</button><button class="btn btn-ghost" data-act="import">Import JSON</button><button class="btn btn-ghost" data-act="csv">Export CSV</button></div>
+    <h3 style="margin-top:14px">Tarikh mula kalendar</h3>
+    <div class="bar"><input class="in" type="date" id="startDate" value="${esc(DB.meta.startDate)}" style="max-width:180px"><label style="display:flex;gap:6px;align-items:center;font-size:13px"><input type="checkbox" id="shiftAll" checked> Anjak semua tarikh topik sekali</label><button class="btn btn-ghost" data-act="setStart">Guna</button></div>
+    <div class="bar"><label class="f" style="margin:0">Bilangan minggu</label><input class="in" type="number" min="1" max="52" id="weeks" value="${DB.meta.weeks}" style="max-width:90px"><button class="btn btn-ghost" data-act="setWeeks">Guna</button></div>
+    <h3 style="margin-top:14px">Tetap semula</h3>
+    <p class="sub" style="margin-bottom:8px">Buang semua perubahan dalam browser ini dan muat semula data dari server.</p>
+    <button class="btn btn-danger" data-act="reset">Tetap semula ke versi server</button>
+    <h3 style="margin-top:14px">Tema</h3>
+    <div class="seg">${[["","Ikut sistem"],["light","Cerah"],["dark","Gelap"]].map(([v,l])=>`<button class="${(lsGet("amzhub:theme")||"")===v?"on":""}" data-act="theme" data-v="${v}">${l}</button>`).join("")}</div>
+  </div></div>`;
+}
+
+/* ================= view bindings ================= */
+function bindView(){
+  const app=$("#app");
+  const q=$("#q"); if(q) q.oninput=()=>{UI.q=q.value;const pos=q.selectionStart;render();const n=$("#q");n.focus();n.setSelectionRange(pos,pos)};
+  app.querySelectorAll("select[data-f]").forEach(s=>s.onchange=()=>{UI[s.dataset.f]=s.value;render()});
+  const cw=$("#calWeek"); if(cw) cw.onchange=()=>{UI.calWeek=cw.value;render()};
+  app.querySelectorAll("[data-gh]").forEach(i=>i.onchange=()=>{META.gh[i.dataset.gh]=i.value.trim();saveMeta()});
+  app.querySelectorAll("[contenteditable][data-edit]").forEach(el=>{
+    el.onblur=()=>inlineEdit(el);
+    el.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&el.dataset.edit==="theme"){e.preventDefault();el.blur()}};
+  });
+  // drag & drop
+  app.querySelectorAll(".tc[draggable]").forEach(c=>{c.ondragstart=e=>{e.dataTransfer.setData("text/plain",c.dataset.id);e.dataTransfer.effectAllowed="move"}});
+  app.querySelectorAll(".day").forEach(d=>{
+    d.ondragover=e=>{e.preventDefault();d.classList.add("over")};
+    d.ondragleave=()=>d.classList.remove("over");
+    d.ondrop=e=>{e.preventDefault();d.classList.remove("over");const t=tById(e.dataTransfer.getData("text/plain"));if(t&&t.date!==d.dataset.date){t.date=d.dataset.date;save();render();toast(`${t.id} dipindah ke ${fmtD(t.date)}`)}};
+  });
+}
+function inlineEdit(el){
+  const v=el.innerText.trim(), k=el.dataset.k, i=+el.dataset.i;
+  switch(el.dataset.edit){
+    case "theme": DB.weekThemes=DB.weekThemes||{}; if(DB.weekThemes[el.dataset.w]===v) return; DB.weekThemes[el.dataset.w]=v; break;
+    case "swot": if(DB.swot[i][k]===v) return; DB.swot[i][k]=v; break;
+    case "tows": if(DB.tows[UI.towsSet][i][k]===v) return; DB.tows[UI.towsSet][i][k]=v; break;
+    case "rule": if(DB.rules[i][k]===v) return; DB.rules[i][k]=v; break;
+    case "risk": if(DB.meta.riskStandard===v) return; DB.meta.riskStandard=v; break;
+  }
+  save();
+}
+
+document.addEventListener("click",async e=>{
+  const a=e.target.closest("[data-act]"); if(!a) return;
+  const act=a.dataset.act, row=a.closest("[data-id]"), id=row&&row.dataset.id;
+  if(act==="tickSiar"){e.stopPropagation();const t=tById(id);t.steps.siar=a.checked;save();
+    if($("#drawer")) refreshEditorSteps(t); else render(); return;}
+  switch(act){
+    case "open": openEditor(id); break;
+    case "del": e.stopPropagation(); delTopic(id); break;
+    case "new": newTopic(); break;
+    case "addDay": e.stopPropagation(); pickForDay(a.dataset.date); break;
+    case "gotoWeek": UI.calWeek="all"; render(); setTimeout(()=>{const s=$("#w"+a.dataset.w); s&&s.scrollIntoView({behavior:"smooth"})},30); break;
+    case "flagFilter": UI.fFlag=a.dataset.flag; UI.fStatus="kalendar"; break;
+    case "csv": exportCSV(); break;
+    case "export": exportJSON(); break;
+    case "import": $("#importFile").click(); break;
+    case "reset": resetToServer(); break;
+    case "ghPush": ghPush(); break;
+    case "ghPull": ghPull(); break;
+    case "setStart": setStart(); break;
+    case "setWeeks": {const n=Math.max(1,Math.min(52,+$("#weeks").value||12));DB.meta.weeks=n;save();toast("Bilangan minggu: "+n);break;}
+    case "theme": {const v=a.dataset.v;lsSet("amzhub:theme",v);applyTheme();render();break;}
+    case "towsSet": UI.towsSet=a.dataset.s; render(); break;
+    case "addSwot": {const q=a.dataset.q;const n=DB.swot.filter(s=>s.q===q).length+1;DB.swot.push({code:q+n,q,title:"Faktor baharu",text:"Huraian…",status:"(andaian)"});save();render();break;}
+    case "delSwot": if(confirm("Padam faktor SWOT ini?")){DB.swot.splice(+a.dataset.i,1);save();render()} break;
+    case "addTows": {const c=prompt("Kod strategi (contoh SO4):");if(c){DB.tows[UI.towsSet].push({code:c.trim().toUpperCase(),combo:"",text:"Strategi…",alloc:""});save();render()}break;}
+    case "delTows": if(confirm("Padam strategi TOWS ini?")){DB.tows[UI.towsSet].splice(+a.dataset.i,1);save();render()} break;
+    case "addRule": DB.rules=DB.rules||[]; DB.rules.push({title:"Peraturan baharu",text:"Huraian…"}); save(); render(); break;
+    case "delRule": if(confirm("Padam peraturan ini?")){DB.rules.splice(+a.dataset.i,1);save();render()} break;
+    case "useServer": DB=UI.serverNewer; UI.serverNewer=null; migrate(); META.dirty=false; lsSet(LS_DATA,JSON.stringify(DB)); saveMeta(); renderSync(); render(); toast("Versi server dimuat."); break;
+    case "dismissServer": UI.serverNewer=null; render(); break;
+  }
+});
+
+/* ================= topic CRUD ================= */
+function blankTopic(over){
+  return {id:nextId(),title:"Topik baharu",short:"",type:"Edukasi Asas",tows:"",platform:"TikTok",format:"Reel",objective:"Awareness",duration:"",hook:"",concept:"",analogy:"",
+    script:"",cta:"",caption:"",hashtags:"#AMZBDM #AdzharMZ",risk:DB.meta.riskStandard||"",prodNote:"",repurpose:"",reason:"",scenes:[],source:"N",sourceId:null,
+    date:"",time:"",series:"",seriesEp:null,dupOf:"",steps:Object.fromEntries(STEPS.map(([k])=>[k,false])),flags:[],link:"",views:"",leads:"",notes:"",...over};
+}
+function newTopic(over){const t=blankTopic(over);DB.topics.push(t);save(true);openEditor(t.id);setTimeout(()=>{const i=$("#drawer [data-t='title']");i&&(i.focus(),i.select())},50)}
+function delTopic(id){
+  const t=tById(id); if(!t) return;
+  const vs=variantsOf(id);
+  if(!confirm(`Padam ${t.id} "${t.short||t.title}"?${vs.length?`\n\n${vs.length} versi alternatif akan jadi topik bank biasa.`:""}`)) return;
+  vs.forEach(v=>v.dupOf="");
+  DB.topics=DB.topics.filter(x=>x.id!==id); save(true);
+  if($("#drawer")) closeOverlays(true); render(); toast(`${id} dipadam`);
+}
+function pickForDay(date){
+  const bank=DB.topics.filter(t=>!isCal(t)&&!isVar(t));
+  const ov=document.createElement("div"); ov.className="ov center"; ov.id="picker";
+  ov.innerHTML=`<div class="modal" role="dialog" aria-modal="true"><div class="modal-h"><h3 style="margin:0">Tambah pada ${fmtD(date)}</h3><button class="icon-btn" data-x aria-label="Tutup">✕</button></div>
+  <div class="modal-b"><div class="bar"><input class="in grow" id="pq" placeholder="Cari dalam bank (${bank.length} topik)…"><button class="btn btn-gold" id="pnew">+ Topik baru</button></div><div id="plist"></div></div></div>`;
+  document.body.appendChild(ov);
+  const draw=()=>{const q=$("#pq").value.toLowerCase();$("#plist").innerHTML=bank.filter(t=>(t.id+t.title+t.short).toLowerCase().includes(q)).map(t=>`<div class="pick" data-pid="${esc(t.id)}"><b class="src">${esc(t.id)}</b> ${esc(t.short||t.title)}<div style="margin-top:4px">${typeChip(t)} <span class="chip">${esc(t.platform)} · ${esc(t.format)}</span> ${srcBadge(t)}</div></div>`).join("")||`<div class="empty">Tiada topik dalam bank.</div>`};
+  draw(); $("#pq").oninput=draw; $("#pq").focus();
+  ov.onclick=e=>{
+    if(e.target===ov||e.target.closest("[data-x]")) return ov.remove();
+    const p=e.target.closest("[data-pid]"); if(p){const t=tById(p.dataset.pid);t.date=date;save();ov.remove();render();toast(`${t.id} dijadualkan ${fmtD(date)}`)}
+  };
+  $("#pnew").onclick=()=>{ov.remove();newTopic({date})};
+}
+
+/* ================= editor ================= */
+let EDIT=null;
+function closeOverlays(keepHash){document.querySelectorAll(".ov").forEach(o=>o.remove());document.body.style.overflow="";
+  if(EDIT&&!keepHash&&location.hash.startsWith("#/topik/")) history.replaceState(null,"","#/"+UI.route); EDIT=null}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const p=$("#picker");if(p)return p.remove();if($("#drawer")){closeOverlays();render()}}});
+
+function openEditor(id,fromHash){
+  const t=tById(id); if(!t){toast("Topik "+id+" tak dijumpai");return}
+  document.querySelectorAll(".ov").forEach(o=>o.remove());
+  EDIT=t.id; if(!fromHash) history.replaceState(null,"","#/topik/"+t.id);
+  const ov=document.createElement("div"); ov.className="ov"; ov.id="drawer";
+  ov.innerHTML=`<div class="drawer" role="dialog" aria-modal="true" aria-label="Editor topik">${editorHtml(t)}</div>`;
+  document.body.appendChild(ov); document.body.style.overflow="hidden";
+  ov.addEventListener("mousedown",e=>{if(e.target===ov){closeOverlays();render()}});
+  bindEditor(ov,t);
+}
+const fld=(t,k,label,type="text",cls="")=>`<div class="${cls}"><label class="f">${label}</label>${
+  type==="area"?`<textarea class="in" data-t="${k}" rows="${k==="script"?14:3}">${esc(t[k])}</textarea>`:
+  Array.isArray(type)?`<select class="in" data-t="${k}">${[...new Set([...(t[k]&&!type.includes(t[k])?[t[k]]:[]),...type])].map(o=>`<option ${o===t[k]?"selected":""}>${esc(o)}</option>`).join("")}</select>`:
+  `<input class="in" type="${type}" data-t="${k}" value="${esc(t[k]??"")}">`}</div>`;
+function editorHtml(t){
+  const vs=variantsOf(t.id), p=t.dupOf&&tById(t.dupOf);
+  return `<div class="dr-h"><div class="ttl"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:2px"><span class="chip src">${esc(t.id)}</span>${srcBadge(t)}${typeChip(t)}<span class="chip" id="stLbl">${esc({kalendar:"Dalam kalendar",bank:"Bank",versi:"Versi alternatif"}[statusOf(t)])}</span></div>
+    <input data-t="title" value="${esc(t.title)}" aria-label="Tajuk"></div>
+    <button class="icon-btn del" data-ed="del" title="Padam topik" aria-label="Padam">🗑</button><button class="icon-btn" data-ed="close" title="Tutup (Esc)" aria-label="Tutup">✕</button></div>
+  <div class="dr-b">
+    <div class="sec"><h3>Langkah produksi</h3><div class="steps" id="steps">${stepsHtml(t)}</div></div>
+    ${p?`<div class="note">Ini <b>versi alternatif</b> bagi <a href="#/topik/${esc(p.id)}">${esc(p.id)} · ${esc(p.short||p.title)}</a>. <button class="btn btn-sm" data-ed="promote">Jadikan topik utama</button></div>`:""}
+    <div class="sec"><h3>Jadual &amp; maklumat</h3><div class="fg">
+      ${fld(t,"short","Tajuk ringkas")}
+      ${fld(t,"type","Jenis",TYPES)}
+      ${fld(t,"tows","Kod TOWS")}
+      ${fld(t,"objective","Objektif",OBJECTIVES)}
+      ${fld(t,"platform","Platform",PLATFORMS)}
+      ${fld(t,"format","Format",FORMATS)}
+      ${fld(t,"duration","Durasi / panjang")}
+      ${fld(t,"date","Tarikh siar","date")}
+      ${fld(t,"time","Masa siar")}
+      ${fld(t,"series","Siri")}
+      ${fld(t,"seriesEp","Episod","number")}
+      ${fld(t,"repurpose","Repurpose ke")}
+    </div>
+    <div class="bar" style="margin:10px 0 0">${t.date?`<button class="btn btn-ghost btn-sm" data-ed="unschedule">Keluarkan dari kalendar</button>`:""}
+    <span style="display:flex;gap:4px;flex-wrap:wrap" id="flags">${flagsHtml(t)}</span><button class="btn btn-ghost btn-sm" data-ed="addFlag">+ Tanda</button></div></div>
+    <div class="sec stack"><h3>Skrip</h3>
+      ${fld(t,"hook","Hook (3 saat pertama)","area")}
+      ${t.concept||t.analogy?`<div class="fg">${t.concept?fld(t,"concept","Konsep","area","w2"):""}${t.analogy?fld(t,"analogy","Analogi utama"):""}</div>`:""}
+      ${fld(t,"script","Skrip penuh","area")}
+      ${fld(t,"cta","CTA","area")}
+      ${fld(t,"risk","Nota risiko","area")}
+    </div>
+    <div class="sec stack"><h3>Kapsyen <button class="btn btn-ghost btn-sm" data-ed="copyCap">Salin kapsyen</button></h3>
+      ${fld(t,"caption","Kapsyen sedia salin","area")}
+      ${fld(t,"hashtags","Hashtag")}
+    </div>
+    <div class="sec"><h3>Papan cerita <span class="sub" style="margin:0;font-weight:400">${t.scenes.length} babak / slaid</span></h3>
+      <div class="stack" id="scenes">${scenesHtml(t)}</div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" data-ed="addScene">+ Babak / slaid</button></div>
+    <div class="sec stack"><h3>Produksi &amp; prestasi</h3>
+      ${t.reason?fld(t,"reason","Sebab strategik","area"):""}
+      ${fld(t,"prodNote","Nota produksi (prop, rakaman, reka bentuk)","area")}
+      <div class="fg">${fld(t,"link","Pautan posting","url","w2")}${fld(t,"views","Tontonan / capaian")}${fld(t,"leads","Lead / DM")}</div>
+      ${fld(t,"notes","Catatan","area")}
+    </div>
+    ${vs.length?`<div class="sec"><h3>Versi alternatif (${vs.length})</h3><p class="sub" style="margin:0 0 4px">Topik yang sama dari fail lain. Buka untuk banding skrip atau salin bahagian yang bagus.</p>
+      ${vs.map(v=>`<div class="var"><div><span class="chip src">${esc(v.id)}</span> ${srcBadge(v)} ${esc(v.title)}<div class="sub" style="font-size:12px;margin:2px 0 0">${esc(v.platform)} · ${esc(v.format)} · ${v.scenes.length} babak${v.flags.length?" · "+esc(v.flags.join(", ")):""}</div></div><a class="btn btn-ghost btn-sm" href="#/topik/${esc(v.id)}">Buka</a></div>`).join("")}</div>`:""}
+    <div class="sec"><h3>Gabung sebagai versi alternatif</h3><p class="sub" style="margin:0 0 8px">Jika topik ini bertindih dengan topik lain, masukkan ID topik utama (contoh T012). Kosongkan untuk jadikan topik bebas.</p>
+      <div class="bar" style="margin:0"><input class="in" style="max-width:140px" data-t="dupOf" value="${esc(t.dupOf)}" placeholder="T000"></div></div>
+  </div>`;
+}
+const stepsHtml=t=>STEPS.map(([k,l])=>`<label class="step ${t.steps[k]?"on":""}"><input type="checkbox" data-step="${k}" ${t.steps[k]?"checked":""}> ${l}</label>`).join("");
+const flagsHtml=t=>t.flags.map((f,i)=>`<span class="chip flag ${f.startsWith("Semak")?"warn":""}">${esc(f)} <button data-ed="rmFlag" data-i="${i}" aria-label="Buang tanda" style="color:inherit">×</button></span>`).join("");
+function scenesHtml(t){
+  return t.scenes.map((s,i)=>`<div class="scene" data-si="${i}"><div class="scene-h"><span class="n">${i+1}</span><input class="in" data-s="label" value="${esc(s.label)}" placeholder="Babak / Slaid"><input class="in" data-s="time" value="${esc(s.time)}" placeholder="Masa" style="max-width:130px">
+    <button class="icon-btn" data-ed="up" title="Naik" aria-label="Naik">↑</button><button class="icon-btn" data-ed="down" title="Turun" aria-label="Turun">↓</button><button class="icon-btn del" data-ed="rmScene" title="Padam babak" aria-label="Padam babak">✕</button></div>
+    <div class="fg"><div><label class="f">Visual / shot</label><textarea class="in" data-s="visual" rows="3">${esc(s.visual)}</textarea></div>
+    <div><label class="f">Teks atas skrin</label><textarea class="in" data-s="onscreen" rows="3">${esc(s.onscreen)}</textarea></div>
+    <div><label class="f">Skrip / VO</label><textarea class="in" data-s="vo" rows="3">${esc(s.vo)}</textarea></div>
+    <div><label class="f">Suntingan / peralihan</label><textarea class="in" data-s="edit" rows="3">${esc(s.edit)}</textarea></div></div></div>`).join("")||`<div class="sub">Belum ada babak.</div>`;
+}
+function refreshEditorSteps(t){const s=$("#steps");if(s)s.innerHTML=stepsHtml(t)}
+function bindEditor(ov,t){
+  ov.addEventListener("input",e=>{
+    const el=e.target;
+    if(el.dataset.t){let v=el.value;const k=el.dataset.t;
+      if(k==="seriesEp") v=v===""?null:+v;
+      if(k==="dupOf"){v=v.trim().toUpperCase(); if(v===t.id) return; if(v&&!tById(v)) return;}
+      t[k]=v; save();
+      if(k==="date"){$("#stLbl").textContent={kalendar:"Dalam kalendar",bank:"Bank",versi:"Versi alternatif"}[statusOf(t)]}
+    }
+    if(el.dataset.s){const si=+el.closest("[data-si]").dataset.si;t.scenes[si][el.dataset.s]=el.value;save()}
+  });
+  ov.addEventListener("change",e=>{
+    const el=e.target;
+    if(el.dataset.step){t.steps[el.dataset.step]=el.checked;save();refreshEditorSteps(t)}
+    if(el.dataset.t==="dupOf"&&el.value.trim()&&!tById(el.value.trim().toUpperCase())) toast("ID "+el.value+" tak wujud");
+  });
+  ov.addEventListener("click",async e=>{
+    const b=e.target.closest("[data-ed]"); if(!b) return;
+    const sc=b.closest("[data-si]"), si=sc?+sc.dataset.si:-1;
+    switch(b.dataset.ed){
+      case "close": closeOverlays(); render(); break;
+      case "del": delTopic(t.id); break;
+      case "unschedule": t.date="";t.time="";save(true);openEditor(t.id);toast("Dikeluarkan dari kalendar"); break;
+      case "promote": promote(t); break;
+      case "copyCap": {const txt=[t.caption,t.caption.includes(t.hashtags)?"":t.hashtags].filter(Boolean).join("\n\n");
+        try{await navigator.clipboard.writeText(txt);toast("Kapsyen disalin")}catch(_){toast("Tak dapat salin. Pilih teks dan salin manual.")} break;}
+      case "addFlag": {const f=prompt("Tanda baharu (contoh: Perlu B-roll, Tunggu kelulusan):");if(f&&f.trim()){t.flags.push(f.trim());save();$("#flags").innerHTML=flagsHtml(t)}break;}
+      case "rmFlag": t.flags.splice(+b.dataset.i,1);save();$("#flags").innerHTML=flagsHtml(t);break;
+      case "addScene": t.scenes.push({label:"Babak "+(t.scenes.length+1),time:"",visual:"",onscreen:"",vo:"",edit:""});save();$("#scenes").innerHTML=scenesHtml(t);break;
+      case "rmScene": if(confirm("Padam babak "+(si+1)+"?")){t.scenes.splice(si,1);save();$("#scenes").innerHTML=scenesHtml(t)}break;
+      case "up": if(si>0){[t.scenes[si-1],t.scenes[si]]=[t.scenes[si],t.scenes[si-1]];save();$("#scenes").innerHTML=scenesHtml(t)}break;
+      case "down": if(si<t.scenes.length-1){[t.scenes[si+1],t.scenes[si]]=[t.scenes[si],t.scenes[si+1]];save();$("#scenes").innerHTML=scenesHtml(t)}break;
+    }
+  });
+}
+function promote(v){
+  const p=tById(v.dupOf); if(!p) return;
+  if(!confirm(`Jadikan ${v.id} topik utama?\n\n${p.id} dan versi lain akan jadi versi alternatif kepada ${v.id}. Tarikh, siri dan progres ${p.id} dipindah ke ${v.id}.`)) return;
+  variantsOf(p.id).forEach(x=>{if(x.id!==v.id)x.dupOf=v.id});
+  ["date","time","series","seriesEp"].forEach(k=>{v[k]=p[k];p[k]=k==="seriesEp"?null:""});
+  v.steps={...p.steps}; p.steps=Object.fromEntries(STEPS.map(([k])=>[k,false]));
+  v.dupOf=""; p.dupOf=v.id; save(true); openEditor(v.id); toast(`${v.id} kini topik utama`);
+}
+
+/* ================= import / export ================= */
+function download(name,text,type){const b=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function exportJSON(){download(`amz-content-${todayStr()}.json`,JSON.stringify(DB,null,1),"application/json");toast("JSON dieksport")}
+function exportCSV(){
+  const cols=[["id","ID"],["date","Tarikh"],["time","Masa"],["type","Jenis"],["tows","TOWS"],["platform","Platform"],["format","Format"],["objective","Objektif"],["short","Tajuk ringkas"],["title","Tajuk"],["hook","Hook"],["series","Siri"],["seriesEp","Episod"],["_status","Status"],["_step","Progres"],["link","Pautan"],["views","Tontonan"],["leads","Lead"],["source","Sumber"]];
+  const rows=DB.topics.filter(t=>!isVar(t)).sort((a,b)=>((a.date||"9999")+a.id).localeCompare((b.date||"9999")+b.id)).map(t=>cols.map(([k])=>k==="_status"?statusOf(t):k==="_step"?stepLabel(t):k==="source"?(t.source||"")+(t.sourceId?"#"+t.sourceId:""):t[k]??""));
+  const csv=[cols.map(c=>c[1]),...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  download(`amz-topik-${todayStr()}.csv`,"﻿"+csv,"text/csv");toast("CSV dieksport")
+}
+$("#importFile").onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{const d=JSON.parse(await f.text()); if(!d||!Array.isArray(d.topics)) throw new Error("format");
+    if(DB&&!confirm(`Import ${d.topics.length} topik dan ganti data semasa dalam browser ini?`)) return;
+    DB=d; migrate(); save(true); route(); toast("Data diimport");
+  }catch(err){toast("Fail JSON tak sah")}
+  e.target.value="";
+};
+async function resetToServer(){
+  if(!confirm("Buang semua perubahan dalam browser ini dan muat semula dari server?")) return;
+  try{DB=await fetchServer();migrate();META.dirty=false;lsSet(LS_DATA,JSON.stringify(DB));saveMeta();renderSync();render();toast("Data server dimuat")}
+  catch(e){toast("Gagal muat data server")}
+}
+function setStart(){
+  const v=$("#startDate").value; if(!v) return;
+  const diff=Math.round((parseD(v)-parseD(DB.meta.startDate))/864e5);
+  if($("#shiftAll").checked&&diff) DB.topics.forEach(t=>{if(t.date)t.date=addDays(t.date,diff)});
+  DB.meta.startDate=v; save(true); render(); toast("Tarikh mula: "+fmtD(v));
+}
+
+/* ================= GitHub sync ================= */
+function ghCfg(){const g=META.gh;if(!g.owner||!g.repo||!g.token){toast("Isi owner, repo dan token dulu di Tetapan");location.hash="#/tetapan";return null}return g}
+const ghUrl=g=>`https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}/contents/${g.path.split("/").map(encodeURIComponent).join("/")}`;
+const ghHead=(g,raw)=>({"Authorization":"Bearer "+g.token,"Accept":raw?"application/vnd.github.raw+json":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"});
+function b64(str){const bytes=new TextEncoder().encode(str);let bin="";for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin)}
+async function ghSha(g){
+  const r=await fetch(ghUrl(g)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:ghHead(g),cache:"no-store"});
+  if(r.status===404) return null; if(!r.ok) throw new Error(await ghErr(r)); return (await r.json()).sha;
+}
+async function ghErr(r){let m="";try{m=(await r.json()).message}catch(e){}return `GitHub ${r.status}${m?": "+m:""}`}
+async function ghPush(){
+  const g=ghCfg(); if(!g) return;
+  toast("Menyimpan ke GitHub…");
+  try{
+    const sha=await ghSha(g);
+    DB.updatedAt=new Date().toISOString();
+    const body={message:`Kemas kini content hub (${new Date().toLocaleString("ms-MY")})`,content:b64(JSON.stringify(DB,null,0)),branch:g.branch};
+    if(sha) body.sha=sha;
+    const r=await fetch(ghUrl(g),{method:"PUT",headers:{...ghHead(g),"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(r.status===409||r.status===422&&/sha/i.test(await r.clone().text())) throw new Error("Fail di GitHub dah berubah. Tarik dulu, kemudian simpan semula.");
+    if(!r.ok) throw new Error(await ghErr(r));
+    META.dirty=false; META.lastSync=new Date().toISOString(); lsSet(LS_DATA,JSON.stringify(DB)); saveMeta(); renderSync(); if(UI.route==="tetapan")render();
+    toast("Disimpan ke GitHub ✓",3500);
+  }catch(e){toast("Gagal: "+e.message,6000)}
+}
+async function ghPull(){
+  const g=ghCfg(); if(!g) return;
+  if(META.dirty&&!confirm("Ada perubahan dalam browser yang belum disimpan ke GitHub. Ganti dengan versi GitHub?")) return;
+  try{
+    const r=await fetch(ghUrl(g)+"?ref="+encodeURIComponent(g.branch)+"&t="+Date.now(),{headers:ghHead(g,true),cache:"no-store"});
+    if(!r.ok) throw new Error(await ghErr(r));
+    const d=await r.json(); if(!Array.isArray(d.topics)) throw new Error("format data tak sah");
+    DB=d; migrate(); META.dirty=false; META.lastSync=new Date().toISOString(); lsSet(LS_DATA,JSON.stringify(DB)); saveMeta(); renderSync(); render(); toast("Data GitHub dimuat ✓");
+  }catch(e){toast("Gagal: "+e.message,6000)}
+}
+
+/* ================= theme & boot ================= */
+function applyTheme(){const v=lsGet("amzhub:theme");if(v)document.documentElement.dataset.theme=v;else delete document.documentElement.dataset.theme}
+applyTheme(); boot();
+</script>
+</body>
+</html>
